@@ -1,9 +1,12 @@
 <html>
 <head>
 
+<link rel="stylesheet" type="text/css" href="stylesheets/test.css" media="print">
+
 </head>
 <body>
 
+CSS test bed
 
 
 </body>

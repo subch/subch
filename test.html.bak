@@ -1,12 +1,18 @@
 <html>
 <head>
 
-<link rel="stylesheet" type="text/css" href="stylesheets/test.css" media="print">
+<link rel="stylesheet" type="text/css" href="../stylesheets/test.css" media="print">
 
 </head>
 <body>
+<style>
 
-CSS test bed
+
+
+
+</style>
+
+<h1>CSS test bed</h1>
 
 
 </body>

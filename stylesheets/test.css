@@ -1,10 +1,8 @@
 body {
-  background-image: linear-gradient(to right, white, grey);
-  font-size: 2.5;
+  background-image: linear-gradient(to right, aquamarine, blueviolet);
+  font-family: Arial, sans-serif;
   }
 
 h1 {
-  font-variant: small-caps;
-  font-family: Arial, sans-serif;
+  font-size: 250%;
   }
-  

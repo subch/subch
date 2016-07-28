@@ -1,7 +1,9 @@
 <html>
 <head>
 
-<link rel="stylesheet" type="text/css" href="./stylesheets/test.css" media="print">
+<meta charset='utf-8'>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<link rel="stylesheet" type="text/css" href="./stylesheets/stylesheet.css" media="print">
 
 </head>
 <body>
@@ -14,6 +16,12 @@
 
 <h1>CSS test bed</h1>
 
+
+	    <h3>
+		<a id="Test Page" class="anchor"></a>Test page
+		</h3>
+	  
+	  <p>This is where you'll find the test page: <a href="./test.html">Test page</a></p>
 
 </body>
 

@@ -1,11 +1,18 @@
-body {
+body{
+
+  padding: 0px;
+  margin: 0px;
   background-image: linear-gradient(to right, aquamarine, aqua);
   font-family: Arial, sans-serif;
-  }
+ }
 
-h1 {
-  font-size: 250%;
-  }
+#gradient
+{
+  width: 100%;
+  /* height: 800px; */
+  padding: 0px;
+  margin: 0px;
+}
 
 .white {
   color: white;

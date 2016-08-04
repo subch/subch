@@ -3,9 +3,9 @@ var colors = new Array(
   [0,35,0],
   [0,0,0],
   [0,35,0],
-  [0,175,0],
-  [0,0,0],
-  [0,128,0]);
+  [0,175,125],
+  [0,0,125],
+  [0,128,125]);
 
 var step = 0;
 //color table indices for: 
@@ -32,7 +32,7 @@ var istep = 1 - step;
 var r1 = Math.round(istep * c0_0[0] + step * c0_1[0]);
 var g1 = Math.round(istep * c0_0[1] + step * c0_1[1]);
 var b1 = Math.round(istep * c0_0[2] + step * c0_1[2]);
-var color1 = "rgb(0, 0, 0)";
+var color1 = "rgb(0, 200, 255)";
 
 var r2 = Math.round(istep * c1_0[0] + step * c1_1[0]);
 var g2 = Math.round(istep * c1_0[1] + step * c1_1[1]);

@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+const { category } = Astro.props;
+---
+<Base title={category.title} description={category.tagline}>
+  <h1>{category.title}</h1>
+  <p class="tagline">{category.tagline}</p>
+
+  <slot />
+
+  <section class="section">
+    <h2>Repos</h2>
+    {category.repos.length === 0 ? (
+      <p class="tagline">Nothing here yet.</p>
+    ) : (
+      <div class="card-grid">
+        {category.repos.map((r) => (
+          <div class="card">
+            <span class={`pill pill-${r.status}`}>{r.status}</span>
+            <h3>{r.name}</h3>
+            <p>{r.description}</p>
+            <a class="repo-link" href={`https://github.com/${r.repo}`}>{r.repo} →</a>
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+</Base>

@@ -1,0 +1,17 @@
+{
+  "name": "subch-hub",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "subch.us — hub for Travis Schaefer's projects: RC, 3D printing, ESP32/Arduino, weather tracking, and data projects.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^4.16.0"
+  }
+}

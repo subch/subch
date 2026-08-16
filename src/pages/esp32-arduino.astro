@@ -1,0 +1,6 @@
+---
+import CategoryPage from '../components/CategoryPage.astro';
+import data from '../data/repos.json';
+const category = data.categories.find((c) => c.slug === 'esp32-arduino');
+---
+<CategoryPage category={category} />

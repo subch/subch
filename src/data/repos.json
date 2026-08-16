@@ -1,0 +1,96 @@
+{
+  "categories": [
+    {
+      "slug": "rc",
+      "title": "RC Projects",
+      "tagline": "Cars, planes, boats — builds, mods, and the code that runs them.",
+      "repos": [
+        {
+          "name": "RC Projects",
+          "repo": "subch/rc-projects",
+          "description": "Home base for RC builds, mods, and telemetry/control code as they come online.",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "slug": "3d-printing",
+      "title": "3D Printing",
+      "tagline": "Models, slicer profiles, and printer tuning.",
+      "repos": [
+        {
+          "name": "3D Printing",
+          "repo": "subch/3d-printing",
+          "description": "STLs, slicer profiles, and printer calibration/tuning notes.",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "slug": "esp32-arduino",
+      "title": "ESP32 / Arduino",
+      "tagline": "Firmware and hardware project code for microcontroller builds.",
+      "repos": [
+        {
+          "name": "ESP32 / Arduino",
+          "repo": "subch/esp32-arduino",
+          "description": "Firmware, wiring notes, and test sketches for ESP32/Arduino hardware projects.",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "slug": "weather",
+      "title": "Weather Tracking",
+      "tagline": "Live conditions plus a home for custom sensor hardware down the line.",
+      "repos": [
+        {
+          "name": "Weather Station",
+          "repo": "subch/weather-station",
+          "description": "Custom sensor hardware and logged data, once built. The live dashboard above works today without it.",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "slug": "data",
+      "title": "Data Projects",
+      "tagline": "Scripts, dashboards, and analysis.",
+      "repos": [
+        {
+          "name": "Data Projects",
+          "repo": "subch/data-projects",
+          "description": "Data pulls, cleanup scripts, and small analysis/dashboard projects.",
+          "status": "planned"
+        }
+      ]
+    }
+  ],
+  "featured": [
+    {
+      "name": "Schaefer TX Consulting",
+      "url": "https://schaefertx.com",
+      "repo": "subch/schaeferTX",
+      "description": "Home for Schaefer TX Consulting projects."
+    },
+    {
+      "name": "Goon Turismo",
+      "url": "https://goon-turismo.com",
+      "repo": "subch/goon-turismo",
+      "description": "Tracks our crew's Gran Turismo 7 Time Trial results and season standings."
+    }
+  ],
+  "other": [
+    {
+      "name": "python",
+      "repo": "subch/python",
+      "description": "General Python scripts and experiments."
+    }
+  ],
+  "forks": [
+    { "name": "LPHK", "repo": "subch/LPHK", "originalRepo": "nimaid/LPHK" },
+    { "name": "stable-diffusion-webui-docker", "repo": "subch/stable-diffusion-webui-docker", "originalRepo": "AbdBarho/stable-diffusion-webui-docker" },
+    { "name": "php-ups-api", "repo": "subch/php-ups-api", "originalRepo": "gabrielbull/php-ups-api" },
+    { "name": "PHP", "repo": "subch/PHP", "originalRepo": "pouyadarabi/PHP" }
+  ]
+}

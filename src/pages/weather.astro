@@ -1,0 +1,187 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/repos.json';
+const category = data.categories.find((c) => c.slug === 'weather');
+---
+<Base title="Weather" description={category.tagline}>
+  <h1>{category.title}</h1>
+  <p class="tagline">{category.tagline}</p>
+
+  <div id="weather-app">
+    <div id="weather-status" class="tagline">Getting your location…</div>
+    <div id="weather-manual" hidden>
+      <form id="manual-form">
+        <label>
+          Latitude
+          <input type="text" id="lat-input" inputmode="decimal" placeholder="30.2672" required />
+        </label>
+        <label>
+          Longitude
+          <input type="text" id="lon-input" inputmode="decimal" placeholder="-97.7431" required />
+        </label>
+        <button type="submit">Use location</button>
+      </form>
+    </div>
+    <div id="weather-current" class="card" hidden></div>
+    <div id="weather-forecast" class="card-grid"></div>
+  </div>
+
+  <section class="section">
+    <h2>Repos</h2>
+    {category.repos.length === 0 ? (
+      <p class="tagline">Nothing here yet.</p>
+    ) : (
+      <div class="card-grid">
+        {category.repos.map((r) => (
+          <div class="card">
+            <span class={`pill pill-${r.status}`}>{r.status}</span>
+            <h3>{r.name}</h3>
+            <p>{r.description}</p>
+            <a class="repo-link" href={`https://github.com/${r.repo}`}>{r.repo} →</a>
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+</Base>
+
+<style>
+  #weather-manual form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: end;
+    margin-top: 0.5rem;
+  }
+  #weather-manual label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.85rem;
+    color: var(--muted);
+    gap: 0.25rem;
+  }
+  #weather-manual input {
+    padding: 0.4rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--fg);
+    font-size: 1rem;
+    width: 10rem;
+  }
+  #weather-manual button {
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  #weather-current {
+    margin-top: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  #weather-current img { width: 64px; height: 64px; }
+  #weather-current .temp { font-size: 2.2rem; font-weight: 700; }
+  #weather-forecast { margin-top: 1.25rem; }
+  #weather-forecast .card h3 { font-size: 0.95rem; }
+  #weather-forecast .card .fc-temp { font-weight: 700; font-size: 1.1rem; }
+</style>
+
+<script>
+  const statusEl = document.getElementById('weather-status');
+  const manualEl = document.getElementById('weather-manual');
+  const manualForm = document.getElementById('manual-form');
+  const currentEl = document.getElementById('weather-current');
+  const forecastEl = document.getElementById('weather-forecast');
+
+  const STORAGE_KEY = 'subch-weather-coords';
+
+  async function loadWeather(lat, lon) {
+    statusEl.hidden = false;
+    statusEl.textContent = 'Loading forecast…';
+    currentEl.hidden = true;
+    forecastEl.innerHTML = '';
+
+    try {
+      const pointRes = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
+      if (!pointRes.ok) throw new Error('location lookup failed');
+      const point = await pointRes.json();
+      const { forecast, relativeLocation } = point.properties;
+
+      const forecastRes = await fetch(forecast);
+      if (!forecastRes.ok) throw new Error('forecast fetch failed');
+      const forecastData = await forecastRes.json();
+      const periods = forecastData.properties.periods;
+
+      const place = relativeLocation?.properties;
+      statusEl.hidden = true;
+
+      const now = periods[0];
+      currentEl.hidden = false;
+      currentEl.innerHTML = `
+        <img src="${now.icon}" alt="${now.shortForecast}" />
+        <div>
+          <div class="temp">${now.temperature}°${now.temperatureUnit}</div>
+          <div>${now.shortForecast}${place ? ` — ${place.city}, ${place.state}` : ''}</div>
+        </div>
+      `;
+
+      forecastEl.innerHTML = periods
+        .slice(1, 7)
+        .map(
+          (p) => `
+            <div class="card">
+              <h3>${p.name}</h3>
+              <img src="${p.icon}" alt="${p.shortForecast}" width="48" height="48" />
+              <div class="fc-temp">${p.temperature}°${p.temperatureUnit}</div>
+              <p>${p.shortForecast}</p>
+            </div>
+          `
+        )
+        .join('');
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ lat, lon }));
+    } catch (err) {
+      statusEl.hidden = false;
+      statusEl.textContent = `Couldn't load forecast (${err.message}). NWS only covers US locations — try setting your location manually.`;
+      manualEl.hidden = false;
+    }
+  }
+
+  function tryGeolocation() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const { lat, lon } = JSON.parse(saved);
+      loadWeather(lat, lon);
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      statusEl.textContent = 'Geolocation not available — set your location manually.';
+      manualEl.hidden = false;
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => loadWeather(pos.coords.latitude.toFixed(4), pos.coords.longitude.toFixed(4)),
+      () => {
+        statusEl.textContent = 'Location access denied — set your location manually.';
+        manualEl.hidden = false;
+      },
+      { timeout: 8000 }
+    );
+  }
+
+  manualForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const lat = document.getElementById('lat-input').value.trim();
+    const lon = document.getElementById('lon-input').value.trim();
+    if (lat && lon) loadWeather(lat, lon);
+  });
+
+  tryGeolocation();
+</script>

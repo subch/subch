@@ -1,0 +1,188 @@
+---
+const { title, description = "Travis Schaefer's project hub." } = Astro.props;
+const nav = [
+  { href: '/', label: 'Home' },
+  { href: '/rc/', label: 'RC' },
+  { href: '/3d-printing/', label: '3D Printing' },
+  { href: '/esp32-arduino/', label: 'ESP32/Arduino' },
+  { href: '/weather/', label: 'Weather' },
+  { href: '/data/', label: 'Data' },
+];
+const currentPath = Astro.url.pathname;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>{title ? `${title} · subch.us` : 'subch.us'}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/">subch<span>.us</span></a>
+        <nav>
+          <ul>
+            {nav.map((item) => (
+              <li>
+                <a href={item.href} aria-current={currentPath === item.href ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main class="wrap">
+      <slot />
+    </main>
+    <footer class="wrap">
+      <p>
+        <a href="https://github.com/subch">github.com/subch</a>
+      </p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #666;
+    --border: #e2e2e2;
+    --accent: #2563eb;
+    --card-bg: #f7f7f8;
+    --pill-planned: #eef1f4;
+    --pill-planned-fg: #556;
+    --pill-active: #e6f4ea;
+    --pill-active-fg: #1e7a34;
+    --pill-archived: #f4eee6;
+    --pill-archived-fg: #8a5a1e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12141a;
+      --fg: #eaeaea;
+      --muted: #9a9fa8;
+      --border: #262a33;
+      --accent: #6ea8ff;
+      --card-bg: #181b22;
+      --pill-planned: #232733;
+      --pill-planned-fg: #aab2c5;
+      --pill-active: #17301f;
+      --pill-active-fg: #6fd08a;
+      --pill-archived: #332a1c;
+      --pill-archived-fg: #d9a662;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+  }
+  a { color: var(--accent); }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+  .site-header {
+    border-bottom: 1px solid var(--border);
+  }
+  .site-header .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .brand span { color: var(--accent); }
+  nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin: 0;
+    padding: 0;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.95rem;
+    padding: 0.35rem 0.1rem;
+  }
+  nav a[aria-current="page"] {
+    color: var(--fg);
+    font-weight: 600;
+    border-bottom: 2px solid var(--accent);
+  }
+  main.wrap {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    min-height: 60vh;
+  }
+  footer.wrap {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  h1 { font-size: 1.8rem; margin-bottom: 0.25rem; }
+  .tagline { color: var(--muted); margin-top: 0; }
+  .card-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    margin-top: 1.5rem;
+  }
+  .card {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+  }
+  .card h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+  .card p { margin: 0 0 0.6rem; color: var(--muted); font-size: 0.92rem; }
+  .card a.repo-link { font-size: 0.85rem; }
+  .pill {
+    display: inline-block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    margin-bottom: 0.5rem;
+  }
+  .pill-active { background: var(--pill-active); color: var(--pill-active-fg); }
+  .pill-planned { background: var(--pill-planned); color: var(--pill-planned-fg); }
+  .pill-archived { background: var(--pill-archived); color: var(--pill-archived-fg); }
+  .section { margin-top: 2.5rem; }
+  .section h2 { font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+  .fork-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    padding: 0;
+    margin: 0.75rem 0 0;
+    list-style: none;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .fork-list a { color: var(--muted); }
+</style>

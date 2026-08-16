@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/repos.json';
+---
+<Base title="Home" description="Travis Schaefer's project hub — RC, 3D printing, ESP32/Arduino, weather tracking, and data projects.">
+  <h1>subch<span style="color: var(--accent)">.us</span></h1>
+  <p class="tagline">A hub for what I'm building — RC, 3D printing, microcontrollers, weather tracking, and data projects.</p>
+
+  <div class="card-grid">
+    {data.categories.map((cat) => (
+      <a class="card" href={`/${cat.slug}/`} style="text-decoration:none; color:inherit;">
+        <h3>{cat.title}</h3>
+        <p>{cat.tagline}</p>
+      </a>
+    ))}
+  </div>
+
+  <section class="section">
+    <h2>Separately hosted</h2>
+    <div class="card-grid">
+      {data.featured.map((proj) => (
+        <div class="card">
+          <h3>{proj.name}</h3>
+          <p>{proj.description}</p>
+          <a class="repo-link" href={proj.url}>{proj.url.replace('https://', '')} →</a>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Other repos</h2>
+    <p class="tagline">Forked repos and misc code — linked, not featured.</p>
+    <ul class="fork-list">
+      {data.other.map((r) => (
+        <li><a href={`https://github.com/${r.repo}`}>{r.name}</a></li>
+      ))}
+      {data.forks.map((r) => (
+        <li>
+          <a href={`https://github.com/${r.repo}`}>{r.name}</a>
+          {' '}(fork of <a href={`https://github.com/${r.originalRepo}`}>{r.originalRepo}</a>)
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>

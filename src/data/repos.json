@@ -62,6 +62,12 @@
           "repo": "subch/data-projects",
           "description": "Data pulls, cleanup scripts, and small analysis/dashboard projects.",
           "status": "planned"
+        },
+        {
+          "name": "python",
+          "repo": "subch/python",
+          "description": "General Python scripts and experiments.",
+          "status": "active"
         }
       ]
     }
@@ -80,13 +86,7 @@
       "description": "Tracks our crew's Gran Turismo 7 Time Trial results and season standings."
     }
   ],
-  "other": [
-    {
-      "name": "python",
-      "repo": "subch/python",
-      "description": "General Python scripts and experiments."
-    }
-  ],
+  "other": [],
   "forks": [
     { "name": "LPHK", "repo": "subch/LPHK", "originalRepo": "nimaid/LPHK" },
     { "name": "stable-diffusion-webui-docker", "repo": "subch/stable-diffusion-webui-docker", "originalRepo": "AbdBarho/stable-diffusion-webui-docker" },

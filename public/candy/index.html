@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Candy Adventure">
+<meta name="theme-color" content="#2b1b3d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<title>Wyatt &amp; Heidi's Candy Adventure</title>
+<meta name="description" content="A candy-collecting browser game built for a four-year-old. Explore, collect treats and coins, dodge the creepers, and spend coins on hats and heroes.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wyatt &amp; Heidi's Candy Adventure">
+<meta property="og:description" content="A candy-collecting browser game built for a four-year-old. Drag to move, collect treats, dodge the creepers.">
+<meta property="og:image" content="icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { width:100%; height:100%; overflow:hidden; background:#2b1b3d;
+    font-family: "Baloo 2","Comic Sans MS","Chalkboard SE","Trebuchet MS",system-ui,sans-serif;
+    touch-action:none; overscroll-behavior:none; user-select:none; -webkit-user-select:none; }
+  #game { display:block; width:100%; height:100%; }
+
+  .btn { border:none; cursor:pointer; font-family:inherit; font-weight:800; color:#fff;
+    border-radius:999px; box-shadow:0 6px 0 rgba(0,0,0,.22), 0 10px 22px rgba(0,0,0,.25);
+    transition:transform .08s ease; }
+  .btn:active { transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,.22); }
+
+  #shopBtn { position:absolute; top:calc(12px + env(safe-area-inset-top)); right:calc(12px + env(safe-area-inset-right));
+    padding:14px 26px; font-size:24px; background:linear-gradient(#ff9ad5,#e1479f); z-index:5;
+    text-shadow:0 2px 0 rgba(0,0,0,.18); }
+
+  #overlay, #shopOverlay, #noteOverlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(48,22,66,.78); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); padding:16px; }
+  #overlay { z-index:20; }
+  #shopOverlay { z-index:21; }
+  #noteOverlay { z-index:23; }
+  .hidden { display:none !important; }
+
+  .panel { background:linear-gradient(#fff6fb,#ffe6f4); border:8px solid #fff; border-radius:34px;
+    box-shadow:0 20px 60px rgba(0,0,0,.4); max-width:860px; width:100%; max-height:100%;
+    display:flex; flex-direction:column; overflow:hidden; }
+  .panel h1 { font-size:clamp(28px,6.4vw,50px); color:#e1479f; text-align:center; padding:18px 16px 4px;
+    text-shadow:0 3px 0 #fff, 0 5px 0 rgba(0,0,0,.08); line-height:1.05; }
+  .panel p { text-align:center; color:#8a5b7a; font-size:clamp(15px,3.6vw,20px); padding:0 22px 14px; font-weight:700; }
+  .panel .body { overflow-y:auto; padding:0 16px 16px; -webkit-overflow-scrolling:touch; }
+  .panel .foot { padding:14px; display:flex; justify-content:center; gap:12px; background:rgba(255,255,255,.6); }
+
+  #playBtn { padding:20px 58px; font-size:32px; background:linear-gradient(#7be08a,#25a355); margin:6px auto 26px; display:block; }
+  #closeShop { padding:14px 40px; font-size:24px; background:linear-gradient(#7be08a,#25a355); }
+  #heroCanvas { display:block; margin:0 auto; width:220px; height:150px; }
+
+  .wallet { display:flex; align-items:center; justify-content:center; gap:8px; font-size:26px; font-weight:900; color:#b8791a; }
+  .wallet canvas { width:34px; height:34px; }
+
+  .tabs { display:flex; gap:10px; justify-content:center; padding:10px 0 14px; }
+  .tab { padding:10px 26px; font-size:20px; border-radius:999px; border:none; font-family:inherit; font-weight:800;
+    background:#ffd9ec; color:#b35a8c; cursor:pointer; }
+  .tab.on { background:linear-gradient(#ff9ad5,#e1479f); color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.15); }
+
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(116px,1fr)); gap:12px; }
+  .item { background:#fff; border-radius:22px; padding:8px 6px 10px; text-align:center; border:4px solid #ffd9ec;
+    cursor:pointer; position:relative; transition:transform .1s ease; }
+  .item:active { transform:scale(.95); }
+  .item canvas { width:88px; height:88px; display:block; margin:0 auto; }
+  .item .name { font-size:14px; font-weight:800; color:#7a4a68; margin-top:2px; }
+  .item .cost { font-size:16px; font-weight:900; color:#b8791a; display:flex; align-items:center; justify-content:center; gap:4px; }
+  .item .cost .c { width:16px; height:16px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#ffe58a,#e8a72a); border:2px solid #c98a12; }
+  .item.owned { border-color:#a9e6b6; }
+  .item.equipped { border-color:#25a355; box-shadow:0 0 0 4px rgba(37,163,85,.25); }
+  .item.equipped::after { content:"✓"; position:absolute; top:-10px; right:-8px; background:#25a355; color:#fff;
+    width:30px; height:30px; border-radius:50%; font-size:18px; line-height:30px; font-weight:900; border:3px solid #fff; }
+  .item.locked { opacity:.65; }
+  .shake { animation:sh .35s; }
+  @keyframes sh { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+
+  .linkRow { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; padding:12px 0 2px; }
+  .linkBtn { background:none; border:none; font-family:inherit; font-size:16px; font-weight:800;
+    color:#b3357d; text-decoration:underline; cursor:pointer; padding:6px 8px; }
+
+  /* ---- found-note card ---- */
+  #noteCard .msg { font-size:clamp(19px,4.6vw,26px); font-weight:800; color:#5c3a52; text-align:center;
+    padding:6px 18px 12px; line-height:1.35; white-space:pre-wrap; }
+  #noteCard .bonus { text-align:center; font-size:24px; font-weight:900; color:#b8791a; padding-bottom:10px; }
+
+  #saveDot { position:absolute; bottom:calc(10px + env(safe-area-inset-bottom)); right:12px; z-index:5;
+    font-size:13px; font-weight:800; color:#fff; opacity:0; transition:opacity .4s ease;
+    background:rgba(40,20,55,.45); padding:5px 12px; border-radius:999px; pointer-events:none; }
+  #saveDot.show { opacity:.85; }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<button id="shopBtn" class="btn">🛒 Shop</button>
+<div id="saveDot">saved</div>
+
+<div id="noteOverlay" class="hidden">
+  <div class="panel" id="noteCard">
+    <h1 id="noteTitle">A note from Mom!</h1>
+    <div class="msg" id="noteMsg"></div>
+    <div class="bonus hidden" id="noteBonus"></div>
+    <div class="foot"><button id="noteOk" class="btn" style="padding:14px 40px;font-size:24px;background:linear-gradient(#7be08a,#25a355);">Yay!</button></div>
+  </div>
+</div>
+
+<div id="overlay">
+  <div class="panel">
+    <h1>Wyatt &amp; Heidi's<br>Candy Adventure</h1>
+    <canvas id="heroCanvas" width="440" height="300"></canvas>
+    <p id="introText">Explore the candy world with Heidi.<br>Grab all the treats and shiny coins!</p>
+    <button id="playBtn" class="btn">PLAY</button>
+    <div class="linkRow">
+      <button class="linkBtn" id="unlockAll">Unlock everything (demo)</button>
+      <button class="linkBtn" id="resetDemo">Start over</button>
+    </div>
+    <p style="font-size:14px;color:#a98aa0;padding:0 22px 16px;">
+      Demo build. Progress is saved in this browser only.
+    </p>
+  </div>
+</div>
+
+<div id="shopOverlay" class="hidden">
+  <div class="panel">
+    <h1 style="font-size:clamp(26px,6vw,44px);padding-bottom:2px;">Candy Shop</h1>
+    <div class="wallet"><canvas id="walletCoin" width="68" height="68"></canvas><span id="walletNum">0</span></div>
+    <div class="tabs">
+      <button class="tab on" data-tab="heroes">Heroes</button>
+      <button class="tab" data-tab="hats">Hats</button>
+      <button class="tab" data-tab="shirts">Shirts</button>
+    </div>
+    <div class="body"><div class="grid" id="shopGrid"></div></div>
+    <div class="foot"><button id="closeShop" class="btn">Back to Playing</button></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   Wyatt & Heidi's Candy Adventure — public demo build
+   No server, no logins: progress is kept in the visitor's browser.
+   ============================================================ */
+
+const cv = document.getElementById('game');
+const ctx = cv.getContext('2d');
+
+let VW = 0, VH = 0, DPR = 1, ZOOM = 1, VIEW_W = 0, VIEW_H = 0;
+function resize(){
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  VW = window.innerWidth; VH = window.innerHeight;
+  ZOOM = Math.max(1, Math.min(2.1, Math.min(VW, VH) / 560));
+  VIEW_W = VW / ZOOM; VIEW_H = VH / ZOOM;
+  cv.width = Math.floor(VW * DPR); cv.height = Math.floor(VH * DPR);
+  cv.style.width = VW + 'px'; cv.style.height = VH + 'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', ()=>setTimeout(resize,250));
+resize();
+
+const params0 = new URLSearchParams(location.search);
+
+/* ---------- tiny seeded RNG ---------- */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd = mulberry32(20260816);
+const rr = (a,b)=>a+rnd()*(b-a);
+const ri = (a,b)=>Math.floor(rr(a,b+1));
+function rrLocal(i,a,b){ const v = Math.sin(i*127.1)*43758.5453; return a + (v - Math.floor(v))*(b-a); }
+
+/* ---------- world ---------- */
+const WORLD = { w: 3600, h: 2700 };
+const REGIONS = [
+  { name:'Lollipop Forest', x:0,    y:0,    w:1850, h:1250, ground:'#8ed07e', accent:'#86c876', light:'#97d888', props:['tree','bigLolli','bigLolli','candyCane','bush'] },
+  { name:'Ice Cream Peaks', x:1850, y:0,    w:1750, h:1250, ground:'#d3e9f6', accent:'#c9e1f0', light:'#dcf1fc', props:['peak','peak','cone','snowBlob','candyCane'] },
+  { name:'Cookie Beach',    x:0,    y:1450, w:1850, h:1250, ground:'#f3d79c', accent:'#ead093', light:'#fbe2ab', props:['cookieRock','cookieRock','sandDune','umbrella','shellCandy'] },
+  { name:'Gumdrop Hills',   x:1850, y:1450, w:1750, h:1250, ground:'#f6c8de', accent:'#eebdd5', light:'#fdd6e9', props:['gumHill','gumHill','cupcakeTower','bigGum','candyCane'] },
+];
+const RIVER_Y = 1350, RIVER_H = 210;
+
+/* ---------- wardrobe ---------- */
+const SHIRTS = {
+  red:     { name:'Red',      body:'#ef5350', dark:'#c62828', cost:0   },
+  blue:    { name:'Blue',     body:'#4f9bff', dark:'#2c6fd1', cost:40  },
+  green:   { name:'Green',    body:'#66d17a', dark:'#3ba355', cost:40  },
+  purple:  { name:'Purple',   body:'#a97bff', dark:'#7b4fd6', cost:70  },
+  orange:  { name:'Orange',   body:'#ff9a4d', dark:'#e0721f', cost:70  },
+  yellow:  { name:'Yellow',   body:'#ffd54d', dark:'#e0ac1f', cost:100 },
+  teal:    { name:'Teal',     body:'#4fd6c6', dark:'#22a596', cost:140 },
+  rainbow: { name:'Rainbow',  body:'RAINBOW', dark:'RAINBOW', cost:350 },
+};
+const HATS = {
+  cap:    { name:'Backwards Cap', cost:0   },
+  none:   { name:'Just Hair',     cost:0   },
+  party:  { name:'Party Hat',     cost:40  },
+  beanie: { name:'Beanie',        cost:60  },
+  cowboy: { name:'Cowboy Hat',    cost:90  },
+  cone:   { name:'Ice Cream',     cost:120 },
+  cookie: { name:'Cookie',        cost:150 },
+  crown:  { name:'Crown',         cost:250 },
+  wizard: { name:'Candy Wizard',  cost:400 },
+};
+
+/* ---------- playable characters ----------
+   h = height scale, w = width scale, head = head-size multiplier    */
+const HAIR_BLONDE = '#f4d267', HAIR_BLONDE_D = '#dcb43c';
+const HAIR_RED    = '#c65127', HAIR_RED_D    = '#9c3c1a';
+const HAIR_DARK   = '#4e3a2c';
+
+const CHARACTERS = {
+  wyatt:    { name:'Wyatt',    cost:0,   kind:'person', h:1.00, w:1.00, head:1.00,
+              hair:'short', hairC:HAIR_BLONDE, hairD:HAIR_BLONDE_D, glasses:false, defHat:'cap' },
+  marshall: { name:'Marshall', cost:150, kind:'person', h:1.18, w:0.86, head:0.94,
+              hair:'short', hairC:HAIR_BLONDE, hairD:HAIR_BLONDE_D, glasses:false, defHat:'cap' },
+  mom:      { name:'Mom',      cost:250, kind:'person', h:1.12, w:0.96, head:0.90,
+              hair:'long',  hairC:HAIR_RED,    hairD:HAIR_RED_D,    glasses:true,  defHat:'none' },
+  dad:      { name:'Dad',      cost:250, kind:'person', h:1.24, w:1.10, head:0.90,
+              hair:'bald',  hairC:HAIR_DARK,   hairD:HAIR_DARK,     glasses:false, defHat:'none' },
+  heidi:    { name:'Heidi',    cost:500, kind:'dog',    h:1.00, w:1.00, head:1.00 },
+};
+
+/* ---------- game state ---------- */
+const S = {
+  running:false,
+  candy:0, coins:0,
+  shirt:'red', hat:'cap', char:'wyatt',
+  owned:{ shirts:new Set(['red']), hats:new Set(['cap','none']), chars:new Set(['wyatt']) },
+  t:0, nextMilestone:10, shake:0,
+};
+const player = { x: 900, y: 1000, vx:0, vy:0, r:30, face:1, walk:0, speed:330 };
+// the buddy who trots along behind you — Heidi normally, Wyatt when you play as Heidi
+const buddy  = { x: 820, y: 1030, vx:0, vy:0, r:26, face:1, walk:0, idle:0, barkCd:0, running:false };
+const cam = { x:0, y:0 };
+const playingDog = () => S.char === 'heidi';
+// which character the buddy shows as
+const buddyChar = () => playingDog() ? 'wyatt' : 'heidi';
+
+/* ---------- audio ---------- */
+let AC = null;
+function audioOn(){ if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(AC && AC.state === 'suspended') AC.resume(); }
+function tone(freq, dur, type='sine', vol=.16, delay=0){
+  if(!AC) return;
+  const t0 = AC.currentTime + delay;
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t0);
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(vol, t0 + .015);
+  g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  o.connect(g); g.connect(AC.destination); o.start(t0); o.stop(t0 + dur + .05);
+}
+const sfxCandy = ()=>{ const b=[660,740,830,880][ri(0,3)]; tone(b,.14,'triangle',.14); tone(b*1.5,.12,'sine',.08,.05); };
+const sfxCoin  = ()=>{ tone(1050,.09,'square',.09); tone(1570,.16,'square',.07,.07); };
+const sfxYay   = ()=>{ [523,659,784,1046].forEach((f,i)=>tone(f,.3,'triangle',.13,i*.09)); };
+const sfxBuy   = ()=>{ [784,988,1319].forEach((f,i)=>tone(f,.25,'sine',.13,i*.07)); };
+const sfxNope  = ()=>{ tone(220,.16,'sine',.09); };
+const sfxWoof  = ()=>{ tone(190,.11,'square',.10); tone(150,.14,'square',.08,.09); };
+const sfxBoom  = ()=>{ tone(120,.45,'sawtooth',.16); tone(70,.55,'square',.13,.02); tone(220,.2,'triangle',.08,.01); };
+const sfxUnlock= ()=>{ [523,659,784,1046,1319].forEach((f,i)=>tone(f,.35,'triangle',.13,i*.08)); };
+
+/* ============================================================
+   DRAW HELPERS
+   ============================================================ */
+function rainbowColor(t, off=0){ return `hsl(${(t*90 + off) % 360}, 85%, 62%)`; }
+function shadow(g,x,y,rx,ry){ g.fillStyle='rgba(60,30,70,.16)'; g.beginPath(); g.ellipse(x,y,rx,ry,0,0,7); g.fill(); }
+function circle(g,x,y,r,c){ g.fillStyle=c; g.beginPath(); g.arc(x,y,r,0,7); g.fill(); }
+function rounded(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r);
+  g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+function star(g,x,y,r,pts,inner,c){ g.fillStyle=c; g.beginPath();
+  for(let i=0;i<pts*2;i++){ const a=-Math.PI/2 + i*Math.PI/pts; const rad=i%2?r*inner:r;
+    g.lineTo(x+Math.cos(a)*rad, y+Math.sin(a)*rad); } g.closePath(); g.fill(); }
+
+/* ============================================================
+   WYATT  —  y is the ground line under his feet
+   ============================================================ */
+const SKIN = '#f7cba1', SKIN_D = '#e2ab7c';
+const HAIR = '#f4d267', HAIR_D = '#dcb43c';
+const EYE_BLUE = '#3f9ae0', EYE_BLUE_D = '#2a72b5';
+
+function drawPerson(g, X, Y, r, shirtKey, hatKey, t, walk, charKey){
+  const c = CHARACTERS[charKey] || CHARACTERS.wyatt;
+  g.save();
+  g.translate(X, Y);
+  if(c.w !== 1) g.scale(c.w, 1);
+  drawPersonBody(g, 0, 0, r, shirtKey, hatKey, t, walk, c);
+  g.restore();
+}
+
+function drawPersonBody(g, x, Y, r, shirtKey, hatKey, t, walk, c){
+  const sh = SHIRTS[shirtKey] || SHIRTS.red;
+  const shirt  = sh.body === 'RAINBOW' ? rainbowColor(t)     : sh.body;
+  const shirtD = sh.dark === 'RAINBOW' ? rainbowColor(t, 40) : sh.dark;
+
+  const H = c.h;
+  const swing = Math.sin(walk * 10);
+  const bob   = Math.abs(Math.sin(walk * 10)) * r * 0.07;
+  const yy    = Y - bob;
+
+  const hipY   = yy - r * 0.80 * H;
+  const shldY  = yy - r * 1.60 * H;
+  const hr     = r * 0.58 * c.head;
+  const headC  = shldY - hr * 0.80;
+
+  g.lineCap = 'round'; g.lineJoin = 'round';
+
+  // ---- legs ----
+  for(const side of [-1, 1]){
+    const ph = side;
+    const footX = x + side * r * 0.21 + swing * ph * r * 0.30;
+    g.strokeStyle = SKIN_D; g.lineWidth = r * 0.23;
+    g.beginPath(); g.moveTo(x + side * r * 0.21, hipY + r * 0.22); g.lineTo(footX, yy - r * 0.09); g.stroke();
+    g.fillStyle = '#3d4a63';
+    g.beginPath(); g.ellipse(footX + side * r * 0.05, yy - r * 0.045, r * 0.20, r * 0.105, 0, 0, 7); g.fill();
+    g.fillStyle = '#ffffff';
+    g.beginPath(); g.ellipse(footX + side * r * 0.05, yy + r * 0.02, r * 0.20, r * 0.05, 0, 0, 7); g.fill();
+  }
+
+  // ---- shorts ----
+  g.fillStyle = '#41628f'; rounded(g, x - r*0.45, hipY - r*0.10, r*0.90, r*0.38, r*0.15); g.fill();
+  g.fillStyle = '#35507a'; rounded(g, x - r*0.05, hipY + r*0.02, r*0.10, r*0.26, r*0.04); g.fill();
+
+  // ---- torso ----
+  g.fillStyle = shirt; rounded(g, x - r*0.47, shldY, r*0.94, (hipY - shldY) + r*0.04, r*0.26); g.fill();
+  g.fillStyle = shirtD; rounded(g, x - r*0.47, hipY - r*0.16, r*0.94, r*0.20, r*0.09); g.fill();
+
+  // ---- arms (back arm first, then front) ----
+  for(const side of [-1, 1]){
+    const ph = -side;
+    const shX = x + side * r * 0.44, shY = shldY + r * 0.16;
+    const hX  = shX + side * r * 0.16 + swing * ph * r * 0.26;
+    const hY  = shY + r * 0.72;
+    g.strokeStyle = SKIN; g.lineWidth = r * 0.19;
+    g.beginPath(); g.moveTo(shX, shY); g.lineTo(hX, hY); g.stroke();
+    g.strokeStyle = shirt; g.lineWidth = r * 0.24;
+    g.beginPath(); g.moveTo(shX, shY); g.lineTo(shX + (hX - shX) * 0.42, shY + (hY - shY) * 0.42); g.stroke();
+    circle(g, hX, hY + r * 0.02, r * 0.11, SKIN);
+  }
+
+  // ---- neck + head ----
+  g.strokeStyle = SKIN_D; g.lineWidth = r * 0.2;
+  g.beginPath(); g.moveTo(x, shldY - r*0.04); g.lineTo(x, shldY + r*0.1); g.stroke();
+
+  const HAIR_C = c.hairC || HAIR_BLONDE, HAIR_DK = c.hairD || HAIR_BLONDE_D;
+  const covered = hatKey !== 'none';
+
+  // long hair falls behind the head and shoulders — drawn first
+  if(c.hair === 'long'){
+    g.fillStyle = HAIR_DK;
+    g.beginPath();
+    g.moveTo(x - hr*1.12, headC - hr*0.30);
+    g.quadraticCurveTo(x - hr*1.40, headC + hr*1.50, x - hr*0.95, headC + hr*1.85);
+    g.quadraticCurveTo(x, headC + hr*1.55, x + hr*0.95, headC + hr*1.85);
+    g.quadraticCurveTo(x + hr*1.40, headC + hr*1.50, x + hr*1.12, headC - hr*0.30);
+    g.closePath(); g.fill();
+  }
+
+  circle(g, x - hr*0.94, headC + hr*0.16, hr*0.20, SKIN_D);   // ear (back)
+  circle(g, x + hr*0.94, headC + hr*0.16, hr*0.20, SKIN);     // ear (front)
+  circle(g, x, headC, hr, SKIN);
+  g.fillStyle = 'rgba(255,255,255,.20)';
+  g.beginPath(); g.ellipse(x - hr*0.3, headC - hr*0.32, hr*0.34, hr*0.22, -.5, 0, 7); g.fill();
+
+  // ---- hair ----
+  if(c.hair === 'bald'){
+    // completely bald — just a shine on top
+    if(!covered){
+      g.fillStyle = 'rgba(255,255,255,.42)';
+      g.beginPath(); g.ellipse(x - hr*0.30, headC - hr*0.60, hr*0.32, hr*0.15, -.42, 0, 7); g.fill();
+    }
+  } else if(covered){
+    // fringe + sideburns poking out from under the hat
+    g.fillStyle = HAIR_C;
+    for(const off of [-0.58, -0.20, 0.20, 0.58]){
+      g.beginPath(); g.ellipse(x + hr*off, headC - hr*0.30, hr*0.27, hr*0.22, 0, 0, 7); g.fill();
+    }
+    g.beginPath(); g.ellipse(x, headC - hr*0.52, hr*0.96, hr*0.42, 0, 0, 7); g.fill();
+    g.fillStyle = HAIR_DK;
+    g.beginPath(); g.ellipse(x - hr*0.90, headC - hr*0.16, hr*0.13, hr*0.20, .18, 0, 7); g.fill();
+    g.beginPath(); g.ellipse(x + hr*0.90, headC - hr*0.16, hr*0.13, hr*0.20, -.18, 0, 7); g.fill();
+  } else {
+    g.fillStyle = HAIR_C;
+    g.beginPath(); g.arc(x, headC, hr*1.04, Math.PI*1.02, Math.PI*1.98); g.closePath(); g.fill();
+    g.beginPath();
+    g.moveTo(x - hr*1.04, headC - hr*0.16);
+    g.quadraticCurveTo(x - hr*0.45, headC + hr*0.12, x + hr*0.12, headC - hr*0.24);
+    g.quadraticCurveTo(x + hr*0.7, headC - hr*0.5, x + hr*1.04, headC - hr*0.18);
+    g.quadraticCurveTo(x + hr*0.9, headC - hr*0.9, x, headC - hr*1.06);
+    g.quadraticCurveTo(x - hr*0.95, headC - hr*0.9, x - hr*1.04, headC - hr*0.16);
+    g.closePath(); g.fill();
+    if(c.hair === 'long'){
+      // side curtains framing the face
+      g.beginPath(); g.ellipse(x - hr*0.98, headC + hr*0.34, hr*0.24, hr*0.62, .06, 0, 7); g.fill();
+      g.beginPath(); g.ellipse(x + hr*0.98, headC + hr*0.34, hr*0.24, hr*0.62, -.06, 0, 7); g.fill();
+    } else {
+      // little cowlick
+      g.strokeStyle = HAIR_C; g.lineWidth = hr*0.2;
+      g.beginPath(); g.moveTo(x + hr*0.1, headC - hr*1.0);
+      g.quadraticCurveTo(x + hr*0.5, headC - hr*1.45, x + hr*0.62, headC - hr*1.05); g.stroke();
+    }
+  }
+
+  // ---- face ----
+  const ey = headC + hr*0.06, ex = hr*0.38;
+  for(const side of [-1, 1]){
+    circle(g, x + side*ex, ey, hr*0.235, '#ffffff');
+    circle(g, x + side*ex + side*hr*0.03, ey + hr*0.01, hr*0.155, EYE_BLUE);
+    circle(g, x + side*ex + side*hr*0.03, ey + hr*0.01, hr*0.145, EYE_BLUE);
+    g.strokeStyle = EYE_BLUE_D; g.lineWidth = hr*0.045;
+    g.beginPath(); g.arc(x + side*ex + side*hr*0.03, ey + hr*0.01, hr*0.145, 0, 7); g.stroke();
+    circle(g, x + side*ex + side*hr*0.03, ey + hr*0.01, hr*0.072, '#26313f');
+    circle(g, x + side*ex - hr*0.03, ey - hr*0.06, hr*0.045, '#ffffff');
+  }
+  // eyebrows
+  g.strokeStyle = c.hair === 'bald' ? HAIR_DK : HAIR_DK; g.lineWidth = hr*0.075;
+  for(const side of [-1, 1]){
+    g.beginPath(); g.arc(x + side*ex, ey - hr*0.30, hr*0.19, Math.PI*1.12, Math.PI*1.88); g.stroke();
+  }
+  // cheeks
+  g.fillStyle = 'rgba(255,120,140,.34)';
+  g.beginPath(); g.ellipse(x - hr*0.62, ey + hr*0.30, hr*0.19, hr*0.12, 0,0,7); g.fill();
+  g.beginPath(); g.ellipse(x + hr*0.62, ey + hr*0.30, hr*0.19, hr*0.12, 0,0,7); g.fill();
+  // nose
+  g.strokeStyle = SKIN_D; g.lineWidth = hr*0.075;
+  g.beginPath(); g.arc(x, ey + hr*0.22, hr*0.09, Math.PI*0.15, Math.PI*0.85); g.stroke();
+  // smile
+  g.strokeStyle = '#a55a48'; g.lineWidth = hr*0.085;
+  g.beginPath(); g.arc(x, ey + hr*0.36, hr*0.30, Math.PI*0.16, Math.PI*0.84); g.stroke();
+
+  // ---- glasses ----
+  if(c.glasses){
+    const lens = hr*0.31;
+    g.fillStyle = 'rgba(255,255,255,.30)';
+    for(const side of [-1, 1]){
+      g.beginPath(); g.ellipse(x + side*ex, ey, lens, lens*0.90, 0, 0, 7); g.fill();
+    }
+    g.strokeStyle = '#4b3a52'; g.lineWidth = hr*0.075;
+    for(const side of [-1, 1]){
+      g.beginPath(); g.ellipse(x + side*ex, ey, lens, lens*0.90, 0, 0, 7); g.stroke();
+    }
+    g.beginPath(); g.moveTo(x - ex + lens, ey - hr*0.03); g.lineTo(x + ex - lens, ey - hr*0.03); g.stroke();
+    g.beginPath(); g.moveTo(x - ex - lens, ey - hr*0.04); g.lineTo(x - hr*0.94, ey - hr*0.10); g.stroke();
+    g.beginPath(); g.moveTo(x + ex + lens, ey - hr*0.04); g.lineTo(x + hr*0.94, ey - hr*0.10); g.stroke();
+    // a little glare so they read as glass
+    g.strokeStyle = 'rgba(255,255,255,.75)'; g.lineWidth = hr*0.05;
+    for(const side of [-1, 1]){
+      g.beginPath(); g.moveTo(x + side*ex - lens*0.45, ey + lens*0.30);
+      g.lineTo(x + side*ex + lens*0.10, ey - lens*0.40); g.stroke();
+    }
+  }
+
+  drawHat(g, x, headC, hr, hatKey, t, shirt, shirtD);
+}
+
+/* hats are positioned from the head centre (hc) and head radius (hr) */
+function drawHat(g, x, hc, hr, key, t, shirt, shirtD){
+  switch(key){
+    case 'cap': {
+      // backwards baseball cap — brim points behind (screen-left when facing right)
+      g.fillStyle = shirtD;
+      g.beginPath(); g.ellipse(x - hr*0.95, hc - hr*0.72, hr*0.62, hr*0.22, -0.12, 0, 7); g.fill();
+      g.fillStyle = shirt;
+      g.beginPath(); g.arc(x, hc - hr*0.38, hr*1.06, Math.PI*1.0, Math.PI*2.0); g.closePath(); g.fill();
+      g.fillStyle = 'rgba(255,255,255,.90)';
+      g.beginPath(); g.arc(x + hr*0.30, hc - hr*0.42, hr*0.74, Math.PI*1.30, Math.PI*1.92); g.closePath(); g.fill();
+      g.fillStyle = shirtD;
+      rounded(g, x - hr*1.06, hc - hr*0.52, hr*2.12, hr*0.17, hr*0.07); g.fill();
+      // adjuster strap gap at the front
+      g.fillStyle = HAIR;
+      rounded(g, x + hr*0.52, hc - hr*0.52, hr*0.34, hr*0.17, hr*0.06); g.fill();
+      circle(g, x, hc - hr*1.42, hr*0.13, shirtD);
+      break; }
+    case 'party': {
+      g.fillStyle='#ff5fa2'; g.beginPath(); g.moveTo(x, hc - hr*2.05); g.lineTo(x - hr*0.62, hc - hr*0.62);
+      g.lineTo(x + hr*0.62, hc - hr*0.62); g.closePath(); g.fill();
+      g.fillStyle='#ffe14d';
+      g.beginPath(); g.moveTo(x-hr*0.44,hc-hr*1.02); g.lineTo(x+hr*0.28,hc-hr*1.22); g.lineTo(x+hr*0.34,hc-hr*0.98);
+      g.lineTo(x-hr*0.40,hc-hr*0.78); g.closePath(); g.fill();
+      g.fillStyle='#63e6ff'; star(g, x, hc - hr*2.16, hr*0.24, 5, .45, '#63e6ff');
+      g.fillStyle='#8f5ad6'; rounded(g, x-hr*0.66, hc-hr*0.74, hr*1.32, hr*0.16, hr*0.07); g.fill();
+      break; }
+    case 'beanie': {
+      g.fillStyle='#5a7fd6';
+      g.beginPath(); g.arc(x, hc - hr*0.42, hr*1.06, Math.PI*1.0, Math.PI*2.0); g.closePath(); g.fill();
+      g.fillStyle='#3f61ac'; rounded(g, x-hr*1.08, hc-hr*0.62, hr*2.16, hr*0.34, hr*0.14); g.fill();
+      circle(g, x, hc - hr*1.60, hr*0.28, '#e8eefc');
+      g.fillStyle='rgba(255,255,255,.25)';
+      g.beginPath(); g.ellipse(x-hr*0.4, hc-hr*1.0, hr*0.3, hr*0.16, -.5,0,7); g.fill();
+      break; }
+    case 'cowboy': {
+      g.fillStyle='#a9743f';
+      g.beginPath(); g.ellipse(x, hc - hr*0.54, hr*1.62, hr*0.42, 0, 0, 7); g.fill();
+      g.fillStyle='#c08a52';
+      g.beginPath(); g.ellipse(x, hc - hr*0.60, hr*1.58, hr*0.38, 0, 0, 7); g.fill();
+      g.fillStyle='#b07c46';
+      g.beginPath();
+      g.moveTo(x - hr*0.72, hc - hr*0.64);
+      g.quadraticCurveTo(x - hr*0.66, hc - hr*1.62, x, hc - hr*1.54);
+      g.quadraticCurveTo(x + hr*0.66, hc - hr*1.62, x + hr*0.72, hc - hr*0.64);
+      g.closePath(); g.fill();
+      g.fillStyle='#7a4f28'; rounded(g, x-hr*0.74, hc-hr*0.82, hr*1.48, hr*0.20, hr*0.08); g.fill();
+      circle(g, x + hr*0.42, hc - hr*0.72, hr*0.11, '#ffd54d');
+      break; }
+    case 'cone': {
+      g.fillStyle='#e0a765'; g.beginPath(); g.moveTo(x - hr*0.52, hc - hr*1.02);
+      g.lineTo(x + hr*0.52, hc - hr*1.02); g.lineTo(x, hc - hr*0.24); g.closePath(); g.fill();
+      g.strokeStyle='#c78f52'; g.lineWidth=hr*0.07;
+      g.beginPath(); g.moveTo(x-hr*0.32,hc-hr*0.82); g.lineTo(x+hr*0.2,hc-hr*0.44);
+      g.moveTo(x+hr*0.32,hc-hr*0.82); g.lineTo(x-hr*0.2,hc-hr*0.44); g.stroke();
+      circle(g, x, hc - hr*1.34, hr*0.46, '#ffd6ea');
+      circle(g, x - hr*0.24, hc - hr*1.74, hr*0.34, '#b5ecd8');
+      circle(g, x + hr*0.20, hc - hr*2.06, hr*0.28, '#ffe9a3');
+      circle(g, x + hr*0.04, hc - hr*2.36, hr*0.16, '#e63558');
+      break; }
+    case 'cookie': {
+      circle(g, x, hc - hr*0.86, hr*0.86, '#c98d51');
+      circle(g, x, hc - hr*0.92, hr*0.78, '#e0a765');
+      [[-.30,-1.12],[.34,-1.06],[0,-.66],[-.40,-.62],[.42,-.72],[.06,-1.36]]
+        .forEach(q=>circle(g, x+hr*q[0], hc+hr*q[1], hr*0.15, '#5a3418'));
+      break; }
+    case 'crown': {
+      const w = hr*1.7, b = hc - hr*0.66, top = hc - hr*1.82;
+      g.fillStyle='#ffcf3d'; g.beginPath();
+      g.moveTo(x-w/2,b); g.lineTo(x-w/2, top+hr*0.34); g.lineTo(x-w*0.28, top+hr*0.78);
+      g.lineTo(x-w*0.16, top); g.lineTo(x, top+hr*0.62); g.lineTo(x+w*0.16, top);
+      g.lineTo(x+w*0.28, top+hr*0.78); g.lineTo(x+w/2, top+hr*0.34); g.lineTo(x+w/2,b); g.closePath(); g.fill();
+      g.fillStyle='#e0a800'; rounded(g, x-w/2, b-hr*0.22, w, hr*0.28, hr*0.1); g.fill();
+      circle(g, x, top+hr*0.92, hr*0.17, '#ff4d7e');
+      circle(g, x-w*0.30, top+hr*1.06, hr*0.12, '#4ec7ff');
+      circle(g, x+w*0.30, top+hr*1.06, hr*0.12, '#7be08a');
+      break; }
+    case 'wizard': {
+      g.fillStyle='#6a3fd6'; g.beginPath(); g.moveTo(x - hr*0.92, hc - hr*0.72);
+      g.quadraticCurveTo(x - hr*0.36, hc - hr*1.76, x + hr*0.56, hc - hr*2.66);
+      g.quadraticCurveTo(x + hr*0.30, hc - hr*1.46, x + hr*0.92, hc - hr*0.72); g.closePath(); g.fill();
+      star(g, x - hr*0.16, hc - hr*1.44, hr*0.22, 5, .45, '#ffe14d');
+      star(g, x + hr*0.26, hc - hr*1.98, hr*0.15, 5, .45, '#8fe6ff');
+      g.fillStyle='#4b28a8'; g.beginPath(); g.ellipse(x, hc - hr*0.70, hr*1.30, hr*0.28, 0,0,7); g.fill();
+      circle(g, x + hr*0.60, hc - hr*2.74, hr*0.16, '#ffe14d');
+      break; }
+  }
+}
+
+/* ============================================================
+   HEIDI  —  black German Shepherd, y is the ground line
+   ============================================================ */
+/* Heidi, from photos: sleek near-black coat with a blue-grey sheen, an
+   all-black face (no tan points on the muzzle or brows), very tall wide
+   ears with rust inside, bright amber eyes, rust on the thighs and lower
+   legs, pale silvery toes, and no collar. Lean and athletic. */
+const DOG    = '#1f1f26';   // body black
+const DOG_L  = '#2c2c36';   // blue-grey sheen
+const DOG_LL = '#3a3a47';   // brightest sheen
+const DOG_D  = '#131318';   // shadowed black
+const DOG_RUST = '#7a4a24'; // thigh / lower-leg rust
+const DOG_RUST_L = '#96602f';
+const DOG_TOE  = '#b9b3ab'; // pale silvery toes
+const DOG_EAR  = '#6e3520'; // inside of the ears
+const DOG_EYE  = '#f0a828'; // amber
+const DOG_EYE_D= '#b9761a';
+
+function drawHeidi(g, x, Y, r, t, walk, running){
+  const swing = Math.sin(walk * 11);
+  const bob   = Math.abs(Math.sin(walk*11)) * r * 0.05;
+  const yy    = Y - bob;
+  const bodyY = yy - r*0.82;
+  const headX = x + r*1.10, headY = yy - r*1.50;
+
+  g.lineCap = 'round'; g.lineJoin = 'round';
+
+  /* ---- a leg: short and sturdy, a hint of rust up top, pale toes ---- */
+  function leg(px, phase, back){
+    const off = swing * phase * r*0.24;
+    const topY = bodyY + r*0.16, footY = yy - r*0.03;
+    g.strokeStyle = back ? DOG_D : DOG;
+    g.lineWidth = r*0.26;
+    g.beginPath(); g.moveTo(px, topY); g.lineTo(px + off, footY); g.stroke();
+    // pale toes, the one light marking on her legs
+    g.strokeStyle = DOG_TOE; g.lineWidth = r*0.19;
+    g.beginPath(); g.moveTo(px + off*0.96, footY - r*0.035); g.lineTo(px + off, footY); g.stroke();
+  }
+
+  // ---- back pair of legs (behind the body) ----
+  leg(x - r*0.58,  1, true);
+  leg(x + r*0.44, -1, true);
+
+  // ---- tail: long, low, rust at the base, black brush ----
+  const wag = Math.sin(t * (running ? 13 : 5)) * (running ? 0.40 : 0.24);
+  g.strokeStyle = DOG_RUST; g.lineWidth = r*0.22;
+  g.beginPath(); g.moveTo(x - r*0.82, bodyY + r*0.02);
+  g.quadraticCurveTo(x - r*1.16, bodyY + r*0.16 + wag*r*0.5, x - r*1.34, bodyY + r*0.30 + wag*r*0.8);
+  g.stroke();
+  g.strokeStyle = DOG; g.lineWidth = r*0.19;
+  g.beginPath(); g.moveTo(x - r*1.20, bodyY + r*0.22 + wag*r*0.6);
+  g.quadraticCurveTo(x - r*1.62, bodyY + r*0.42 + wag*r, x - r*1.86, bodyY + r*0.30 + wag*r*1.4);
+  g.stroke();
+  g.strokeStyle = DOG; g.lineWidth = r*0.12;
+  g.beginPath(); g.moveTo(x - r*1.80, bodyY + r*0.32 + wag*r*1.3);
+  g.lineTo(x - r*2.02, bodyY + r*0.24 + wag*r*1.7); g.stroke();
+
+  // ---- haunch, with the rust patch that shows in her photos ----
+  g.fillStyle = DOG;
+  g.beginPath(); g.ellipse(x - r*0.50, bodyY + r*0.06, r*0.42, r*0.38, 0, 0, 7); g.fill();
+  g.fillStyle = DOG_RUST;
+  g.beginPath(); g.ellipse(x - r*0.52, bodyY + r*0.24, r*0.26, r*0.16, -0.1, 0, 7); g.fill();
+
+  // ---- neck ----
+  g.strokeStyle = DOG; g.lineWidth = r*0.44;
+  g.beginPath(); g.moveTo(x + r*0.56, bodyY - r*0.12); g.lineTo(headX - r*0.24, headY + r*0.32); g.stroke();
+
+  // ---- body: lean, with a sheen along the back ----
+  g.fillStyle = DOG;
+  g.beginPath(); g.ellipse(x, bodyY, r*0.94, r*0.46, -0.07, 0, 7); g.fill();
+  g.fillStyle = DOG_L;
+  g.beginPath(); g.ellipse(x - r*0.04, bodyY - r*0.21, r*0.50, r*0.08, -0.10, 0, 7); g.fill();
+  g.fillStyle = DOG_LL;
+  g.beginPath(); g.ellipse(x + r*0.22, bodyY - r*0.24, r*0.18, r*0.045, -0.14, 0, 7); g.fill();
+
+  // ---- front pair of legs ----
+  leg(x + r*0.68, -1, false);
+  leg(x - r*0.28,  1, false);
+
+  // ---- ears: tall, wide at the base, rust inside ----
+  const ear = (bx, tipX, tipY, bw) => {
+    g.fillStyle = DOG;
+    g.beginPath();
+    g.moveTo(headX + bx - bw, headY - r*0.14);
+    g.lineTo(headX + tipX, headY + tipY);
+    g.lineTo(headX + bx + bw, headY - r*0.26);
+    g.closePath(); g.fill();
+    g.fillStyle = DOG_EAR;
+    g.beginPath();
+    g.moveTo(headX + bx - bw*0.48, headY - r*0.26);
+    g.lineTo(headX + tipX*0.80, headY + tipY*0.78);
+    g.lineTo(headX + bx + bw*0.44, headY - r*0.34);
+    g.closePath(); g.fill();
+  };
+  ear(-r*0.14, -r*0.20, -r*1.30, r*0.26);
+  ear( r*0.40,  r*0.54, -r*1.26, r*0.24);
+
+  // ---- head: skull plus a tapered muzzle, all black ----
+  g.fillStyle = DOG;
+  g.beginPath(); g.ellipse(headX + r*0.06, headY, r*0.52, r*0.47, 0, 0, 7); g.fill();
+  g.beginPath();
+  g.moveTo(headX + r*0.14, headY - r*0.24);
+  g.quadraticCurveTo(headX + r*0.62, headY - r*0.14, headX + r*0.78, headY + r*0.12);
+  g.quadraticCurveTo(headX + r*0.70, headY + r*0.44, headX + r*0.16, headY + r*0.40);
+  g.closePath(); g.fill();
+  // the blue-grey sheen across the top of the muzzle and brow
+  g.fillStyle = DOG_L;
+  g.beginPath(); g.ellipse(headX + r*0.44, headY - r*0.02, r*0.24, r*0.07, 0.14, 0, 7); g.fill();
+  g.fillStyle = DOG_LL;
+  g.beginPath(); g.ellipse(headX - r*0.04, headY - r*0.24, r*0.17, r*0.05, -0.25, 0, 7); g.fill();
+
+  // ---- nose ----
+  circle(g, headX + r*0.76, headY + r*0.14, r*0.14, '#0d0d11');
+  circle(g, headX + r*0.72, headY + r*0.09, r*0.042, 'rgba(255,255,255,.42)');
+
+  // ---- the amber eye, her most Heidi feature ----
+  const ex = headX + r*0.30, ey = headY - r*0.06;
+  circle(g, ex, ey, r*0.135, DOG_EYE_D);
+  circle(g, ex, ey, r*0.115, DOG_EYE);
+  circle(g, ex + r*0.015, ey + r*0.01, r*0.058, '#20160a');
+  circle(g, ex - r*0.04, ey - r*0.045, r*0.033, '#ffffff');
+
+  // ---- mouth line + tongue when she's running ----
+  g.strokeStyle = '#0d0d11'; g.lineWidth = r*0.05;
+  g.beginPath(); g.moveTo(headX + r*0.74, headY + r*0.30);
+  g.quadraticCurveTo(headX + r*0.56, headY + r*0.40, headX + r*0.34, headY + r*0.32); g.stroke();
+  if(running){
+    g.fillStyle = '#ff7d9e';
+    g.beginPath(); g.ellipse(headX + r*0.58, headY + r*0.48, r*0.10, r*0.14, 0.2, 0, 7); g.fill();
+  }
+}
+
+/* ============================================================
+   BLOCKY RENDER CORE
+   Everything in the world is drawn on a voxel grid so the terrain,
+   props, treats and creepers all read as one chunky pixel style.
+   The people and Heidi stay smooth so the family still looks like
+   themselves.
+   ============================================================ */
+const BLOCK = 16;                       // world units per terrain block
+const snap = v => Math.floor(v / BLOCK) * BLOCK;
+function hash2(i, j){ const v = Math.sin(i*127.1 + j*311.7) * 43758.5453; return v - Math.floor(v); }
+
+/* one block. the +0.6 overdraw hides seams between neighbours */
+function blk(g, x, y, w, h, c){ g.fillStyle = c; g.fillRect(x, y, w + 0.6, h + 0.6); }
+
+/* a filled disc made of blocks */
+function bDisc(g, cx, cy, r, s, c, cLight, cDark){
+  const n = Math.ceil(r/s) + 1;
+  for(let i=-n;i<=n;i++) for(let j=-n;j<=n;j++){
+    const dx = (i+0.5)*s, dy = (j+0.5)*s;
+    if(Math.hypot(dx, dy) > r) continue;
+    let col = c;
+    if(cLight && i <= 0 && j <= -1) col = cLight;
+    else if(cDark && j >= 1 && i >= 0) col = cDark;
+    blk(g, cx + i*s, cy + j*s, s, s, col);
+  }
+}
+/* a dome: the top half of a disc, sitting on baseY */
+function bDome(g, cx, baseY, r, s, c, cLight){
+  const n = Math.ceil(r/s) + 1;
+  for(let i=-n;i<=n;i++) for(let j=-n;j<=0;j++){
+    const dx = (i+0.5)*s, dy = (j+0.5)*s;
+    if(Math.hypot(dx, dy) > r) continue;
+    blk(g, cx + i*s, baseY + j*s, s, s, (cLight && i <= 0 && j <= -1) ? cLight : c);
+  }
+}
+/* a stepped pyramid */
+function bPyramid(g, cx, baseY, halfW, rows, s, c, cLight){
+  for(let r=0;r<rows;r++){
+    const w = Math.max(1, Math.round(halfW * (1 - r/rows)));
+    for(let i=-w;i<w;i++)
+      blk(g, cx + i*s, baseY - (r+1)*s, s, s, (cLight && i < 0) ? cLight : c);
+  }
+}
+/* a plain block column */
+function bCol(g, cx, baseY, wBlocks, hBlocks, s, c, cLight){
+  for(let r=0;r<hBlocks;r++) for(let i=0;i<wBlocks;i++)
+    blk(g, cx + (i - wBlocks/2)*s, baseY - (r+1)*s, s, s, (cLight && i === 0) ? cLight : c);
+}
+function bShadow(g, cx, cy, wBlocks, s){
+  g.fillStyle = 'rgba(50,25,60,.15)';
+  for(let i=0;i<wBlocks;i++) g.fillRect(cx + (i - wBlocks/2)*s, cy - s*0.5, s + 0.6, s + 0.6);
+}
+
+/* ============================================================
+   CREEPER  —  blocky, waddles over, lights a fuse and pops
+   ============================================================ */
+const CREEP_G = ['#5f9c33','#6fb03c','#7ec84a','#4f8529'];   // mottled greens
+function drawCreeper(g, k, t){
+  const s = 6;                                  // creeper pixel size
+  const fusing = k.fuse > 0;
+  const flash = fusing && (Math.sin(k.fuse * (8 + k.fuse*22)) > 0);
+  const puff = fusing ? 1 + k.fuse * 0.22 : 1;
+  const step = Math.sin(k.walk*7);
+
+  bShadow(g, k.x, k.y, 5, s);
+
+  g.save(); g.translate(k.x, k.y); g.scale(k.face * puff, puff);
+
+  const shade = (i, j) => {
+    if(flash) return (hash2(i, j) > .5) ? '#ffffff' : '#ffd6d6';
+    return CREEP_G[Math.floor(hash2(i, j) * CREEP_G.length)];
+  };
+
+  // four stubby legs, front pair swings opposite the back pair
+  for(const [lx, ph] of [[-2, 1], [1, -1]]){
+    const off = Math.round(step * ph) * s * 0.5;
+    for(let i=0;i<2;i++) for(let r=0;r<2;r++)
+      blk(g, (lx+i)*s, -(r+1)*s + off, s, s, shade(lx+i+40, r+70));
+  }
+
+  // body: 4 blocks wide, 6 tall
+  for(let i=-2;i<2;i++) for(let r=2;r<8;r++)
+    blk(g, i*s, -(r+1)*s, s, s, shade(i, r));
+
+  // head: 5 wide, 5 tall, sat on the body
+  const hy = -9*s;
+  for(let i=-2.5;i<2.5;i++) for(let r=0;r<5;r++)
+    blk(g, i*s, hy - r*s, s, s, shade(i+7, r+13));
+
+  // the face — two dark eyes and a dropped jaw
+  const dark = '#20301a';
+  blk(g, -2*s, hy - 3.4*s, s*1.6, s*1.6, dark);
+  blk(g,  0.4*s, hy - 3.4*s, s*1.6, s*1.6, dark);
+  blk(g, -0.8*s, hy - 2.0*s, s*1.6, s*1.2, dark);
+  blk(g, -1.6*s, hy - 1.2*s, s*0.8, s*1.6, dark);
+  blk(g,  0.8*s, hy - 1.2*s, s*0.8, s*1.6, dark);
+  blk(g, -0.8*s, hy - 0.6*s, s*1.6, s*0.6, dark);
+
+  // sparking fuse while it counts down
+  if(fusing){
+    blk(g, -0.4*s, hy - 6.2*s, s*0.8, s*1.2, '#6b4a2c');
+    const sz = s * (1.1 + Math.abs(Math.sin(k.fuse*30)) * 0.9);
+    blk(g, -sz/2, hy - 6.2*s - sz, sz, sz, '#ffe14d');
+    blk(g, -sz/4, hy - 6.2*s - sz*0.7, sz/2, sz/2, '#fff6c9');
+  }
+  g.restore();
+}
+
+/* ============================================================
+   COLLECTIBLE ART  —  blocky treats
+   ============================================================ */
+const CANDY_KINDS = ['wrapped','lolli','gum','donut','choc','cupcake','bean','icecream'];
+function drawCandy(g, kind, x, y, sz, hue){
+  const s = Math.max(4, Math.round(sz/2.5));         // treat pixel size
+  const C  = `hsl(${hue},82%,66%)`;
+  const CL = `hsl(${hue},85%,78%)`;
+  const CD = `hsl(${hue},70%,52%)`;
+  switch(kind){
+    case 'wrapped':
+      for(let i=-1;i<1;i++) for(let j=-1;j<1;j++) blk(g, x+i*s, y+j*s, s, s, (i<0&&j<0)?CL:C);
+      blk(g, x-2*s, y-s, s, s*2, CD); blk(g, x+s, y-s, s, s*2, CD);
+      break;
+    case 'lolli':
+      bDisc(g, x, y-s, s*2.2, s, C, CL, CD);
+      blk(g, x-s*0.5, y+s, s, s*2.2, '#ffffff');
+      break;
+    case 'gum':
+      bDome(g, x, y+s*1.2, s*2.2, s, C, CL);
+      blk(g, x-s*0.5, y-s*0.5, s, s, 'rgba(255,255,255,.6)');
+      break;
+    case 'donut': {
+      const n = 2;
+      for(let i=-n;i<=n;i++) for(let j=-n;j<=n;j++){
+        const d = Math.hypot(i, j);
+        if(d > 2.3 || d < 0.9) continue;
+        blk(g, x+i*s, y+j*s, s, s, (j<0)?CL:C);
+      }
+      blk(g, x-s*2, y-s*2, s, s, '#ffffff'); blk(g, x+s, y+s, s, s, '#8fe6ff');
+      break; }
+    case 'choc':
+      for(let i=-2;i<2;i++) for(let j=-1;j<1;j++)
+        blk(g, x+i*s, y+j*s, s, s, ((i+j)%2===0)?'#8b5630':'#6b3f22');
+      break;
+    case 'cupcake':
+      bDome(g, x, y, s*2.0, s, CL, '#ffffff');
+      for(let i=-2;i<2;i++) blk(g, x+i*s, y, s, s*2, '#f2a3c7');
+      blk(g, x-s*0.5, y-s*2.6, s, s, '#e63558');
+      break;
+    case 'bean':
+      for(let i=-2;i<2;i++) blk(g, x+i*s, y-s*0.5, s, s, (i<0)?CL:C);
+      blk(g, x-s, y-s*1.5, s*2, s, C);
+      break;
+    case 'icecream':
+      bDome(g, x, y-s*0.4, s*2.0, s, CL, '#ffffff');
+      bPyramid(g, x, y+s*2.6, 2, 3, s, '#e0a765', '#f0bd80');
+      break;
+  }
+}
+function drawCoin(g, x, y, sz, t){
+  const s = Math.max(4, Math.round(sz/2.5));
+  const w = Math.abs(Math.cos(t*2.2));
+  g.save(); g.translate(x, y); g.scale(Math.max(.22, w), 1);
+  bDisc(g, 0, 0, s*2.4, s, '#f5c33a', '#ffe07a', '#c98a12');
+  blk(g, -s*0.5, -s*1.5, s, s*3, '#e8a72a');
+  blk(g, -s*1.5, -s*0.5, s*3, s, '#e8a72a');
+  g.restore();
+}
+
+/* ============================================================
+   PARENT DROPS  —  notes and gifts hidden by Mom or Dad
+   ============================================================ */
+function drawDrop(g, d, t){
+  const s = 6;
+  const bob = Math.sin(t*2.2 + (d.x + d.y)*0.01) * 4;
+  const yy = d.y + bob;
+  bShadow(g, d.x, d.y + 6, 5, s);
+
+  // soft glow so it stands out in tall candy grass
+  const glow = 0.35 + Math.abs(Math.sin(t*2.4)) * 0.35;
+  g.fillStyle = `rgba(255,236,140,${glow*0.5})`;
+  g.beginPath(); g.arc(d.x, yy - s*2, s*6.5, 0, 7); g.fill();
+
+  if(d.kind === 'note'){
+    // an envelope
+    for(let i=-3;i<3;i++) for(let j=-2;j<2;j++)
+      blk(g, d.x+i*s, yy+j*s - s*2, s, s, (j<0)?'#fffdf4':'#f2ead5');
+    for(let i=-3;i<3;i++){
+      const j = Math.abs(i+0.5) < 1.5 ? 0 : (Math.abs(i+0.5) < 2.5 ? -1 : -2);
+      blk(g, d.x+i*s, yy+j*s - s*2, s, s, '#e1479f');
+    }
+  } else {
+    // a present
+    for(let i=-3;i<3;i++) for(let j=-3;j<1;j++)
+      blk(g, d.x+i*s, yy+j*s - s*1.5, s, s, (i<0&&j<0)?'#ff9ad5':'#e1479f');
+    for(let j=-3;j<1;j++) blk(g, d.x-s*0.5, yy+j*s - s*1.5, s, s, '#ffe14d');
+    for(let i=-3;i<3;i++) blk(g, d.x+i*s, yy-s*2.5, s, s, '#ffe14d');
+    blk(g, d.x-s*1.5, yy-s*4.5, s, s, '#ffe14d');
+    blk(g, d.x+s*0.5, yy-s*4.5, s, s, '#ffe14d');
+  }
+  // a bobbing "!" so kids spot it from a distance
+  const sp = s * (0.9 + Math.abs(Math.sin(t*3)) * 0.3);
+  blk(g, d.x - sp/2, yy - s*8.5, sp, sp*1.8, '#fff2a8');
+  blk(g, d.x - sp/2, yy - s*6.2, sp, sp, '#fff2a8');
+}
+
+/* ============================================================
+   WORLD PROPS  —  all blocky
+   ============================================================ */
+const props = [];
+function addProp(type,x,y,scale,hue){ props.push({type,x,y,s:scale,hue,sway:rr(0,6.28)}); }
+REGIONS.forEach(reg=>{
+  const cols = Math.round(reg.w/230), rows = Math.round(reg.h/230);
+  for(let i=0;i<cols;i++) for(let j=0;j<rows;j++){
+    if(rnd() > 0.55) continue;
+    const x = reg.x + (i+0.5)*(reg.w/cols) + rr(-60,60);
+    const y = reg.y + (j+0.5)*(reg.h/rows) + rr(-60,60);
+    if(y > RIVER_Y-90 && y < RIVER_Y+RIVER_H+90) continue;
+    addProp(reg.props[ri(0,reg.props.length-1)], x, y, rr(.8,1.35), ri(0,360));
+  }
+});
+
+function drawProp(g, p, t){
+  const s = Math.max(6, Math.round(p.s * 11));      // this prop's pixel size
+  const x = p.x, y = p.y;
+  const C  = `hsl(${p.hue},80%,66%)`;
+  const CL = `hsl(${p.hue},84%,78%)`;
+  const CD = `hsl(${p.hue},68%,52%)`;
+
+  switch(p.type){
+    case 'tree':
+      bShadow(g, x, y, 4, s);
+      bCol(g, x, y, 2, 4, s, '#a5713f', '#b8834f');
+      bDisc(g, x, y - s*6.2, s*3.4, s, '#ff7ec4', '#ffa8da', '#e0559f');
+      blk(g, x - s*2, y - s*7.6, s, s, '#ffd0e9');
+      break;
+    case 'bigLolli':
+      bShadow(g, x, y, 3, s);
+      bCol(g, x, y, 1, 5, s, '#ffffff');
+      bDisc(g, x, y - s*7, s*2.8, s, C, CL, CD);
+      for(let i=-1;i<1;i++) blk(g, x + i*s, y - s*7, s, s, '#ffffff');
+      blk(g, x - s*2, y - s*8, s, s, '#ffffff');
+      blk(g, x + s, y - s*6, s, s, '#ffffff');
+      break;
+    case 'candyCane':
+      bShadow(g, x, y, 2, s);
+      for(let r=0;r<7;r++) blk(g, x - s*0.5, y - (r+1)*s, s, s, (r%2)?'#e63558':'#ffffff');
+      blk(g, x + s*0.5, y - s*7, s, s, '#ffffff');
+      blk(g, x + s*1.5, y - s*6.6, s, s, '#e63558');
+      break;
+    case 'bush':
+      bShadow(g, x, y, 3, s);
+      bDome(g, x, y, s*2.6, s, '#7ec658', '#96d972');
+      blk(g, x - s, y - s*2, s, s, '#ff5f8f');
+      blk(g, x + s, y - s*1, s, s, '#ffd84d');
+      break;
+    case 'peak':
+      bShadow(g, x, y, 6, s);
+      bPyramid(g, x, y, 5, 7, s, '#bfe4f7', '#d8f0ff');
+      bPyramid(g, x, y - s*5, 2, 3, s, '#ffffff', '#ffffff');
+      break;
+    case 'cone':
+      bShadow(g, x, y, 4, s);
+      bPyramid(g, x, y, 3, 4, s, '#e0a765', '#f0bd80');
+      bDome(g, x, y - s*4, s*2.6, s, '#ffd6ea', '#ffe9f4');
+      bDome(g, x, y - s*6, s*1.8, s, '#b5ecd8', '#d4f5e8');
+      blk(g, x - s*0.5, y - s*8, s, s, '#e63558');
+      break;
+    case 'snowBlob':
+      bShadow(g, x, y, 4, s);
+      bDome(g, x, y, s*2.4, s, '#f2fbff', '#ffffff');
+      break;
+    case 'cookieRock':
+      bShadow(g, x, y, 4, s);
+      bDome(g, x, y, s*2.8, s, '#e0a765', '#f0bd80');
+      blk(g, x - s*1.5, y - s*1.5, s, s, '#5a3418');
+      blk(g, x + s*0.5, y - s*2.5, s, s, '#5a3418');
+      blk(g, x - s*0.5, y - s*0.9, s, s, '#5a3418');
+      break;
+    case 'sandDune':
+      for(let i=-3;i<3;i++) blk(g, x + i*s, y - s, s, s, (i<0)?'#ffeec4':'#f6d493');
+      for(let i=-2;i<2;i++) blk(g, x + i*s, y - s*2, s, s, '#ffeec4');
+      break;
+    case 'umbrella':
+      bShadow(g, x, y, 2, s);
+      bCol(g, x, y, 1, 5, s, '#ffffff');
+      for(let i=-4;i<4;i++) blk(g, x + i*s, y - s*6, s, s, (Math.floor(i/2)%2)?'#ff5f8f':'#ffffff');
+      for(let i=-3;i<3;i++) blk(g, x + i*s, y - s*7, s, s, (Math.floor(i/2)%2)?'#ffffff':'#ff5f8f');
+      break;
+    case 'shellCandy':
+      bShadow(g, x, y, 3, s);
+      bDome(g, x, y, s*2.0, s, C, CL);
+      blk(g, x - s*0.5, y - s*1.5, s, s, '#ffffff');
+      break;
+    case 'gumHill':
+      bShadow(g, x, y, 6, s);
+      bDome(g, x, y, s*4.2, s, C, CL);
+      blk(g, x - s*2.5, y - s*2.5, s, s, 'rgba(255,255,255,.7)');
+      blk(g, x + s*1.5, y - s*3.5, s, s, 'rgba(255,255,255,.7)');
+      blk(g, x - s*0.5, y - s*1.5, s, s, 'rgba(255,255,255,.7)');
+      break;
+    case 'bigGum':
+      bShadow(g, x, y, 4, s);
+      bDome(g, x, y, s*2.6, s, C, CL);
+      break;
+    case 'cupcakeTower':
+      bShadow(g, x, y, 5, s);
+      for(let r=0;r<3;r++) for(let i=-3;i<3;i++)
+        blk(g, x + i*s, y - (r+1)*s, s, s, (i%2)?'#f2a3c7':'#e07fae');
+      bDome(g, x, y - s*3, s*3.4, s, '#fffbe8', '#ffffff');
+      bDome(g, x, y - s*6, s*2.2, s, '#fff3d0', '#ffffff');
+      blk(g, x - s*0.5, y - s*8, s, s, '#e63558');
+      break;
+  }
+}
+
+/* ============================================================
+   COLLECTIBLES
+   ============================================================ */
+const candies = [], coins = [], parts = [], pops = [];
+const TARGET_CANDY = 300, TARGET_COINS = 95;
+function randSpot(minDist){
+  for(let i=0;i<40;i++){
+    const x = rr(70, WORLD.w-70), y = rr(70, WORLD.h-70);
+    if(minDist && Math.hypot(x-player.x,y-player.y) < minDist) continue;
+    return {x,y};
+  }
+  return {x: rr(70,WORLD.w-70), y: rr(70,WORLD.h-70)};
+}
+function spawnCandy(far){ const p = randSpot(far);
+  candies.push({x:p.x,y:p.y, kind:CANDY_KINDS[ri(0,CANDY_KINDS.length-1)], hue:ri(0,360), ph:rr(0,6.28), s:15}); }
+function spawnCoin(far){ const p = randSpot(far); coins.push({x:p.x,y:p.y, ph:rr(0,6.28), s:15}); }
+for(let i=0;i<TARGET_CANDY;i++) spawnCandy(0);
+for(let i=0;i<TARGET_COINS;i++) spawnCoin(0);
+
+/* ---------- creepers ---------- */
+const creepers = [];
+const CREEPERS_ON = params0.get('creepers') !== '0';
+const TARGET_CREEPERS = CREEPERS_ON ? 16 : 0;
+const CREEP_SPEED = 62;      // slow enough that walking away always works
+const CREEP_AGGRO = 470;     // starts following
+const CREEP_TOUCH = 66;      // starts its fuse
+const CREEP_ESCAPE = 130;    // far enough that the fuse fizzles out
+const CREEP_FUSE = 1.45;     // seconds of flashing before it pops
+const DOG_SCARE = 120;       // the buddy dog shoos them off
+const LOSS_CANDY = 3, LOSS_COINS = 2;
+
+function spawnCreeper(far){
+  const p = randSpot(far || 900);
+  creepers.push({ x:p.x, y:p.y, r:22, face:1, walk:0, fuse:0, ph:rr(0,6.28),
+                  wx:p.x, wy:p.y, wt:rr(0,3), scared:0 });
+}
+for(let i=0;i<TARGET_CREEPERS;i++) spawnCreeper(1100);
+
+function burst(x,y,color,n){
+  for(let i=0;i<n;i++){ const a=rr(0,6.28), sp=rr(60,240);
+    parts.push({x,y,vx:Math.cos(a)*sp, vy:Math.sin(a)*sp - 60, life:rr(.45,.9), t:0, c:color, r:rr(3,7)}); }
+}
+/* A creeper pops: knocks a few treats loose and scatters them on the ground
+   right there, so nothing is gone for good — he just has to pick them back up. */
+function explode(k){
+  const i = creepers.indexOf(k);
+  if(i >= 0) creepers.splice(i, 1);
+
+  for(let n=0;n<34;n++){ const a=rr(0,6.28), sp=rr(90,420);
+    parts.push({x:k.x, y:k.y-10, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-140, life:rr(.5,1.1), t:0,
+      c:['#7ec84a','#b7f07a','#fff1c9','#5aa432'][ri(0,3)], r:rr(4,10)}); }
+
+  const lostCandy = Math.min(S.candy, LOSS_CANDY);
+  const lostCoins = Math.min(S.coins, LOSS_COINS);
+  S.candy -= lostCandy; S.coins -= lostCoins;
+  if(S.candy < S.nextMilestone - 10) S.nextMilestone = Math.floor(S.candy/10)*10 + 10;
+
+  // flung well clear of the magnet, and briefly un-grabbable, so he has to go get them
+  for(let n=0;n<lostCandy;n++){
+    const a = rr(0,6.28), d = rr(230,360);
+    candies.push({ x: clampX(k.x + Math.cos(a)*d), y: clampY(k.y + Math.sin(a)*d),
+      kind: CANDY_KINDS[ri(0,CANDY_KINDS.length-1)], hue: ri(0,360), ph: rr(0,6.28), s: 15,
+      drop: true, noGrab: 1.0 });
+  }
+  for(let n=0;n<lostCoins;n++){
+    const a = rr(0,6.28), d = rr(230,360);
+    coins.push({ x: clampX(k.x + Math.cos(a)*d), y: clampY(k.y + Math.sin(a)*d),
+      ph: rr(0,6.28), s: 15, drop: true, noGrab: 1.0 });
+  }
+
+  if(lostCandy || lostCoins){
+    pops.push({ x:k.x, y:k.y-70, t:0, big:true, c:'#4a8a2c',
+      txt: `-${lostCandy + lostCoins}` });
+  }
+  pops.push({ x:k.x, y:k.y-120, t:0, c:'#4a8a2c', txt:'POP!' });
+
+  S.shake = 1;
+  sfxBoom();
+  markDirty();
+  setTimeout(()=>{ if(CREEPERS_ON) spawnCreeper(1100); }, 6000);
+}
+const clampX = v => Math.max(60, Math.min(WORLD.w-60, v));
+const clampY = v => Math.max(80, Math.min(WORLD.h-60, v));
+
+function confetti(){
+  for(let i=0;i<70;i++){ const a=rr(0,6.28), sp=rr(120,420);
+    parts.push({x:player.x, y:player.y-40, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-160, life:rr(.9,1.6), t:0,
+      c:`hsl(${ri(0,360)},90%,66%)`, r:rr(4,9)}); }
+}
+
+/* ============================================================
+   INPUT
+   ============================================================ */
+const keys = {};
+window.addEventListener('keydown', e=>{ keys[e.key.toLowerCase()] = true; if(e.key.startsWith('Arrow')) e.preventDefault(); });
+window.addEventListener('keyup',   e=>{ keys[e.key.toLowerCase()] = false; });
+
+const stick = { active:false, id:null, ox:0, oy:0, x:0, y:0, dx:0, dy:0 };
+const STICK_R = 70;
+let hintAlpha = 1;
+function stickStart(id,x,y){ stick.active=true; stick.id=id; stick.ox=x; stick.oy=y; stick.x=x; stick.y=y; stick.dx=0; stick.dy=0; }
+function stickMove(x,y){
+  let dx = x-stick.ox, dy = y-stick.oy;
+  const d = Math.hypot(dx,dy);
+  if(d > STICK_R){ stick.ox += (dx/d)*(d-STICK_R); stick.oy += (dy/d)*(d-STICK_R); dx = x-stick.ox; dy = y-stick.oy; }
+  stick.x=x; stick.y=y; stick.dx = dx/STICK_R; stick.dy = dy/STICK_R;
+  if(Math.hypot(stick.dx,stick.dy) > .25) hintAlpha = Math.max(0, hintAlpha - .08);
+}
+function stickEnd(){ stick.active=false; stick.id=null; stick.dx=0; stick.dy=0; }
+cv.addEventListener('touchstart', e=>{ e.preventDefault();
+  if(!stick.active){ const t=e.changedTouches[0]; stickStart(t.identifier, t.clientX, t.clientY); } }, {passive:false});
+cv.addEventListener('touchmove', e=>{ e.preventDefault();
+  for(const t of e.changedTouches) if(t.identifier === stick.id) stickMove(t.clientX, t.clientY); }, {passive:false});
+const endTouch = e=>{ for(const t of e.changedTouches) if(t.identifier === stick.id) stickEnd(); };
+cv.addEventListener('touchend', endTouch); cv.addEventListener('touchcancel', endTouch);
+cv.addEventListener('mousedown', e=>stickStart('m', e.clientX, e.clientY));
+window.addEventListener('mousemove', e=>{ if(stick.id==='m') stickMove(e.clientX,e.clientY); });
+window.addEventListener('mouseup', ()=>{ if(stick.id==='m') stickEnd(); });
+
+/* ============================================================
+   UPDATE
+   ============================================================ */
+function update(dt){
+  S.t += dt;
+
+  let ix = stick.dx, iy = stick.dy;
+  if(keys['arrowleft']||keys['a']) ix -= 1;
+  if(keys['arrowright']||keys['d']) ix += 1;
+  if(keys['arrowup']||keys['w']) iy -= 1;
+  if(keys['arrowdown']||keys['s']) iy += 1;
+  let mag = Math.hypot(ix,iy);
+  if(mag > 1){ ix/=mag; iy/=mag; mag = 1; }
+  if(mag < .12){ ix=0; iy=0; mag=0; }
+
+  player.vx += (ix*player.speed - player.vx) * Math.min(1, dt*14);
+  player.vy += (iy*player.speed - player.vy) * Math.min(1, dt*14);
+  player.x += player.vx*dt; player.y += player.vy*dt;
+  player.x = Math.max(50, Math.min(WORLD.w-50, player.x));
+  player.y = Math.max(90, Math.min(WORLD.h-40, player.y));
+  if(mag > 0){ player.walk += dt*(0.6 + mag*0.9); if(Math.abs(ix)>.1) player.face = ix>0?1:-1; }
+
+  /* ---- Heidi trots along behind ---- */
+  const behind = 78;
+  const tx = player.x - player.face*behind, ty = player.y + 16;
+  const hdx = tx - buddy.x, hdy = ty - buddy.y, hd = Math.hypot(hdx, hdy);
+  let running = false;
+  if(hd > 22){
+    const sp = Math.min(player.speed*1.45, hd*3.4);
+    buddy.vx = (hdx/hd)*sp; buddy.vy = (hdy/hd)*sp;
+    buddy.x += buddy.vx*dt; buddy.y += buddy.vy*dt;
+    buddy.walk += dt*(sp/150);
+    if(Math.abs(buddy.vx) > 12) buddy.face = buddy.vx > 0 ? 1 : -1;
+    running = sp > 90;
+    buddy.idle = 0;
+  } else {
+    buddy.idle += dt;
+    buddy.face = player.face;
+  }
+  buddy.running = running;
+  buddy.barkCd = Math.max(0, buddy.barkCd - dt);
+
+  // camera
+  const cx = player.x - VIEW_W/2, cy = player.y - VIEW_H/2;
+  cam.x += (cx-cam.x)*Math.min(1, dt*6); cam.y += (cy-cam.y)*Math.min(1, dt*6);
+  cam.x = Math.max(0, Math.min(WORLD.w-VIEW_W, cam.x)); cam.y = Math.max(0, Math.min(WORLD.h-VIEW_H, cam.y));
+  if(WORLD.w < VIEW_W) cam.x = (WORLD.w-VIEW_W)/2;
+  if(WORLD.h < VIEW_H) cam.y = (WORLD.h-VIEW_H)/2;
+
+  const MAGNET = 130, GRAB = 46, DOG_GRAB = 40;
+  for(let i=candies.length-1;i>=0;i--){
+    const c = candies[i];
+    if(c.noGrab > 0){ c.noGrab -= dt; continue; }
+    const dx = player.x-c.x, dy = (player.y-40)-c.y, d = Math.hypot(dx,dy);
+    if(d < MAGNET){ const pull = (1 - d/MAGNET) * 620 * dt; c.x += dx/d*pull; c.y += dy/d*pull; }
+    const byDog = Math.hypot(buddy.x-c.x, (buddy.y-24)-c.y) < DOG_GRAB;
+    if(d < GRAB || byDog){
+      candies.splice(i,1); S.candy++; markDirty();
+      burst(c.x,c.y,`hsl(${c.hue},88%,68%)`, 10);
+      pops.push({x:c.x,y:c.y,t:0,txt:'+1',c:`hsl(${c.hue},80%,52%)`});
+      if(byDog && d >= GRAB){
+        const bName = buddyChar()==='heidi' ? 'Heidi!' : 'Wyatt!';
+        pops.push({x:buddy.x, y:buddy.y-60, t:0, txt:bName, c:'#5a4a6a'});
+        if(buddyChar()==='heidi' && buddy.barkCd <= 0){ sfxWoof(); buddy.barkCd = 1.6; } else sfxCandy();
+      } else sfxCandy();
+      if(!c.drop) spawnCandy(700);   // treats knocked loose by a creeper aren't replaced
+      if(S.candy >= S.nextMilestone){ S.nextMilestone += 10; confetti(); sfxYay();
+        pops.push({x:player.x,y:player.y-100,t:0,txt:'YAY!',c:'#e1479f',big:true}); }
+    }
+  }
+  for(let i=coins.length-1;i>=0;i--){
+    const c = coins[i];
+    if(c.noGrab > 0){ c.noGrab -= dt; continue; }
+    const dx = player.x-c.x, dy = (player.y-40)-c.y, d = Math.hypot(dx,dy);
+    if(d < MAGNET){ const pull = (1 - d/MAGNET) * 700 * dt; c.x += dx/d*pull; c.y += dy/d*pull; }
+    const byDog = Math.hypot(buddy.x-c.x, (buddy.y-24)-c.y) < DOG_GRAB;
+    if(d < GRAB || byDog){
+      coins.splice(i,1); S.coins++; markDirty();
+      burst(c.x,c.y,'#ffd84d', 9);
+      pops.push({x:c.x,y:c.y,t:0,txt:'+1',c:'#c98a12'});
+      sfxCoin(); if(!c.drop) spawnCoin(700);
+    }
+  }
+
+  /* ---- notes and presents hidden by Mum or Dad ---- */
+  for(let i=drops.length-1;i>=0;i--){
+    const d = drops[i];
+    if(Math.hypot(player.x - d.x, (player.y - 30) - d.y) < 58){
+      drops.splice(i, 1);
+      openNote(d);
+      break;
+    }
+  }
+
+  /* ---- creepers ---- */
+  S.shake = Math.max(0, S.shake - dt*2.6);
+  for(const k of creepers){
+    const dxp = player.x - k.x, dyp = (player.y - 20) - k.y;
+    const dp = Math.hypot(dxp, dyp) || 1;
+    const dogD = Math.hypot(buddy.x - k.x, buddy.y - k.y);
+
+    if(buddyChar() === 'heidi' && dogD < DOG_SCARE){
+      // Heidi barks them off — fuse fizzles and they scurry away
+      k.scared = 1.4;
+      if(buddy.barkCd <= 0){ sfxWoof(); buddy.barkCd = 1.4; }
+    }
+    k.scared = Math.max(0, k.scared - dt);
+
+    let vx = 0, vy = 0;
+    if(k.scared > 0){
+      k.fuse = 0;
+      const ex = k.x - buddy.x, ey = k.y - buddy.y, ed = Math.hypot(ex, ey) || 1;
+      vx = ex/ed * CREEP_SPEED * 1.9; vy = ey/ed * CREEP_SPEED * 1.9;
+    } else if(dp < CREEP_AGGRO){
+      vx = dxp/dp * CREEP_SPEED; vy = dyp/dp * CREEP_SPEED;
+      if(dp < CREEP_TOUCH){
+        k.fuse += dt;
+        vx *= 0.15; vy *= 0.15;
+        if(k.fuse >= CREEP_FUSE){ explode(k); continue; }
+      } else if(dp > CREEP_ESCAPE){
+        k.fuse = Math.max(0, k.fuse - dt*2.5);
+      }
+    } else {
+      // idle wander
+      k.fuse = Math.max(0, k.fuse - dt*2.5);
+      k.wt -= dt;
+      if(k.wt <= 0){ const w = randSpot(0); k.wx = w.x; k.wy = w.y; k.wt = rr(6, 14); }
+      const wx = k.wx - k.x, wy = k.wy - k.y, wd = Math.hypot(wx, wy) || 1;
+      vx = wx/wd * CREEP_SPEED * 0.35; vy = wy/wd * CREEP_SPEED * 0.35;
+    }
+
+    k.x += vx*dt; k.y += vy*dt;
+    k.x = Math.max(40, Math.min(WORLD.w-40, k.x));
+    k.y = Math.max(60, Math.min(WORLD.h-40, k.y));
+    if(Math.abs(vx) > 4) k.face = vx > 0 ? 1 : -1;
+    k.walk += dt * (Math.hypot(vx, vy) / 60);
+  }
+
+  for(let i=parts.length-1;i>=0;i--){ const p=parts[i]; p.t+=dt;
+    if(p.t>=p.life){ parts.splice(i,1); continue; }
+    p.vy += 520*dt; p.x += p.vx*dt; p.y += p.vy*dt; p.vx *= (1-dt*1.2); }
+  for(let i=pops.length-1;i>=0;i--){ pops[i].t += dt; if(pops[i].t > 1.1) pops.splice(i,1); }
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+/* Terrain is a voxel grid: every block picks a shade from a hash of its
+   grid position, which gives the mottled look without any noise library.
+   Drawn inside the world transform, so these are world coordinates. */
+function regionAt(x, y){
+  for(const r of REGIONS)
+    if(x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h) return r;
+  return null;
+}
+function riverTop(x){ return RIVER_Y + snap(Math.sin(x*0.006) * 22); }
+function riverBot(x){ return RIVER_Y + RIVER_H + snap(Math.sin(x*0.006 + 1.4) * 22); }
+
+function drawGround(){
+  const B = BLOCK;
+  const i0 = Math.floor(cam.x/B) - 1, i1 = Math.ceil((cam.x + VIEW_W)/B) + 1;
+  const j0 = Math.floor(cam.y/B) - 1, j1 = Math.ceil((cam.y + VIEW_H)/B) + 1;
+
+  for(let i=i0;i<=i1;i++){
+    const wx = i*B;
+    const rTop = riverTop(wx), rBot = riverBot(wx);
+    for(let j=j0;j<=j1;j++){
+      const wy = j*B;
+      const h = hash2(i, j);
+      let col;
+      if(wy >= rTop && wy < rBot){
+        // chocolate river, with a slow shimmer rolling across it
+        const flow = Math.sin(wx*0.02 + wy*0.01 + S.t*1.6);
+        col = flow > 0.75 ? '#a86c40' : (h > .62 ? '#8a5730' : (h > .3 ? '#7a4a26' : '#6b3f20'));
+      } else {
+        const reg = regionAt(wx + B/2, wy + B/2);
+        if(!reg){ col = h > .5 ? '#ffeecf' : '#f7e3bf'; }
+        else col = h > .78 ? reg.light : (h > .40 ? reg.ground : reg.accent);
+      }
+      blk(ctx, wx, wy, B, B, col);
+    }
+  }
+
+  // region names, painted flat on the ground
+  ctx.save(); ctx.globalAlpha = .18; ctx.fillStyle = '#3d2447';
+  ctx.font = '900 58px "Trebuchet MS", sans-serif'; ctx.textAlign = 'center';
+  for(const reg of REGIONS){
+    if(reg.x > cam.x + VIEW_W || reg.x + reg.w < cam.x) continue;
+    if(reg.y > cam.y + VIEW_H || reg.y + reg.h < cam.y) continue;
+    ctx.fillText(reg.name, reg.x + reg.w/2, reg.y + 110);
+  }
+  ctx.restore();
+}
+
+function render(){
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.fillStyle = '#ffeecf'; ctx.fillRect(0,0,VW,VH);
+  ctx.save();
+  if(S.shake > 0.01){
+    const m = S.shake * S.shake * 16;
+    ctx.translate(Math.sin(S.t*61)*m, Math.cos(S.t*47)*m);
+  }
+  ctx.scale(ZOOM, ZOOM); ctx.translate(-cam.x, -cam.y);
+
+  drawGround();
+
+  const list = [];
+  const pad = 260;
+  for(const p of props){
+    if(p.x < cam.x-pad || p.x > cam.x+VIEW_W+pad || p.y < cam.y-pad*2 || p.y > cam.y+VIEW_H+pad) continue;
+    list.push({y:p.y, kind:'prop', o:p});
+  }
+  for(const c of candies){
+    if(c.x < cam.x-60 || c.x > cam.x+VIEW_W+60 || c.y < cam.y-60 || c.y > cam.y+VIEW_H+60) continue;
+    list.push({y:c.y, kind:'candy', o:c});
+  }
+  for(const c of coins){
+    if(c.x < cam.x-60 || c.x > cam.x+VIEW_W+60 || c.y < cam.y-60 || c.y > cam.y+VIEW_H+60) continue;
+    list.push({y:c.y, kind:'coin', o:c});
+  }
+  for(const d of drops){
+    if(d.x < cam.x-120 || d.x > cam.x+VIEW_W+120 || d.y < cam.y-140 || d.y > cam.y+VIEW_H+120) continue;
+    list.push({y:d.y, kind:'drop', o:d});
+  }
+  for(const k of creepers){
+    if(k.x < cam.x-120 || k.x > cam.x+VIEW_W+120 || k.y < cam.y-120 || k.y > cam.y+VIEW_H+120) continue;
+    list.push({y:k.y, kind:'creeper', o:k});
+  }
+  list.push({y:player.y, kind:'player'});
+  list.push({y:buddy.y, kind:'buddy'});
+  list.sort((a,b)=>a.y-b.y);
+
+  for(const e of list){
+    if(e.kind==='prop') drawProp(ctx, e.o, S.t);
+    else if(e.kind==='candy'){
+      const b = Math.sin(S.t*2.4 + e.o.ph)*4;
+      shadow(ctx, e.o.x, e.o.y+14, 13, 5);
+      drawCandy(ctx, e.o.kind, e.o.x, e.o.y + b, e.o.s, e.o.hue);
+    }
+    else if(e.kind==='coin'){
+      const b = Math.sin(S.t*2.8 + e.o.ph)*5;
+      shadow(ctx, e.o.x, e.o.y+16, 12, 5);
+      drawCoin(ctx, e.o.x, e.o.y + b, e.o.s, S.t + e.o.ph);
+    }
+    else if(e.kind==='creeper') drawCreeper(ctx, e.o, S.t);
+    else if(e.kind==='drop') drawDrop(ctx, e.o, S.t);
+    else if(e.kind==='buddy'){
+      const asDog = buddyChar() === 'heidi';
+      shadow(ctx, buddy.x, buddy.y, asDog ? buddy.r*1.15 : buddy.r*0.62, buddy.r*0.30);
+      ctx.save(); ctx.translate(buddy.x, buddy.y); ctx.scale(buddy.face, 1);
+      if(asDog) drawHeidi(ctx, 0, 0, buddy.r, S.t, buddy.walk, buddy.running);
+      else drawPerson(ctx, 0, 0, buddy.r*1.05, S.shirt, 'cap', S.t, buddy.walk, 'wyatt');
+      ctx.restore();
+    }
+    else {
+      const asDog = playingDog();
+      shadow(ctx, player.x, player.y, asDog ? player.r*1.15 : player.r*0.62, player.r*0.24);
+      ctx.save(); ctx.translate(player.x, player.y); ctx.scale(player.face, 1);
+      if(asDog) drawHeidi(ctx, 0, 0, player.r*0.95, S.t, player.walk, Math.hypot(player.vx,player.vy) > 90);
+      else drawPerson(ctx, 0, 0, player.r, S.shirt, S.hat, S.t, player.walk, S.char);
+      ctx.restore();
+    }
+  }
+
+  for(const p of parts){
+    const a = 1 - p.t/p.life;
+    ctx.globalAlpha = a; ctx.fillStyle = p.c;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r*a + 1, 0, 7); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  for(const p of pops){
+    const a = 1 - p.t/1.1;
+    ctx.globalAlpha = Math.max(0,a);
+    ctx.font = p.big ? '900 54px "Trebuchet MS", sans-serif' : '900 28px "Trebuchet MS", sans-serif';
+    ctx.textAlign='center'; ctx.lineWidth = p.big?8:5; ctx.strokeStyle='#fff';
+    ctx.strokeText(p.txt, p.x, p.y - p.t*60); ctx.fillStyle = p.c;
+    ctx.fillText(p.txt, p.x, p.y - p.t*60);
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+
+  drawHUD();
+  drawStick();
+}
+
+function drawHUD(){
+  const top = 14;
+  pill(16, top, 168, 54);
+  drawCandy(ctx, 'wrapped', 46, top+27, 13, 330);
+  hudText(String(S.candy), 72, top+37, '#b3357d');
+  pill(16, top+64, 168, 54);
+  drawCoin(ctx, 46, top+64+27, 15, 0);
+  hudText(String(S.coins), 72, top+64+37, '#b8791a');
+}
+function pill(x,y,w,h){
+  ctx.fillStyle='rgba(255,255,255,.88)'; rounded(ctx,x,y,w,h,h/2); ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.95)'; ctx.lineWidth=3; ctx.stroke();
+}
+function hudText(t,x,y,c){
+  ctx.font='900 30px "Trebuchet MS", sans-serif'; ctx.textAlign='left'; ctx.fillStyle=c; ctx.fillText(t,x,y);
+}
+function drawStick(){
+  if(stick.active){
+    ctx.globalAlpha=.35; circle(ctx, stick.ox, stick.oy, STICK_R, '#ffffff');
+    ctx.globalAlpha=.22; ctx.strokeStyle='#7a3f66'; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.arc(stick.ox, stick.oy, STICK_R, 0, 7); ctx.stroke();
+    ctx.globalAlpha=.85;
+    const kx = stick.ox + stick.dx*STICK_R, ky = stick.oy + stick.dy*STICK_R;
+    circle(ctx, kx, ky, 38, '#ff9ad5'); circle(ctx, kx-8, ky-8, 12, 'rgba(255,255,255,.65)');
+    ctx.globalAlpha=1;
+  } else if(hintAlpha > 0.01){
+    const hx = 110, hy = VH - 120;
+    ctx.globalAlpha = hintAlpha*.4; circle(ctx, hx, hy, STICK_R, '#ffffff');
+    ctx.globalAlpha = hintAlpha*.85; circle(ctx, hx, hy, 38, '#ff9ad5');
+    ctx.font='900 22px "Trebuchet MS", sans-serif'; ctx.textAlign='center'; ctx.fillStyle='#fff';
+    ctx.strokeStyle='rgba(120,50,100,.5)'; ctx.lineWidth=5;
+    ctx.strokeText('Drag to move', hx, hy + 110); ctx.fillText('Drag to move', hx, hy + 110);
+    ctx.globalAlpha = 1;
+  }
+}
+
+let last = 0;
+function frame(now){
+  const dt = Math.min(0.05, (now - last)/1000 || 0); last = now;
+  if(S.running) update(dt); else S.t += dt;
+  render();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ============================================================
+   DEMO SAVE  —  this public build has no server, so progress
+   lives in the visitor's own browser. Nothing leaves their device.
+   ============================================================ */
+const SAVE_VERSION = 2;
+const STORE_KEY = 'candy-adventure-demo-v2';
+let saveDirty = false;
+const saveDot = document.getElementById('saveDot');
+
+function store(){
+  try{ return window.localStorage; }catch(e){ return null; }   // private mode, iframes, etc.
+}
+function markDirty(){ saveDirty = true; }
+function saveBody(){
+  return {
+    v:SAVE_VERSION, candy:S.candy, coins:S.coins,
+    shirt:S.shirt, hat:S.hat, char:S.char,
+    ownedShirts:[...S.owned.shirts], ownedHats:[...S.owned.hats], ownedChars:[...S.owned.chars],
+    found:[...foundDrops],
+    x:Math.round(player.x), y:Math.round(player.y)
+  };
+}
+function freshState(){
+  S.candy = 0; S.coins = 0;
+  S.shirt = 'red'; S.hat = 'cap'; S.char = 'wyatt';
+  S.owned.shirts = new Set(['red']);
+  S.owned.hats   = new Set(['cap','none']);
+  S.owned.chars  = new Set(['wyatt']);
+  S.nextMilestone = 10;
+  foundDrops.clear();
+}
+function loadSave(){
+  const st = store();
+  if(!st) return false;
+  let d;
+  try{ d = JSON.parse(st.getItem(STORE_KEY) || 'null'); }catch(e){ return false; }
+  if(!d || d.v !== SAVE_VERSION || typeof d.candy !== 'number') return false;
+  S.candy = Math.max(0, d.candy|0);
+  S.coins = Math.max(0, d.coins|0);
+  S.shirt = SHIRTS[d.shirt] ? d.shirt : 'red';
+  S.hat   = HATS[d.hat]     ? d.hat   : 'cap';
+  S.char  = CHARACTERS[d.char] ? d.char : 'wyatt';
+  S.owned.shirts = new Set(['red',        ...(d.ownedShirts||[]).filter(k=>SHIRTS[k])]);
+  S.owned.hats   = new Set(['cap','none', ...(d.ownedHats||[]).filter(k=>HATS[k])]);
+  S.owned.chars  = new Set(['wyatt',      ...(d.ownedChars||[]).filter(k=>CHARACTERS[k])]);
+  if(!S.owned.chars.has(S.char)) S.char = 'wyatt';
+  S.nextMilestone = Math.floor(S.candy/10)*10 + 10;
+  for(const id of (d.found||[])) foundDrops.add(id);
+  if(typeof d.x === 'number' && typeof d.y === 'number' && (d.x || d.y)){
+    player.x = Math.max(50, Math.min(WORLD.w-50, d.x));
+    player.y = Math.max(90, Math.min(WORLD.h-40, d.y));
+    buddy.x = player.x - 78; buddy.y = player.y + 16;
+  }
+  cam.x = Math.max(0, Math.min(WORLD.w-VIEW_W, player.x - VIEW_W/2));
+  cam.y = Math.max(0, Math.min(WORLD.h-VIEW_H, player.y - VIEW_H/2));
+  return true;
+}
+function pushSave(){
+  const st = store();
+  saveDirty = false;
+  if(!st) return;
+  try{
+    st.setItem(STORE_KEY, JSON.stringify(saveBody()));
+    saveDot.classList.add('show'); setTimeout(()=>saveDot.classList.remove('show'), 1200);
+  }catch(e){ /* storage full or blocked — just keep playing */ }
+}
+setInterval(()=>{ if(saveDirty) pushSave(); }, 5000);
+window.addEventListener('pagehide', ()=>{ if(saveDirty) pushSave(); });
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden && saveDirty) pushSave(); });
+
+/* ============================================================
+   HIDDEN NOTES  —  in the family's private build, Mum and Dad hide
+   these anywhere in the world for the boys to find. This public demo
+   ships a few fixed ones so you can see how it works.
+   ============================================================ */
+const drops = [];                 // what's currently findable in the world
+const foundDrops = new Set();     // ids already opened
+const DEMO_DROPS = [
+  { id:1, kind:'note', from:'mom',  coins:60,  x:1020, y:820,
+    message:'You found a hidden note!\n\nIn the real version, Mom and Dad log in and hide these anywhere in the world.' },
+  { id:2, kind:'gift', from:'dad',  coins:150, x:2500, y:700,
+    message:'A present, hidden way out in the Ice Cream Peaks.\n\nPresents can carry bonus coins.' },
+  { id:3, kind:'note', from:'mom',  coins:90,  x:900,  y:2100,
+    message:'Notes can be for one kid or both, and they only show up for whoever they were left for.' },
+];
+function loadDrops(){
+  drops.length = 0;
+  for(const d of DEMO_DROPS) if(!foundDrops.has(d.id)) drops.push(d);
+}
+
+const noteOverlay = document.getElementById('noteOverlay');
+function openNote(d){
+  S.running = false; stickEnd();
+  const from = d.from.charAt(0).toUpperCase() + d.from.slice(1);
+  document.getElementById('noteTitle').textContent =
+    d.kind === 'gift' ? `A present from ${from}!` : `A note from ${from}!`;
+  document.getElementById('noteMsg').textContent = d.message || '💛';
+  const bonus = document.getElementById('noteBonus');
+  if(d.coins > 0){ bonus.textContent = `+${d.coins} coins!`; bonus.classList.remove('hidden'); }
+  else bonus.classList.add('hidden');
+  noteOverlay.classList.remove('hidden');
+  sfxUnlock(); confetti();
+
+  foundDrops.add(d.id);
+  if(d.coins > 0) S.coins += d.coins;
+  markDirty(); pushSave();
+}
+document.getElementById('noteOk').addEventListener('click', ()=>{
+  noteOverlay.classList.add('hidden'); S.running = true; last = performance.now();
+});
+
+function regionName(x, y){
+  if(y >= RIVER_Y && y < RIVER_Y + RIVER_H) return 'the Chocolate River';
+  for(const r of REGIONS)
+    if(x >= r.x && x < r.x+r.w && y >= r.y && y < r.y+r.h) return r.name;
+  return 'the candy world';
+}
+
+function enterGame(){
+  overlay.classList.remove('hidden');
+  freshState();
+  const returning = loadSave();
+  loadDrops();
+  const intro = document.getElementById('introText');
+  if(returning && (S.candy > 0 || S.coins > 0)){
+    intro.innerHTML = `Welcome back!<br>You have <b>${S.candy}</b> candies and <b>${S.coins}</b> coins.`;
+    document.getElementById('playBtn').textContent = 'KEEP PLAYING';
+  } else {
+    intro.innerHTML = `Explore the candy world with Heidi.<br>` +
+      `Watch out for creepers — they pop and knock your treats loose!`;
+    document.getElementById('playBtn').textContent = 'PLAY';
+  }
+}
+
+/* ---- demo conveniences on the title screen ---- */
+document.getElementById('unlockAll').addEventListener('click', ()=>{
+  audioOn();
+  for(const k of Object.keys(CHARACTERS)) S.owned.chars.add(k);
+  for(const k of Object.keys(HATS))       S.owned.hats.add(k);
+  for(const k of Object.keys(SHIRTS))     S.owned.shirts.add(k);
+  S.coins += 500;
+  sfxUnlock(); markDirty(); pushSave();
+  document.getElementById('introText').innerHTML =
+    `Everything unlocked, plus 500 coins.<br>Tap <b>🛒 Shop</b> once you're in to try the whole cast.`;
+});
+document.getElementById('resetDemo').addEventListener('click', ()=>{
+  const st = store(); if(st){ try{ st.removeItem(STORE_KEY); }catch(e){} }
+  freshState(); loadDrops();
+  player.x = 900; player.y = 1000; buddy.x = 820; buddy.y = 1030;
+  sfxNope();
+  document.getElementById('introText').innerHTML = 'Starting over from scratch.';
+  document.getElementById('playBtn').textContent = 'PLAY';
+});
+
+/* ============================================================
+   UI
+   ============================================================ */
+const overlay = document.getElementById('overlay');
+const shopOverlay = document.getElementById('shopOverlay');
+const shopGrid = document.getElementById('shopGrid');
+const walletNum = document.getElementById('walletNum');
+let shopTab = 'heroes';
+
+function previewCanvas(shirtKey, hatKey, charKey){
+  const c = document.createElement('canvas'); c.width = 176; c.height = 176;
+  const g = c.getContext('2d'); g.scale(2,2);
+  const ch = CHARACTERS[charKey] || CHARACTERS.wyatt;
+  if(ch.kind === 'dog'){ drawHeidi(g, 40, 76, 19, 1.0, 0.3, false); return c; }
+  drawPerson(g, 44, 86, 17.5, shirtKey, hatKey, 1.2, 0, charKey);   // no height normalising — tall characters should look tall
+  return c;
+}
+{ const wc = document.getElementById('walletCoin'); drawCoin(wc.getContext('2d'), 34, 34, 30, 0); }
+
+// hero art on the title screen
+(function heroLoop(){
+  const hc = document.getElementById('heroCanvas'); const g = hc.getContext('2d');
+  function tick(){
+    g.setTransform(2,0,0,2,0,0); g.clearRect(0,0,220,150);
+    const ch = CHARACTERS[S.char] || CHARACTERS.wyatt;
+    if(ch.kind === 'dog'){
+      drawHeidi(g, 128, 138, 26, S.t, 0.3 + Math.sin(S.t*1.4)*0.16, false);
+      g.save(); g.translate(52, 0);
+      drawPerson(g, 0, 138, 26, S.shirt, 'cap', S.t, 0.3 + Math.sin(S.t*1.2)*0.14, 'wyatt');
+      g.restore();
+    } else {
+      drawPerson(g, 132, 138, 23, S.shirt, S.hat, S.t, 0.35 + Math.sin(S.t*1.2)*0.16, S.char);
+      drawHeidi(g, 66, 138, 22, S.t, 0.25 + Math.sin(S.t*1.4)*0.16, false);
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+document.getElementById('playBtn').addEventListener('click', ()=>{
+  audioOn(); overlay.classList.add('hidden'); S.running = true; last = performance.now();
+  tone(523,.2,'triangle',.12); tone(784,.25,'triangle',.12,.1);
+});
+document.getElementById('shopBtn').addEventListener('click', ()=>{ audioOn(); openShop(); });
+document.getElementById('closeShop').addEventListener('click', ()=>{
+  shopOverlay.classList.add('hidden'); S.running = true; last = performance.now(); stickEnd(); pushSave();
+});
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click', ()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); shopTab = b.dataset.tab; buildShop();
+}));
+function openShop(){ S.running = false; stickEnd(); shopOverlay.classList.remove('hidden'); buildShop(); }
+
+function buildShop(){
+  walletNum.textContent = S.coins;
+  shopGrid.innerHTML = '';
+  const SRC = shopTab === 'hats' ? HATS : shopTab === 'shirts' ? SHIRTS : CHARACTERS;
+  const kind = shopTab === 'hats' ? 'hat' : shopTab === 'shirts' ? 'shirt' : 'char';
+  const entries = Object.entries(SRC).map(([k,v])=>({k, name:v.name, cost:v.cost, kind}));
+
+  // dressing up is for people — show it on Wyatt while you're playing as Heidi
+  const dressOn = playingDog() ? 'wyatt' : S.char;
+
+  for(const it of entries){
+    const ownedSet = it.kind==='hat' ? S.owned.hats : it.kind==='shirt' ? S.owned.shirts : S.owned.chars;
+    const owned = ownedSet.has(it.k);
+    const equipped = it.kind==='hat' ? S.hat===it.k : it.kind==='shirt' ? S.shirt===it.k : S.char===it.k;
+
+    const el = document.createElement('div');
+    el.className = 'item' + (owned?' owned':'') + (equipped?' equipped':'') + (!owned && S.coins < it.cost ? ' locked':'');
+    el.appendChild(previewCanvas(
+      it.kind==='shirt' ? it.k : S.shirt,
+      it.kind==='hat'   ? it.k : (it.kind==='char' ? (CHARACTERS[it.k].defHat || S.hat) : S.hat),
+      it.kind==='char'  ? it.k : dressOn));
+    const nm = document.createElement('div'); nm.className='name'; nm.textContent = it.name; el.appendChild(nm);
+    const cost = document.createElement('div'); cost.className='cost';
+    if(owned){
+      cost.textContent = equipped ? (it.kind==='char' ? 'Playing' : 'Wearing')
+                                  : (it.kind==='char' ? 'Tap to play' : 'Tap to wear');
+      cost.style.color='#4a8a5c'; cost.style.fontSize='13px';
+    } else { const dot = document.createElement('span'); dot.className='c'; cost.appendChild(dot);
+             cost.appendChild(document.createTextNode(String(it.cost))); }
+    el.appendChild(cost);
+
+    const equip = ()=>{
+      if(it.kind==='hat') S.hat = it.k;
+      else if(it.kind==='shirt') S.shirt = it.k;
+      else {
+        S.char = it.k;
+        const d = CHARACTERS[it.k].defHat;
+        if(d && (S.hat === 'cap' || S.hat === 'none')) S.hat = d;   // keep paid hats on
+      }
+    };
+
+    el.addEventListener('click', ()=>{
+      if(owned){
+        equip(); sfxBuy(); markDirty(); buildShop();
+      } else if(S.coins >= it.cost){
+        S.coins -= it.cost; ownedSet.add(it.k); equip();
+        if(it.kind==='char'){ sfxUnlock(); confetti(); } else sfxBuy();
+        markDirty(); pushSave(); buildShop();
+      } else {
+        sfxNope(); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+      }
+    });
+    shopGrid.appendChild(el);
+  }
+}
+
+/* ---------- boot ---------- */
+enterGame();
+</script>
+</body>
+</html>

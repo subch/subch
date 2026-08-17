@@ -1,0 +1,49 @@
+<!-- Optional: paste this block into your landing page to link the game.
+     It's self-contained (scoped class names, inline styles) so it won't
+     collide with whatever CSS your site already has.
+     Adjust the two hrefs if you put the game somewhere other than /candy/. -->
+
+<a class="candy-card" href="/candy/">
+  <img class="candy-card__icon" src="/candy/icon-192.png" alt="" width="88" height="88">
+  <span class="candy-card__body">
+    <span class="candy-card__title">Wyatt &amp; Heidi's Candy Adventure</span>
+    <span class="candy-card__desc">
+      A browser game I built for my four-year-old. Explore a blocky candy
+      world with the dog, collect treats, dodge the creepers. No fail state,
+      no timers, nothing to lose.
+    </span>
+    <span class="candy-card__cta">Play in your browser →</span>
+  </span>
+</a>
+
+<style>
+  .candy-card {
+    display: flex; align-items: center; gap: 18px;
+    max-width: 560px; padding: 18px 22px;
+    background: linear-gradient(135deg, #fff6fb, #ffe6f4);
+    border: 3px solid #ffd0e8; border-radius: 22px;
+    text-decoration: none; color: inherit;
+    font-family: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+    box-shadow: 0 6px 22px rgba(120, 40, 90, .12);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .candy-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(120, 40, 90, .18);
+  }
+  .candy-card__icon { border-radius: 16px; flex: none; }
+  .candy-card__body { display: flex; flex-direction: column; gap: 5px; }
+  .candy-card__title { font-size: 21px; font-weight: 800; color: #d13c8f; line-height: 1.15; }
+  .candy-card__desc  { font-size: 14.5px; color: #7a5a70; line-height: 1.45; }
+  .candy-card__cta   { font-size: 14px; font-weight: 800; color: #25a355; margin-top: 3px; }
+
+  @media (max-width: 480px) {
+    .candy-card { flex-direction: column; text-align: center; }
+  }
+  @media (prefers-color-scheme: dark) {
+    .candy-card { background: linear-gradient(135deg, #3a2340, #4a2a4e); border-color: #6b3f68; }
+    .candy-card__title { color: #ff9ad5; }
+    .candy-card__desc  { color: #d9c2d4; }
+    .candy-card__cta   { color: #7be08a; }
+  }
+</style>

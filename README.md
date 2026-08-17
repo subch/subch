@@ -35,6 +35,12 @@ Each entry generates a card on `/rc/` and a full build-sheet page at `/rc/<slug>
 - `status` — `runner`, `project`, `shelf`, `parts`, or `retired`. Labels live in `statusLabels`.
 - `photos` — array of `{ src, caption }`. Put images in `public/img/rc/<slug>/`; the
   first entry is the card thumbnail.
+- `manufacturerUrl` — link to the manufacturer/product page for the identified model. This
+  is the source of truth for stock specs — when it's wrong or missing, fix it here first,
+  then correct any spec fields that were guessed from it.
+- `upgrades` — array of `{ component, stock, upgraded, notes }`, for parts swapped from
+  stock (e.g. `{ "component": "Power system", "stock": "Brushed motor/ESC", "upgraded": "All-in-one brushless system", "notes": "" }`).
+  Separate from `mods`, which stays a freeform list (paint, wraps, cosmetic changes).
 
 **Every spec field is optional.** Empty strings, `null`, and empty arrays render as a
 muted *TBD* on the build sheet, and the card shows a "% spec'd" meter — so an entry with

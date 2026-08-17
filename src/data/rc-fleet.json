@@ -17,23 +17,27 @@
       "status": "runner",
       "acquired": "",
       "summary": "ARRMA Typhon 4WD buggy in a purple/pink/white livery, pink-anodized shocks.",
+      "manufacturerUrl": "https://www.arrma-rc.com/en/product/1-8-typhon-3s-4x4-rtr-brushless-buggy-black/ARA102696.html",
       "photos": [
         { "src": "/img/rc/arrma-typhon/01.jpg", "caption": "" },
         { "src": "/img/rc/arrma-typhon/02.jpg", "caption": "" },
         { "src": "/img/rc/arrma-typhon/03.jpg", "caption": "" }
       ],
-      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "chassis": { "make": "ARRMA", "model": "Typhon 4X4 3S BLX", "material": "Composite tub chassis", "drivetrain": "4WD", "notes": "Assuming the standard 3S BLX trim — ARRMA also sells 6S and TLR Tuned Typhon variants. Confirm against the manufacturer page and correct chassis.model if it's a different trim." },
       "power": {
-        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
-        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
-        "batteries": [],
+        "motor": { "make": "Spektrum Firma", "model": "3660", "type": "Brushless sensorless", "kv": 3200, "turns": null, "notes": "" },
+        "esc": { "make": "ARRMA", "model": "BLX100", "cells": "3S", "currentRating": "100A", "sensored": false, "notes": "Waterproof, IC5 connector." },
+        "batteries": [
+          { "chemistry": "LiPo", "cells": "3S", "capacityMah": 5000, "cRating": "35C min", "connector": "IC5", "notes": "Manufacturer-recommended minimum spec." }
+        ],
         "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
       },
       "electronics": {
-        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
-        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+        "servo": { "make": "Spektrum", "model": "S651", "torqueKgCm": 7.27, "type": "Metal-geared digital", "notes": "" },
+        "transmitter": "Spektrum SLT3 2.4GHz 3-channel", "receiver": "Spektrum SLR300", "telemetry": "", "extras": []
       },
-      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "37T 1.35 mod diffs per manufacturer spec." },
+      "upgrades": [],
       "mods": [],
       "todo": [],
       "notes": ""
@@ -47,6 +51,7 @@
       "status": "runner",
       "acquired": "",
       "summary": "Bronco-bodied trophy/short-course truck, white and red with a shark graphic, BELL Helmets and REPX decals.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/bronco-trophy-truck/01.jpg", "caption": "" },
         { "src": "/img/rc/bronco-trophy-truck/02.jpg", "caption": "" },
@@ -65,9 +70,10 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
-      "notes": ""
+      "notes": "Couldn't pin down the underlying chassis/manufacturer from decals alone — most of what's legible (Bell, Yoshimura, ProGrip, Fox) are sponsor stickers, not a chassis nameplate."
     },
     {
       "slug": "rlaarlo-rally-xts",
@@ -78,6 +84,7 @@
       "status": "project",
       "acquired": "",
       "summary": "Ford Fiesta-shaped rally car. Came with a black/green 'Milk Wings' box livery, since repainted matte black with a tiger-stripe wrap and yellow wheels.",
+      "manufacturerUrl": "https://rlaarlo.com/products/carbon-fiber-brushless-rc-rally-car-xts-f10",
       "photos": [
         { "src": "/img/rc/rlaarlo-rally-xts/01.jpg", "caption": "" },
         { "src": "/img/rc/rlaarlo-rally-xts/02.jpg", "caption": "" },
@@ -85,18 +92,21 @@
         { "src": "/img/rc/rlaarlo-rally-xts/04.jpg", "caption": "As it arrived, boxed" },
         { "src": "/img/rc/rlaarlo-rally-xts/05.jpg", "caption": "Repainted matte black, before the tiger-stripe wrap" }
       ],
-      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "4WD", "notes": "" },
+      "chassis": { "make": "RLAARLO", "model": "XTS-F10", "material": "2.5mm aluminum alloy (7075)", "drivetrain": "4WD", "notes": "Confirmed against the box: '50-80' speed rating and '7075 Alloy' match the XTS-F10 product page exactly." },
       "power": {
-        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
-        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
-        "batteries": [],
+        "motor": { "make": "", "model": "3650", "type": "Brushless", "kv": 3300, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "60A Independent Brushless ESC", "cells": "2-3S", "currentRating": "60A", "sensored": null, "notes": "Cooling fan." },
+        "batteries": [
+          { "chemistry": "LiPo/Li-ion", "cells": "3S", "capacityMah": 4400, "cRating": "", "connector": "", "notes": "108.5×44×34.5mm pack size." }
+        ],
         "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
       },
       "electronics": {
-        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
-        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+        "servo": { "make": "", "model": "", "torqueKgCm": 11, "type": "Waterproof metal gear", "notes": "" },
+        "transmitter": "2.4GHz 5-channel, gyro-assisted, 350m range", "receiver": "", "telemetry": "", "extras": []
       },
-      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "Repainted matte black with tiger-stripe wrap; yellow wheels." },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "Repainted matte black with tiger-stripe wrap; yellow wheels. Rated top speed 50-80 km/h stock." },
+      "upgrades": [],
       "mods": ["Custom matte black tiger-stripe body wrap", "Yellow wheels"],
       "todo": [],
       "notes": ""
@@ -110,6 +120,7 @@
       "status": "shelf",
       "acquired": "",
       "summary": "Redcat rally car, Lancia Delta S4-style body in Martini livery, #4 'Sestrieres.'",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/redcat-lancia-rally/01.jpg", "caption": "" },
         { "src": "/img/rc/redcat-lancia-rally/02.jpg", "caption": "" },
@@ -127,9 +138,10 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
-      "notes": ""
+      "notes": "'REDCAT' is printed on the body, but I couldn't find a matching official Redcat rally-car product — it may be part of the livery graphics rather than the actual brand of the RC itself. Left unconfirmed rather than guessing."
     },
     {
       "slug": "rlaarlo-status",
@@ -140,11 +152,12 @@
       "status": "shelf",
       "acquired": "",
       "summary": "RLAARLO-branded prototype/GT-style body, green and orange 'Status' livery, wall-mounted.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/rlaarlo-status/01.jpg", "caption": "" },
         { "src": "/img/rc/rlaarlo-status/02.jpg", "caption": "On the pegboard, with the rest of the display shelf" }
       ],
-      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "chassis": { "make": "RLAARLO", "model": "", "material": "", "drivetrain": "", "notes": "" },
       "power": {
         "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
         "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
@@ -156,9 +169,10 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
-      "notes": ""
+      "notes": "'Status' looks like a livery/body name rather than an RLAARLO product line — couldn't find a matching model on their site."
     },
     {
       "slug": "losi-mini-b",
@@ -169,22 +183,28 @@
       "status": "shelf",
       "acquired": "",
       "summary": "Losi Mini-B, yellow body with red/blue Mini-B graphics.",
+      "manufacturerUrl": "https://www.losi.com/product/1-16-mini-b-2wd-buggy-brushed-rtr-yellow-white/LOS01016T3.html",
       "photos": [
         { "src": "/img/rc/losi-mini-b/01.jpg", "caption": "" },
         { "src": "/img/rc/losi-mini-b/02.jpg", "caption": "On the pegboard, with the rest of the display shelf" }
       ],
-      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "2WD", "notes": "" },
+      "chassis": { "make": "Losi", "model": "Mini-B (LOS01016T3)", "material": "1.5mm 6061-T6 aluminum plate", "drivetrain": "2WD", "notes": "Bevel-gear differential. 10.7\" L x 7\" W x 4\" H, 7.5\" wheelbase." },
       "power": {
-        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
-        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
-        "batteries": [],
-        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+        "motor": { "make": "Dynamite", "model": "280-size", "type": "Brushed", "kv": null, "turns": 47, "notes": "Stock motor — see Upgrades, since replaced." },
+        "esc": { "make": "", "model": "HRZ 2-in-1 ESC/RX", "cells": "2S", "currentRating": "", "sensored": false, "notes": "Stock combo ESC/receiver — see Upgrades." },
+        "batteries": [
+          { "chemistry": "LiPo", "cells": "2S", "capacityMah": 650, "cRating": "20C", "connector": "EC2", "notes": "Dynamite Reaction 2.0 7.4V, included stock." }
+        ],
+        "gearing": { "pinion": 18, "spur": 60, "internalRatio": "0.5 mod", "finalDriveRatio": "", "rollout": "" }
       },
       "electronics": {
-        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
-        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+        "servo": { "make": "Spektrum", "model": "SX107", "torqueKgCm": null, "type": "Metal gear", "notes": "" },
+        "transmitter": "Spektrum 2.4GHz", "receiver": "Built into HRZ 2-in-1 ESC unit", "telemetry": "", "extras": []
       },
-      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "running": { "tires": "Tapered Pin front / BK Bar rear", "wheels": "Dish wheels", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [
+        { "component": "Power system", "stock": "Dynamite 280-size brushed motor (47T) + HRZ 2-in-1 brushed ESC/RX", "upgraded": "All-in-one brushless system", "notes": "Exact brushless combo brand/model TBD." }
+      ],
       "mods": [],
       "todo": [],
       "notes": ""
@@ -198,22 +218,24 @@
       "status": "runner",
       "acquired": "",
       "summary": "Scale rock crawler with a vintage International Scout II-style body, blue with a white stripe and a roof rack.",
+      "manufacturerUrl": "https://www.redcatracing.com/products/redcat-gen8-v2-scout-ii-1-10-electric-rc-scale-crawler",
       "photos": [
         { "src": "/img/rc/blue-scout-crawler/01.jpg", "caption": "" },
         { "src": "/img/rc/blue-scout-crawler/02.jpg", "caption": "" }
       ],
-      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "chassis": { "make": "Redcat", "model": "Gen8 V2 — International Scout II", "material": "C-channel steel frame rails", "drivetrain": "4WD", "notes": "Body/decal text ('Scout', 'All Wheel') matches this product — confirm exact trim/color against the manufacturer page." },
       "power": {
-        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "Front-mounted per manufacturer page; kV/turns not listed there." },
         "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
         "batteries": [],
-        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+        "gearing": { "pinion": null, "spur": 32, "internalRatio": "Mod 1", "finalDriveRatio": "", "rollout": "" }
       },
       "electronics": {
-        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "servo": { "make": "", "model": "", "torqueKgCm": 25, "type": "Metal gear", "notes": "" },
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
-      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "running": { "tires": "", "wheels": "", "shocks": "Threaded aluminum shocks", "springs": "", "body": "", "notes": "Portal axles, 54.5mm ground clearance." },
+      "upgrades": [],
       "mods": [],
       "todo": [],
       "notes": ""
@@ -227,6 +249,7 @@
       "status": "shelf",
       "acquired": "",
       "summary": "On-road touring car with a Corvette-style body in copper/orange, Texas outline decal, wall-mounted.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/orange-corvette-touring/01.jpg", "caption": "" },
         { "src": "/img/rc/orange-corvette-touring/02.jpg", "caption": "" }
@@ -243,9 +266,10 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
-      "notes": ""
+      "notes": "No brand/model text visible on the body — too generic a shape to identify a specific manufacturer page with confidence."
     },
     {
       "slug": "pink-mini-buggy",
@@ -256,6 +280,7 @@
       "status": "project",
       "acquired": "",
       "summary": "Small pink buggy with a blue chassis and an HRC Honda Racing-badged ESC.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/pink-mini-buggy/01.jpg", "caption": "" }
       ],
@@ -271,9 +296,10 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
-      "notes": ""
+      "notes": "'HRC Honda Racing' is on the ESC/receiver box, not the chassis brand — couldn't identify the actual RC manufacturer."
     },
     {
       "slug": "teal-pickup-monster-truck",
@@ -284,6 +310,7 @@
       "status": "shelf",
       "acquired": "",
       "summary": "Monster truck with a vintage two-tone teal pickup body.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/teal-pickup-monster-truck/01.jpg", "caption": "" }
       ],
@@ -299,6 +326,7 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
       "notes": ""
@@ -312,6 +340,7 @@
       "status": "shelf",
       "acquired": "",
       "summary": "Small dark navy monster truck/buggy with chunky tires.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/navy-monster-truck/01.jpg", "caption": "" }
       ],
@@ -327,6 +356,7 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
       "notes": ""
@@ -336,26 +366,30 @@
       "name": "Redcat Kaiju",
       "kind": "car",
       "class": "Monster Truck",
-      "scale": "",
+      "scale": "1/8",
       "status": "runner",
       "acquired": "",
       "summary": "Redcat Kaiju monster truck, blue body with white 'KAIJU' lettering and a red star decal, black wing.",
+      "manufacturerUrl": "https://www.redcatracing.com/products/kaiju",
       "photos": [
         { "src": "/img/rc/redcat-kaiju/01.jpg", "caption": "" },
         { "src": "/img/rc/redcat-kaiju/02.jpg", "caption": "" }
       ],
-      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "chassis": { "make": "Redcat", "model": "Kaiju", "material": "", "drivetrain": "4WD", "notes": "Wheelbase 309mm, 58mm ground clearance. Steel CVA driveshafts, steel internal diff gears." },
       "power": {
-        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
-        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
-        "batteries": [],
+        "motor": { "make": "", "model": "", "type": "Brushless, waterproof", "kv": 2100, "turns": null, "notes": "" },
+        "esc": { "make": "Redcat", "model": "", "cells": "6S (or 2x3S / 4S / 2x2S)", "currentRating": "150A", "sensored": null, "notes": "Waterproof." },
+        "batteries": [
+          { "chemistry": "LiPo", "cells": "6S", "capacityMah": null, "cRating": "", "connector": "", "notes": "Also runs a single 4S, or two 3S/2S packs in series." }
+        ],
         "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
       },
       "electronics": {
-        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "servo": { "make": "Hexfly", "model": "", "torqueKgCm": 25, "type": "Digital steering", "notes": "" },
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
-      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "running": { "tires": "", "wheels": "17mm aluminum hex hubs", "shocks": "Aluminum-body adjustable coil-overs", "springs": "", "body": "", "notes": "Adjustable wheelie bar." },
+      "upgrades": [],
       "mods": [],
       "todo": [],
       "notes": ""
@@ -365,25 +399,29 @@
       "name": "Jiusi Race Truggy",
       "kind": "car",
       "class": "Truggy",
-      "scale": "",
+      "scale": "1/14",
       "status": "shelf",
       "acquired": "",
       "summary": "Truggy with a blue 'Jiusi Race' body, cartoon pig-face graphics, and an integrated LED light bar.",
+      "manufacturerUrl": "https://jiusirc.com/products/jiusi-pt14r-rc-monster-truck-114-4wd-brushless-50mph-waterproof-rtr",
       "photos": [
         { "src": "/img/rc/jiusi-race-truggy/01.jpg", "caption": "" }
       ],
-      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "chassis": { "make": "Jiusi", "model": "PT14R (assumed)", "material": "Aluminum", "drivetrain": "4WD", "notes": "Jiusi sells two visually similar 1/14 trucks (MT14R with a racing wing, PT14R with roof rack/LEDs) — this one's LED light bar looks closer to the PT14R, but I couldn't confirm which trim from the photo alone." },
       "power": {
-        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
-        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
-        "batteries": [],
+        "motor": { "make": "", "model": "", "type": "Brushless", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "3S", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [
+          { "chemistry": "LiPo", "cells": "3S", "capacityMah": null, "cRating": "", "connector": "", "notes": "Included stock." }
+        ],
         "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
       },
       "electronics": {
         "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
-        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+        "transmitter": "2.4GHz", "receiver": "", "telemetry": "", "extras": []
       },
-      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "running": { "tires": "", "wheels": "", "shocks": "Metal oil-filled", "springs": "", "body": "", "notes": "Rated top speed 50mph stock; waterproof." },
+      "upgrades": [],
       "mods": [],
       "todo": [],
       "notes": ""
@@ -397,6 +435,7 @@
       "status": "runner",
       "acquired": "",
       "summary": "Scale rock crawler with a rounded-fender Ford Bronco-style body, blue with a white racing stripe and an open tube roll cage. Distinct from the Scout-bodied crawler.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/blue-bronco-crawler/01.jpg", "caption": "On a backyard rock-crawling course" }
       ],
@@ -412,9 +451,10 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
-      "notes": ""
+      "notes": "No legible brand text in the available photos — didn't want to guess between the many Bronco-bodied crawler kits on the market."
     },
     {
       "slug": "black-gt-wing-car",
@@ -425,6 +465,7 @@
       "status": "project",
       "acquired": "",
       "summary": "On-road GT-style body with a tall rear wing, built and painted matte black over several sessions.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/black-gt-wing-car/01.jpg", "caption": "" },
         { "src": "/img/rc/black-gt-wing-car/02.jpg", "caption": "Masked for two-tone paint" }
@@ -441,35 +482,40 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": ["Painted matte black"],
       "todo": [],
-      "notes": ""
+      "notes": "Unpainted/primer body in the build photos, so no manufacturer markings to go on yet."
     },
     {
       "slug": "nissan-skyline-coupe",
       "name": "Nissan Skyline Coupe",
       "kind": "car",
       "class": "On-Road Touring",
-      "scale": "",
+      "scale": "1/10",
       "status": "shelf",
       "acquired": "",
       "summary": "On-road touring car with a glossy white vintage Nissan Skyline-shaped body, black wheels.",
+      "manufacturerUrl": "https://rc.kyosho.com/en/34425t1c.html",
       "photos": [
         { "src": "/img/rc/nissan-skyline-coupe/01.jpg", "caption": "" },
         { "src": "/img/rc/nissan-skyline-coupe/02.jpg", "caption": "On the pegboard, with the rest of the display shelf" }
       ],
-      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "chassis": { "make": "Kyosho", "model": "Fazer Mk2 (FZ02) — Nissan Skyline 2000GT-R (KPGC10) body", "material": "Nylon, shaft-drive", "drivetrain": "4WD", "notes": "Body matches this 'Hakosuka' GT-R shell by the cursive 'Skyline' badge and vintage coupe shape, but the stock RTR ships silver on Watanabe-style wheels — this one is white on plain black wheels, so it may be repainted/rewheeled or a different trim. Confirm against the manufacturer page." },
       "power": {
-        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "motor": { "make": "Kyosho", "model": "G14L", "type": "Brushed", "kv": null, "turns": null, "notes": "" },
         "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
-        "batteries": [],
-        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+        "batteries": [
+          { "chemistry": "NiMH", "cells": "", "capacityMah": null, "cRating": "", "connector": "", "notes": "7.2V pack (Kyosho Speed House 22HV/36HV recommended)." }
+        ],
+        "gearing": { "pinion": 32, "spur": 68, "internalRatio": "6.54:1", "finalDriveRatio": "", "rollout": "" }
       },
       "electronics": {
-        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
-        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+        "servo": { "make": "", "model": "KS202W", "torqueKgCm": null, "type": "Waterproof steering", "notes": "" },
+        "transmitter": "Kyosho Syncro KT-231P+", "receiver": "", "telemetry": "", "extras": []
       },
-      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "running": { "tires": "", "wheels": "", "shocks": "Oil-filled", "springs": "", "body": "", "notes": "Wheelbase 260mm (270mm w/ optional parts). Weight ~1650g." },
+      "upgrades": [],
       "mods": [],
       "todo": [],
       "notes": ""
@@ -483,6 +529,7 @@
       "status": "runner",
       "acquired": "",
       "summary": "Large-scale bash truck, built up over a multi-week project from a bare chassis through lexan test-fits to a finished purple/teal painted body.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/large-scale-bash-truck/01.jpg", "caption": "Finished purple/teal body" },
         { "src": "/img/rc/large-scale-bash-truck/02.jpg", "caption": "On the shelf, next to the Thunder monster truck" }
@@ -499,9 +546,10 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": ["Custom purple/teal painted body"],
       "todo": [],
-      "notes": "Built from a bare chassis through several lexan body test-fits before final paint."
+      "notes": "Built from a bare chassis through several lexan body test-fits before final paint — no brand markings visible on the bare chassis to identify the manufacturer."
     },
     {
       "slug": "thunder-monster-truck",
@@ -512,6 +560,7 @@
       "status": "shelf",
       "acquired": "",
       "summary": "Monster truck with a blue/red 'Thunder'-branded body and LED light bar.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/thunder-monster-truck/01.jpg", "caption": "On the shelf, next to the large-scale bash truck" }
       ],
@@ -527,9 +576,10 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
-      "notes": ""
+      "notes": "'Thunder' reads like a body/livery name rather than a manufacturer — couldn't confidently match it to a specific product."
     },
     {
       "slug": "red-redcat-blazer",
@@ -540,10 +590,11 @@
       "status": "shelf",
       "acquired": "",
       "summary": "Redcat scale truck with a red Blazer/Bronco-style body, chrome side stripe, and a roll cage.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/red-redcat-blazer/01.jpg", "caption": "" }
       ],
-      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "chassis": { "make": "Redcat", "model": "", "material": "", "drivetrain": "", "notes": "" },
       "power": {
         "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
         "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
@@ -555,9 +606,10 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
-      "notes": ""
+      "notes": "Body reads 'REDCAT' but I couldn't find an official Redcat product actually called 'Blazer' — no confident manufacturer page to link."
     },
     {
       "slug": "rc-boat-sr85",
@@ -568,21 +620,25 @@
       "status": "shelf",
       "acquired": "",
       "summary": "Yellow-hulled RC boat, 'SR85 Racing' decal.",
+      "manufacturerUrl": "https://www.imexrc.com/products/atomic-sr85-50-mph",
       "photos": [
         { "src": "/img/rc/rc-boat-sr85/01.jpg", "caption": "" }
       ],
-      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "chassis": { "make": "Volantex RC (Atomic)", "model": "SR85", "material": "Blow-molded ABS unibody (catamaran hull)", "drivetrain": "", "notes": "" },
       "power": {
-        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
-        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
-        "batteries": [],
+        "motor": { "make": "", "model": "3720", "type": "Brushless, water-cooled", "kv": 1800, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "4S", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [
+          { "chemistry": "LiPo", "cells": "4S (14.8V)", "capacityMah": 5000, "cRating": "", "connector": "", "notes": "Manufacturer-recommended, not included." }
+        ],
         "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
       },
       "electronics": {
         "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
-        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+        "transmitter": "2.4GHz, 300m range", "receiver": "", "telemetry": "", "extras": []
       },
-      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "Rated top speed 55mph (88km/h). Self-righting capsize recovery." },
+      "upgrades": [],
       "mods": [],
       "todo": [],
       "notes": ""
@@ -596,6 +652,7 @@
       "status": "shelf",
       "acquired": "",
       "summary": "White-hulled RC airboat/hovercraft with teal bucket seats, a caged propeller, and a camera mount. Travels on its own trailer.",
+      "manufacturerUrl": "",
       "photos": [
         { "src": "/img/rc/rc-airboat/01.jpg", "caption": "On its trailer, next to the Blue Scout Crawler" }
       ],
@@ -611,9 +668,10 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
-      "notes": ""
+      "notes": "No brand markings visible in the trailer photo — too generic a hull shape to identify a specific manufacturer with confidence."
     },
     {
       "slug": "arrma-basher",
@@ -624,6 +682,7 @@
       "status": "shelf",
       "acquired": "",
       "summary": "ARRMA-branded buggy in a blue/purple livery with SHOEI, VP Racing Fuels, and TR Tuned decals plus a US-flag sticker. Separate vehicle from the ARRMA Typhon — no specific model name confirmed from the visible decals, which are mostly aftermarket sponsor stickers rather than a chassis nameplate.",
+      "manufacturerUrl": "https://www.arrma-rc.com/en/collections/vehicles.html",
       "photos": [
         { "src": "/img/rc/arrma-basher/01.jpg", "caption": "" }
       ],
@@ -639,9 +698,10 @@
         "transmitter": "", "receiver": "", "telemetry": "", "extras": []
       },
       "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "upgrades": [],
       "mods": [],
       "todo": [],
-      "notes": "Model name unconfirmed — worth double-checking in person."
+      "notes": "Model name unconfirmed — worth double-checking in person. Linked to ARRMA's full vehicle lineup rather than guessing a specific product page."
     }
   ]
 }

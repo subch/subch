@@ -25,6 +25,12 @@ const photos = (v.photos ?? []).filter((p) => has(p?.src));
     {has(v.acquired) && ` · acquired ${v.acquired}`}
   </p>
   {has(v.summary) && <p>{v.summary}</p>}
+  {has(v.manufacturerUrl) && (
+    <p class="tagline">
+      <a href={v.manufacturerUrl} target="_blank" rel="noopener">Manufacturer page →</a>
+      <span class="source-note"> — source of truth for stock specs; edit `manufacturerUrl` in rc-fleet.json to update.</span>
+    </p>
+  )}
 
   {photos.length > 0 && (
     <div class="gallery">
@@ -74,6 +80,30 @@ const photos = (v.photos ?? []).filter((p) => has(p?.src));
           ))}
         </dl>
       </div>
+    )}
+  </section>
+
+  <section class="section">
+    <h2>Upgrades</h2>
+    {has(v.upgrades) ? (
+      <div class="spec-group">
+        <dl>
+          {v.upgrades.map((u) => (
+            <div class="spec-row upgrade-row">
+              <dt>{u.component || 'Upgrade'}</dt>
+              <dd>
+                {has(u.stock) && <span class="upgrade-stock">{u.stock}</span>}
+                {has(u.stock) && has(u.upgraded) && <span class="upgrade-arrow"> → </span>}
+                {has(u.upgraded) && <span class="upgrade-now">{u.upgraded}</span>}
+                {!has(u.stock) && !has(u.upgraded) && 'TBD'}
+                {has(u.notes) && <span class="upgrade-notes"> ({u.notes})</span>}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    ) : (
+      <p class="tagline">Nothing logged yet — still stock.</p>
     )}
   </section>
 
@@ -170,4 +200,10 @@ const photos = (v.photos ?? []).filter((p) => has(p?.src));
     padding-left: 1.1rem;
   }
   .plain-list li { margin-bottom: 0.3rem; }
+  .source-note { color: var(--muted); }
+  .upgrade-row dd { text-align: right; }
+  .upgrade-stock { color: var(--muted); text-decoration: line-through; }
+  .upgrade-arrow { color: var(--muted); }
+  .upgrade-now { font-weight: 600; }
+  .upgrade-notes { color: var(--muted); font-size: 0.85em; }
 </style>

@@ -63,6 +63,12 @@ const currentPath = Astro.url.pathname;
     --pill-active-fg: #1e7a34;
     --pill-archived: #f4eee6;
     --pill-archived-fg: #8a5a1e;
+    --pill-project: #eef1f4;
+    --pill-project-fg: #556;
+    --pill-shelf: #eceaf6;
+    --pill-shelf-fg: #574d8a;
+    --pill-parts: #f6ecec;
+    --pill-parts-fg: #8a4a4a;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -78,6 +84,12 @@ const currentPath = Astro.url.pathname;
       --pill-active-fg: #6fd08a;
       --pill-archived: #332a1c;
       --pill-archived-fg: #d9a662;
+      --pill-project: #232733;
+      --pill-project-fg: #aab2c5;
+      --pill-shelf: #262238;
+      --pill-shelf-fg: #b0a6e0;
+      --pill-parts: #332222;
+      --pill-parts-fg: #e09a9a;
     }
   }
   * { box-sizing: border-box; }
@@ -173,6 +185,12 @@ const currentPath = Astro.url.pathname;
   .pill-active { background: var(--pill-active); color: var(--pill-active-fg); }
   .pill-planned { background: var(--pill-planned); color: var(--pill-planned-fg); }
   .pill-archived { background: var(--pill-archived); color: var(--pill-archived-fg); }
+  /* fleet statuses */
+  .pill-runner { background: var(--pill-active); color: var(--pill-active-fg); }
+  .pill-project { background: var(--pill-project); color: var(--pill-project-fg); }
+  .pill-shelf { background: var(--pill-shelf); color: var(--pill-shelf-fg); }
+  .pill-parts { background: var(--pill-parts); color: var(--pill-parts-fg); }
+  .pill-retired { background: var(--pill-archived); color: var(--pill-archived-fg); }
   .section { margin-top: 2.5rem; }
   .section h2 { font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
   .fork-list {

@@ -24,3 +24,22 @@ Edit `src/data/repos.json` and add an entry under the relevant category:
 ```
 
 `status` is one of `active`, `planned`, or `archived` and controls how it's styled on the category page.
+
+## The RC fleet
+
+Vehicles on the RC page come from `src/data/rc-fleet.json`, separate from `repos.json`.
+Each entry generates a card on `/rc/` and a full build-sheet page at `/rc/<slug>/`.
+
+- `slug` — URL segment; also the photo folder name.
+- `kind` — `car`, `plane`, `boat`, or `other`. Groups the cards on `/rc/`.
+- `status` — `runner`, `project`, `shelf`, `parts`, or `retired`. Labels live in `statusLabels`.
+- `photos` — array of `{ src, caption }`. Put images in `public/img/rc/<slug>/`; the
+  first entry is the card thumbnail.
+
+**Every spec field is optional.** Empty strings, `null`, and empty arrays render as a
+muted *TBD* on the build sheet, and the card shows a "% spec'd" meter — so an entry with
+nothing but a name and a photo still looks intentional. Fill in motor/ESC/battery details
+as you get to them.
+
+Copy the `example-buggy` entry as a template; `src/lib/fleet.js` defines which fields land
+in which section of the build sheet.

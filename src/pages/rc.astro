@@ -1,6 +1,70 @@
 ---
-import CategoryPage from '../components/CategoryPage.astro';
+import Base from '../layouts/Base.astro';
+import FleetGrid from '../components/FleetGrid.astro';
 import data from '../data/repos.json';
+import { allVehicles } from '../lib/fleet.js';
+
 const category = data.categories.find((c) => c.slug === 'rc');
+const vehicles = allVehicles();
+const groups = [
+  { key: 'car', title: 'Cars & Trucks' },
+  { key: 'plane', title: 'Planes' },
+  { key: 'boat', title: 'Boats' },
+  { key: 'other', title: 'Other' },
+];
+const present = groups
+  .map((g) => ({ ...g, items: vehicles.filter((v) => (v.kind ?? 'other') === g.key) }))
+  .filter((g) => g.items.length > 0);
 ---
-<CategoryPage category={category} />
+<Base title={category.title} description={category.tagline}>
+  <h1>{category.title}</h1>
+  <p class="tagline">{category.tagline}</p>
+
+  <section class="section">
+    <h2>The Fleet</h2>
+    <p class="tagline">
+      {vehicles.length} logged. Specs get filled in as I go — tap any card for the build sheet.
+    </p>
+    {present.length === 0 ? (
+      <p class="tagline">Nothing logged yet.</p>
+    ) : present.length === 1 ? (
+      <FleetGrid vehicles={present[0].items} />
+    ) : (
+      present.map((g) => (
+        <div class="fleet-group">
+          <h3 class="fleet-group-title">{g.title}</h3>
+          <FleetGrid vehicles={g.items} />
+        </div>
+      ))
+    )}
+  </section>
+
+  <section class="section">
+    <h2>Repos</h2>
+    {category.repos.length === 0 ? (
+      <p class="tagline">Nothing here yet.</p>
+    ) : (
+      <div class="card-grid">
+        {category.repos.map((r) => (
+          <div class="card">
+            <span class={`pill pill-${r.status}`}>{r.status}</span>
+            <h3>{r.name}</h3>
+            <p>{r.description}</p>
+            <a class="repo-link" href={`https://github.com/${r.repo}`}>{r.repo} →</a>
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+</Base>
+
+<style>
+  .fleet-group { margin-top: 1.75rem; }
+  .fleet-group-title {
+    margin: 0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+</style>

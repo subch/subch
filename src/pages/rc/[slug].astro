@@ -1,0 +1,173 @@
+---
+import Base from '../../layouts/Base.astro';
+import fleet from '../../data/rc-fleet.json';
+import { specGroups, batteryRows, statusLabel, has, completeness } from '../../lib/fleet.js';
+
+export function getStaticPaths() {
+  return fleet.vehicles.map((v) => ({ params: { slug: v.slug }, props: { vehicle: v } }));
+}
+
+const { vehicle: v } = Astro.props;
+const groups = specGroups(v);
+const batteries = batteryRows(v);
+const c = completeness(v);
+const photos = (v.photos ?? []).filter((p) => has(p?.src));
+---
+<Base title={v.name} description={v.summary || `${v.name} — build sheet.`}>
+  <p class="crumb"><a href="/rc/">← RC Projects</a></p>
+
+  <div class="sheet-head">
+    <h1>{v.name}</h1>
+    <span class={`pill pill-${v.status}`}>{statusLabel(v.status)}</span>
+  </div>
+  <p class="tagline">
+    {[v.class, v.scale, v.chassis?.drivetrain].filter(has).join(' · ') || 'Class TBD'}
+    {has(v.acquired) && ` · acquired ${v.acquired}`}
+  </p>
+  {has(v.summary) && <p>{v.summary}</p>}
+
+  {photos.length > 0 && (
+    <div class="gallery">
+      {photos.map((p) => (
+        <figure>
+          <img src={p.src} alt={p.caption || v.name} loading="lazy" />
+          {has(p.caption) && <figcaption>{p.caption}</figcaption>}
+        </figure>
+      ))}
+    </div>
+  )}
+
+  <section class="section">
+    <h2>Build Sheet</h2>
+    <p class="tagline">{c.filled} of {c.total} fields filled in.</p>
+    <div class="spec-groups">
+      {groups.map((g) => (
+        <div class="spec-group">
+          <h3>{g.title}</h3>
+          <dl>
+            {g.rows.map(([label, value]) => (
+              <div class={has(value) ? 'spec-row' : 'spec-row spec-row-todo'}>
+                <dt>{label}</dt>
+                <dd>{has(value) ? value : 'TBD'}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Batteries</h2>
+    {batteries.length === 0 ? (
+      <p class="tagline">TBD.</p>
+    ) : (
+      <div class="spec-group">
+        <dl>
+          {batteries.map((b) => (
+            <div class="spec-row">
+              <dt>{b.pack}</dt>
+              <dd>
+                {[b.capacity, b.cRating, b.connector, b.notes].filter(has).join(' · ') || 'TBD'}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    )}
+  </section>
+
+  <section class="section">
+    <h2>Mods</h2>
+    {has(v.mods) ? (
+      <ul class="plain-list">{v.mods.map((m) => <li>{m}</li>)}</ul>
+    ) : (
+      <p class="tagline">Nothing logged yet.</p>
+    )}
+  </section>
+
+  <section class="section">
+    <h2>To Do</h2>
+    {has(v.todo) ? (
+      <ul class="plain-list">{v.todo.map((t) => <li>{t}</li>)}</ul>
+    ) : (
+      <p class="tagline">Nothing on the list.</p>
+    )}
+  </section>
+
+  {has(v.notes) && (
+    <section class="section">
+      <h2>Notes</h2>
+      <p>{v.notes}</p>
+    </section>
+  )}
+</Base>
+
+<style>
+  .crumb { margin: 0 0 1rem; font-size: 0.9rem; }
+  .sheet-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .sheet-head h1 { margin-bottom: 0; }
+  .sheet-head .pill { margin-bottom: 0; }
+  .gallery {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    margin-top: 1.5rem;
+  }
+  .gallery figure { margin: 0; }
+  .gallery img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .gallery figcaption {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+  .spec-groups {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    margin-top: 1.25rem;
+  }
+  .spec-group {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem 1rem;
+  }
+  .spec-group h3 {
+    margin: 0 0 0.5rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+  .spec-group dl { margin: 0; }
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .spec-row:last-child { border-bottom: 0; }
+  .spec-row dt { color: var(--muted); }
+  .spec-row dd { margin: 0; text-align: right; }
+  .spec-row-todo dd { color: var(--muted); font-style: italic; }
+  .plain-list {
+    margin: 0.75rem 0 0;
+    padding-left: 1.1rem;
+  }
+  .plain-list li { margin-bottom: 0.3rem; }
+</style>

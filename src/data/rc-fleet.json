@@ -1,0 +1,647 @@
+{
+  "$comment": "Fleet data for /rc/. One entry per vehicle. Leave any unknown field as an empty string, empty array, or null — the site renders those as a muted TBD instead of breaking. See README for the field guide.",
+  "statusLabels": {
+    "runner": "Runner",
+    "project": "Project",
+    "shelf": "Shelf Queen",
+    "parts": "Parts Donor",
+    "retired": "Retired"
+  },
+  "vehicles": [
+    {
+      "slug": "arrma-typhon",
+      "name": "ARRMA Typhon",
+      "kind": "car",
+      "class": "1/8 4WD Buggy",
+      "scale": "1/8",
+      "status": "runner",
+      "acquired": "",
+      "summary": "ARRMA Typhon 4WD buggy in a purple/pink/white livery, pink-anodized shocks.",
+      "photos": [
+        { "src": "/img/rc/arrma-typhon/01.jpg", "caption": "" },
+        { "src": "/img/rc/arrma-typhon/02.jpg", "caption": "" },
+        { "src": "/img/rc/arrma-typhon/03.jpg", "caption": "" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "bronco-trophy-truck",
+      "name": "Bronco Trophy Truck",
+      "kind": "car",
+      "class": "Short Course / Trophy Truck",
+      "scale": "",
+      "status": "runner",
+      "acquired": "",
+      "summary": "Bronco-bodied trophy/short-course truck, white and red with a shark graphic, BELL Helmets and REPX decals.",
+      "photos": [
+        { "src": "/img/rc/bronco-trophy-truck/01.jpg", "caption": "" },
+        { "src": "/img/rc/bronco-trophy-truck/02.jpg", "caption": "" },
+        { "src": "/img/rc/bronco-trophy-truck/03.jpg", "caption": "" },
+        { "src": "/img/rc/bronco-trophy-truck/04.jpg", "caption": "Decal detail: shark panel, Transworld Motocross, Yoshimura, Bell Helmets" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "rlaarlo-rally-xts",
+      "name": "RLAARLO Rally XTS",
+      "kind": "car",
+      "class": "1/10 4WD Rally",
+      "scale": "1/10",
+      "status": "project",
+      "acquired": "",
+      "summary": "Ford Fiesta-shaped rally car. Came with a black/green 'Milk Wings' box livery, since repainted matte black with a tiger-stripe wrap and yellow wheels.",
+      "photos": [
+        { "src": "/img/rc/rlaarlo-rally-xts/01.jpg", "caption": "" },
+        { "src": "/img/rc/rlaarlo-rally-xts/02.jpg", "caption": "" },
+        { "src": "/img/rc/rlaarlo-rally-xts/03.jpg", "caption": "" },
+        { "src": "/img/rc/rlaarlo-rally-xts/04.jpg", "caption": "As it arrived, boxed" },
+        { "src": "/img/rc/rlaarlo-rally-xts/05.jpg", "caption": "Repainted matte black, before the tiger-stripe wrap" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "4WD", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "Repainted matte black with tiger-stripe wrap; yellow wheels." },
+      "mods": ["Custom matte black tiger-stripe body wrap", "Yellow wheels"],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "redcat-lancia-rally",
+      "name": "Redcat Rally (Sestrieres)",
+      "kind": "car",
+      "class": "1/10 Rally",
+      "scale": "1/10",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "Redcat rally car, Lancia Delta S4-style body in Martini livery, #4 'Sestrieres.'",
+      "photos": [
+        { "src": "/img/rc/redcat-lancia-rally/01.jpg", "caption": "" },
+        { "src": "/img/rc/redcat-lancia-rally/02.jpg", "caption": "" },
+        { "src": "/img/rc/redcat-lancia-rally/03.jpg", "caption": "On the pegboard, with the rest of the display shelf" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "rlaarlo-status",
+      "name": "RLAARLO Status",
+      "kind": "car",
+      "class": "Prototype/GT Body",
+      "scale": "",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "RLAARLO-branded prototype/GT-style body, green and orange 'Status' livery, wall-mounted.",
+      "photos": [
+        { "src": "/img/rc/rlaarlo-status/01.jpg", "caption": "" },
+        { "src": "/img/rc/rlaarlo-status/02.jpg", "caption": "On the pegboard, with the rest of the display shelf" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "losi-mini-b",
+      "name": "Losi Mini-B",
+      "kind": "car",
+      "class": "1/16 2WD Buggy",
+      "scale": "1/16",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "Losi Mini-B, yellow body with red/blue Mini-B graphics.",
+      "photos": [
+        { "src": "/img/rc/losi-mini-b/01.jpg", "caption": "" },
+        { "src": "/img/rc/losi-mini-b/02.jpg", "caption": "On the pegboard, with the rest of the display shelf" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "2WD", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "blue-scout-crawler",
+      "name": "Blue Scout Crawler",
+      "kind": "car",
+      "class": "Scale Crawler",
+      "scale": "1/10",
+      "status": "runner",
+      "acquired": "",
+      "summary": "Scale rock crawler with a vintage International Scout II-style body, blue with a white stripe and a roof rack.",
+      "photos": [
+        { "src": "/img/rc/blue-scout-crawler/01.jpg", "caption": "" },
+        { "src": "/img/rc/blue-scout-crawler/02.jpg", "caption": "" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "orange-corvette-touring",
+      "name": "Orange Corvette Touring Car",
+      "kind": "car",
+      "class": "On-Road Touring",
+      "scale": "1/10",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "On-road touring car with a Corvette-style body in copper/orange, Texas outline decal, wall-mounted.",
+      "photos": [
+        { "src": "/img/rc/orange-corvette-touring/01.jpg", "caption": "" },
+        { "src": "/img/rc/orange-corvette-touring/02.jpg", "caption": "" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "pink-mini-buggy",
+      "name": "Pink Mini Buggy",
+      "kind": "car",
+      "class": "Mini Buggy",
+      "scale": "",
+      "status": "project",
+      "acquired": "",
+      "summary": "Small pink buggy with a blue chassis and an HRC Honda Racing-badged ESC.",
+      "photos": [
+        { "src": "/img/rc/pink-mini-buggy/01.jpg", "caption": "" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "teal-pickup-monster-truck",
+      "name": "Teal Pickup Monster Truck",
+      "kind": "car",
+      "class": "Monster Truck",
+      "scale": "",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "Monster truck with a vintage two-tone teal pickup body.",
+      "photos": [
+        { "src": "/img/rc/teal-pickup-monster-truck/01.jpg", "caption": "" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "navy-monster-truck",
+      "name": "Navy Monster Truck",
+      "kind": "car",
+      "class": "Monster Truck",
+      "scale": "",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "Small dark navy monster truck/buggy with chunky tires.",
+      "photos": [
+        { "src": "/img/rc/navy-monster-truck/01.jpg", "caption": "" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "redcat-kaiju",
+      "name": "Redcat Kaiju",
+      "kind": "car",
+      "class": "Monster Truck",
+      "scale": "",
+      "status": "runner",
+      "acquired": "",
+      "summary": "Redcat Kaiju monster truck, blue body with white 'KAIJU' lettering and a red star decal, black wing.",
+      "photos": [
+        { "src": "/img/rc/redcat-kaiju/01.jpg", "caption": "" },
+        { "src": "/img/rc/redcat-kaiju/02.jpg", "caption": "" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "jiusi-race-truggy",
+      "name": "Jiusi Race Truggy",
+      "kind": "car",
+      "class": "Truggy",
+      "scale": "",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "Truggy with a blue 'Jiusi Race' body, cartoon pig-face graphics, and an integrated LED light bar.",
+      "photos": [
+        { "src": "/img/rc/jiusi-race-truggy/01.jpg", "caption": "" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "blue-bronco-crawler",
+      "name": "Blue Bronco Crawler",
+      "kind": "car",
+      "class": "Scale Crawler",
+      "scale": "",
+      "status": "runner",
+      "acquired": "",
+      "summary": "Scale rock crawler with a rounded-fender Ford Bronco-style body, blue with a white racing stripe and an open tube roll cage. Distinct from the Scout-bodied crawler.",
+      "photos": [
+        { "src": "/img/rc/blue-bronco-crawler/01.jpg", "caption": "On a backyard rock-crawling course" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "black-gt-wing-car",
+      "name": "Black GT Wing Car",
+      "kind": "car",
+      "class": "On-Road GT",
+      "scale": "",
+      "status": "project",
+      "acquired": "",
+      "summary": "On-road GT-style body with a tall rear wing, built and painted matte black over several sessions.",
+      "photos": [
+        { "src": "/img/rc/black-gt-wing-car/01.jpg", "caption": "" },
+        { "src": "/img/rc/black-gt-wing-car/02.jpg", "caption": "Masked for two-tone paint" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": ["Painted matte black"],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "nissan-skyline-coupe",
+      "name": "Nissan Skyline Coupe",
+      "kind": "car",
+      "class": "On-Road Touring",
+      "scale": "",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "On-road touring car with a glossy white vintage Nissan Skyline-shaped body, black wheels.",
+      "photos": [
+        { "src": "/img/rc/nissan-skyline-coupe/01.jpg", "caption": "" },
+        { "src": "/img/rc/nissan-skyline-coupe/02.jpg", "caption": "On the pegboard, with the rest of the display shelf" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "large-scale-bash-truck",
+      "name": "Large-Scale Bash Truck",
+      "kind": "car",
+      "class": "Monster/Bash Truck",
+      "scale": "",
+      "status": "runner",
+      "acquired": "",
+      "summary": "Large-scale bash truck, built up over a multi-week project from a bare chassis through lexan test-fits to a finished purple/teal painted body.",
+      "photos": [
+        { "src": "/img/rc/large-scale-bash-truck/01.jpg", "caption": "Finished purple/teal body" },
+        { "src": "/img/rc/large-scale-bash-truck/02.jpg", "caption": "On the shelf, next to the Thunder monster truck" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": ["Custom purple/teal painted body"],
+      "todo": [],
+      "notes": "Built from a bare chassis through several lexan body test-fits before final paint."
+    },
+    {
+      "slug": "thunder-monster-truck",
+      "name": "Thunder Monster Truck",
+      "kind": "car",
+      "class": "Monster Truck",
+      "scale": "",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "Monster truck with a blue/red 'Thunder'-branded body and LED light bar.",
+      "photos": [
+        { "src": "/img/rc/thunder-monster-truck/01.jpg", "caption": "On the shelf, next to the large-scale bash truck" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "red-redcat-blazer",
+      "name": "Red Redcat Blazer",
+      "kind": "car",
+      "class": "Scale Truck",
+      "scale": "",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "Redcat scale truck with a red Blazer/Bronco-style body, chrome side stripe, and a roll cage.",
+      "photos": [
+        { "src": "/img/rc/red-redcat-blazer/01.jpg", "caption": "" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "rc-boat-sr85",
+      "name": "RC Boat (SR85 Racing)",
+      "kind": "boat",
+      "class": "RC Boat",
+      "scale": "",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "Yellow-hulled RC boat, 'SR85 Racing' decal.",
+      "photos": [
+        { "src": "/img/rc/rc-boat-sr85/01.jpg", "caption": "" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "rc-airboat",
+      "name": "RC Airboat",
+      "kind": "boat",
+      "class": "RC Airboat/Hovercraft",
+      "scale": "",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "White-hulled RC airboat/hovercraft with teal bucket seats, a caged propeller, and a camera mount. Travels on its own trailer.",
+      "photos": [
+        { "src": "/img/rc/rc-airboat/01.jpg", "caption": "On its trailer, next to the Blue Scout Crawler" }
+      ],
+      "chassis": { "make": "", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": ""
+    },
+    {
+      "slug": "arrma-basher",
+      "name": "ARRMA Basher",
+      "kind": "car",
+      "class": "Buggy/Basher",
+      "scale": "",
+      "status": "shelf",
+      "acquired": "",
+      "summary": "ARRMA-branded buggy in a blue/purple livery with SHOEI, VP Racing Fuels, and TR Tuned decals plus a US-flag sticker. Separate vehicle from the ARRMA Typhon — no specific model name confirmed from the visible decals, which are mostly aftermarket sponsor stickers rather than a chassis nameplate.",
+      "photos": [
+        { "src": "/img/rc/arrma-basher/01.jpg", "caption": "" }
+      ],
+      "chassis": { "make": "ARRMA", "model": "", "material": "", "drivetrain": "", "notes": "" },
+      "power": {
+        "motor": { "make": "", "model": "", "type": "", "kv": null, "turns": null, "notes": "" },
+        "esc": { "make": "", "model": "", "cells": "", "currentRating": "", "sensored": null, "notes": "" },
+        "batteries": [],
+        "gearing": { "pinion": null, "spur": null, "internalRatio": "", "finalDriveRatio": "", "rollout": "" }
+      },
+      "electronics": {
+        "servo": { "make": "", "model": "", "torqueKgCm": null, "type": "", "notes": "" },
+        "transmitter": "", "receiver": "", "telemetry": "", "extras": []
+      },
+      "running": { "tires": "", "wheels": "", "shocks": "", "springs": "", "body": "", "notes": "" },
+      "mods": [],
+      "todo": [],
+      "notes": "Model name unconfirmed — worth double-checking in person."
+    }
+  ]
+}

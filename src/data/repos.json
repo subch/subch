@@ -73,14 +73,14 @@
     },
     {
       "slug": "search",
-      "title": "No-AI Search",
+      "title": "No Baloney",
       "tagline": "Curated search that surfaces primary/authoritative sources instead of AI-generated SEO content-farm results.",
       "repos": [
         {
-          "name": "No-AI Search",
-          "repo": "subch/no-ai-search",
+          "name": "No Baloney",
+          "repo": "subch/no-baloney",
           "description": "Google Programmable Search Engine scoped to a curated allowlist of trusted domains. The interface above works once the CSE is configured.",
-          "status": "planned"
+          "status": "active"
         }
       ]
     }

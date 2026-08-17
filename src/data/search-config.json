@@ -1,5 +1,5 @@
 {
-  "_comment": "Fill in after creating a Google Programmable Search Engine at https://programmablesearchengine.google.com/. See github.com/subch/no-ai-search for setup steps. Leave blank to show the setup instructions instead of a search box.",
-  "apiKey": "",
+  "_comment": "searchEngineId (cx) is all the embedded widget needs. apiKey is unused for now — kept around in case the Custom Search JSON API path (custom-styled results instead of Google's own widget UI) ever becomes usable; see github.com/subch/no-baloney for why it's stuck.",
+  "apiKey": "AIzaSyASo1kQVEU233lUMQAQrF-UIGM69snbwGs",
   "searchEngineId": "f3034cb4bfcce4269"
 }

@@ -3,144 +3,142 @@ import Base from '../layouts/Base.astro';
 import searchConfig from '../data/search-config.json';
 import data from '../data/repos.json';
 
-const configured = Boolean(searchConfig.apiKey && searchConfig.searchEngineId);
+const configured = Boolean(searchConfig.searchEngineId);
 const category = data.categories.find((c) => c.slug === 'search');
 ---
 <Base
-  title="Search"
+  title="No Baloney"
   description="Curated search that surfaces primary and authoritative sources instead of AI-generated SEO content-farm results."
 >
-  <h1>No-AI Search</h1>
-  <p class="tagline">
-    Search results from a curated allowlist of trusted domains — universities, .gov sites, manufacturers — instead of AI-written content-farm SEO pages.
-  </p>
+  <div class="deli-page">
+    <div class="deli-checker" aria-hidden="true"></div>
 
-  {!configured && (
-    <div class="card" style="margin-top: 1.5rem;">
-      <h3>Not configured yet</h3>
-      <p>
-        This page calls the <a href="https://developers.google.com/custom-search/v1/overview">Google Custom Search JSON API</a>,
-        which needs a free Programmable Search Engine set up first. See the
-        {' '}<a href="https://github.com/subch/no-ai-search#setup-one-time-in-googles-dashboard--not-something-i-can-do-for-you">setup steps</a>
-        {' '}in the <a href="https://github.com/subch/no-ai-search">no-ai-search</a> repo, then fill in <code>src/data/search-config.json</code>.
-      </p>
-    </div>
-  )}
+    <h1 class="deli-title">No Baloney<span class="deli-title-sub">🥪 fresh sources, thinly sliced</span></h1>
+    <p class="tagline deli-tagline">
+      Search results from a curated allowlist of trusted domains — universities, .gov sites, manufacturers — instead of AI-written content-farm SEO pages.
+    </p>
 
-  {configured && (
-    <div id="search-app">
-      <form id="search-form">
-        <input type="search" id="search-input" placeholder="how to kill grass naturally" autocomplete="off" required />
-        <button type="submit">Search</button>
-      </form>
-      <div id="search-status" class="tagline"></div>
-      <div id="search-results"></div>
-    </div>
-  )}
+    {!configured && (
+      <div class="deli-card" style="margin-top: 1.5rem;">
+        <h3>Not configured yet</h3>
+        <p>
+          This page embeds a <a href="https://programmablesearchengine.google.com/">Google Programmable Search Engine</a>,
+          which needs to be created first. See the
+          {' '}<a href="https://github.com/subch/no-baloney#setup-one-time-in-googles-dashboard--not-something-i-can-do-for-you">setup steps</a>
+          {' '}in the <a href="https://github.com/subch/no-baloney">no-baloney</a> repo, then fill in <code>src/data/search-config.json</code>.
+        </p>
+      </div>
+    )}
 
-  <section class="section">
-    <h2>Repo</h2>
-    <div class="card-grid">
-      {category.repos.map((r) => (
-        <div class="card">
-          <span class={`pill pill-${r.status}`}>{r.status}</span>
-          <h3>{r.name}</h3>
-          <p>{r.description}</p>
-          <a class="repo-link" href={`https://github.com/${r.repo}`}>{r.repo} →</a>
-        </div>
-      ))}
-    </div>
-  </section>
+    {configured && (
+      <div class="deli-widget-card">
+        <div class="gcse-search"></div>
+      </div>
+    )}
+
+    <section class="section">
+      <h2>Repo</h2>
+      <div class="card-grid">
+        {category.repos.map((r) => (
+          <div class="deli-card">
+            <span class={`pill pill-${r.status}`}>{r.status}</span>
+            <h3>{r.name}</h3>
+            <p>{r.description}</p>
+            <a class="repo-link" href={`https://github.com/${r.repo}`}>{r.repo} →</a>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <div class="deli-checker" aria-hidden="true"></div>
+  </div>
 </Base>
 
 <style>
-  #search-form {
+  .deli-page {
+    --deli-paper: #f6e7c4;
+    --deli-paper-alt: #efd9a3;
+    --deli-red: #b5121b;
+    --deli-mustard: #c98a1f;
+    --deli-ink: #3b2a18;
+    --deli-line: #c9a86a;
+    background: var(--deli-paper);
+    color: var(--deli-ink);
+    border: 1px solid var(--deli-line);
+    border-radius: 12px;
+    padding: 1.75rem 1.75rem 2.25rem;
+    margin-top: -0.5rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    .deli-page {
+      --deli-paper: #241a10;
+      --deli-paper-alt: #2e2214;
+      --deli-red: #e2454f;
+      --deli-mustard: #e8b25a;
+      --deli-ink: #f3e6c9;
+      --deli-line: #5a3f22;
+    }
+  }
+  .deli-checker {
+    height: 10px;
+    margin: -1.75rem -1.75rem 1.5rem;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--deli-red),
+      var(--deli-red) 10px,
+      var(--deli-paper) 10px,
+      var(--deli-paper) 20px
+    );
+    border-bottom: 1px solid var(--deli-line);
+  }
+  .deli-checker:last-child {
+    margin: 1.75rem -1.75rem -2.25rem;
+    border-bottom: none;
+    border-top: 1px solid var(--deli-line);
+  }
+  .deli-title {
+    color: var(--deli-red);
+    font-weight: 800;
+    letter-spacing: -0.01em;
     display: flex;
-    gap: 0.5rem;
-    margin-top: 1.25rem;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 0 0 0.25rem;
   }
-  #search-input {
-    flex: 1;
-    padding: 0.6rem 0.8rem;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--fg);
-    font-size: 1rem;
-  }
-  #search-form button {
-    padding: 0.6rem 1.1rem;
-    border: 1px solid var(--accent);
-    background: var(--accent);
-    color: #fff;
-    border-radius: 8px;
+  .deli-title-sub {
+    color: var(--deli-mustard);
+    font-weight: 600;
     font-size: 0.95rem;
-    cursor: pointer;
+    letter-spacing: 0;
   }
-  #search-status { margin-top: 0.75rem; }
-  #search-results {
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
+  .deli-tagline { color: var(--deli-ink); opacity: 0.75; }
+
+  .deli-card {
+    border: 1px dashed var(--deli-line);
+    background: var(--deli-paper-alt);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    color: var(--deli-ink);
+  }
+  .deli-card h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+  .deli-card p { margin: 0 0 0.6rem; opacity: 0.8; font-size: 0.92rem; }
+  .deli-card a { color: var(--deli-red); }
+
+  .deli-page .section h2 {
+    border-bottom-color: var(--deli-line);
+    color: var(--deli-ink);
+  }
+
+  .deli-widget-card {
     margin-top: 1.25rem;
+    background: #fff;
+    border: 1px dashed var(--deli-line);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
   }
-  .result h3 { margin: 0 0 0.15rem; font-size: 1.05rem; }
-  .result h3 a { text-decoration: none; }
-  .result .result-url { color: var(--pill-active-fg); font-size: 0.82rem; margin-bottom: 0.25rem; }
-  .result p { margin: 0; color: var(--muted); font-size: 0.92rem; }
 </style>
 
 {configured && (
-  <script define:vars={{ apiKey: searchConfig.apiKey, cx: searchConfig.searchEngineId }}>
-    const form = document.getElementById('search-form');
-    const input = document.getElementById('search-input');
-    const statusEl = document.getElementById('search-status');
-    const resultsEl = document.getElementById('search-results');
-
-    async function runSearch(query) {
-      statusEl.textContent = 'Searching…';
-      resultsEl.innerHTML = '';
-
-      const url = new URL('https://www.googleapis.com/customsearch/v1');
-      url.searchParams.set('key', apiKey);
-      url.searchParams.set('cx', cx);
-      url.searchParams.set('q', query);
-
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error?.message || `Search failed (${res.status})`);
-        }
-
-        const items = data.items || [];
-        if (items.length === 0) {
-          statusEl.textContent = 'No results from the trusted-domain list for that query.';
-          return;
-        }
-
-        statusEl.textContent = `${data.searchInformation?.formattedTotalResults ?? items.length} results`;
-        resultsEl.innerHTML = items
-          .map(
-            (item) => `
-              <div class="result">
-                <h3><a href="${item.link}">${item.title}</a></h3>
-                <div class="result-url">${item.displayLink}</div>
-                <p>${item.snippet ?? ''}</p>
-              </div>
-            `
-          )
-          .join('');
-      } catch (err) {
-        statusEl.textContent = `Couldn't load results (${err.message}).`;
-      }
-    }
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const query = input.value.trim();
-      if (query) runSearch(query);
-    });
-  </script>
+  <script async src={`https://cse.google.com/cse.js?cx=${searchConfig.searchEngineId}`}></script>
 )}

@@ -70,6 +70,19 @@
           "status": "active"
         }
       ]
+    },
+    {
+      "slug": "search",
+      "title": "No-AI Search",
+      "tagline": "Curated search that surfaces primary/authoritative sources instead of AI-generated SEO content-farm results.",
+      "repos": [
+        {
+          "name": "No-AI Search",
+          "repo": "subch/no-ai-search",
+          "description": "Google Programmable Search Engine scoped to a curated allowlist of trusted domains. The interface above works once the CSE is configured.",
+          "status": "planned"
+        }
+      ]
     }
   ],
   "featured": [

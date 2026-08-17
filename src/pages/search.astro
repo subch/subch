@@ -1,0 +1,146 @@
+---
+import Base from '../layouts/Base.astro';
+import searchConfig from '../data/search-config.json';
+import data from '../data/repos.json';
+
+const configured = Boolean(searchConfig.apiKey && searchConfig.searchEngineId);
+const category = data.categories.find((c) => c.slug === 'search');
+---
+<Base
+  title="Search"
+  description="Curated search that surfaces primary and authoritative sources instead of AI-generated SEO content-farm results."
+>
+  <h1>No-AI Search</h1>
+  <p class="tagline">
+    Search results from a curated allowlist of trusted domains — universities, .gov sites, manufacturers — instead of AI-written content-farm SEO pages.
+  </p>
+
+  {!configured && (
+    <div class="card" style="margin-top: 1.5rem;">
+      <h3>Not configured yet</h3>
+      <p>
+        This page calls the <a href="https://developers.google.com/custom-search/v1/overview">Google Custom Search JSON API</a>,
+        which needs a free Programmable Search Engine set up first. See the
+        {' '}<a href="https://github.com/subch/no-ai-search#setup-one-time-in-googles-dashboard--not-something-i-can-do-for-you">setup steps</a>
+        {' '}in the <a href="https://github.com/subch/no-ai-search">no-ai-search</a> repo, then fill in <code>src/data/search-config.json</code>.
+      </p>
+    </div>
+  )}
+
+  {configured && (
+    <div id="search-app">
+      <form id="search-form">
+        <input type="search" id="search-input" placeholder="how to kill grass naturally" autocomplete="off" required />
+        <button type="submit">Search</button>
+      </form>
+      <div id="search-status" class="tagline"></div>
+      <div id="search-results"></div>
+    </div>
+  )}
+
+  <section class="section">
+    <h2>Repo</h2>
+    <div class="card-grid">
+      {category.repos.map((r) => (
+        <div class="card">
+          <span class={`pill pill-${r.status}`}>{r.status}</span>
+          <h3>{r.name}</h3>
+          <p>{r.description}</p>
+          <a class="repo-link" href={`https://github.com/${r.repo}`}>{r.repo} →</a>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  #search-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+  #search-input {
+    flex: 1;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    font-size: 1rem;
+  }
+  #search-form button {
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  #search-status { margin-top: 0.75rem; }
+  #search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    margin-top: 1.25rem;
+  }
+  .result h3 { margin: 0 0 0.15rem; font-size: 1.05rem; }
+  .result h3 a { text-decoration: none; }
+  .result .result-url { color: var(--pill-active-fg); font-size: 0.82rem; margin-bottom: 0.25rem; }
+  .result p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+</style>
+
+{configured && (
+  <script define:vars={{ apiKey: searchConfig.apiKey, cx: searchConfig.searchEngineId }}>
+    const form = document.getElementById('search-form');
+    const input = document.getElementById('search-input');
+    const statusEl = document.getElementById('search-status');
+    const resultsEl = document.getElementById('search-results');
+
+    async function runSearch(query) {
+      statusEl.textContent = 'Searching…';
+      resultsEl.innerHTML = '';
+
+      const url = new URL('https://www.googleapis.com/customsearch/v1');
+      url.searchParams.set('key', apiKey);
+      url.searchParams.set('cx', cx);
+      url.searchParams.set('q', query);
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error?.message || `Search failed (${res.status})`);
+        }
+
+        const items = data.items || [];
+        if (items.length === 0) {
+          statusEl.textContent = 'No results from the trusted-domain list for that query.';
+          return;
+        }
+
+        statusEl.textContent = `${data.searchInformation?.formattedTotalResults ?? items.length} results`;
+        resultsEl.innerHTML = items
+          .map(
+            (item) => `
+              <div class="result">
+                <h3><a href="${item.link}">${item.title}</a></h3>
+                <div class="result-url">${item.displayLink}</div>
+                <p>${item.snippet ?? ''}</p>
+              </div>
+            `
+          )
+          .join('');
+      } catch (err) {
+        statusEl.textContent = `Couldn't load results (${err.message}).`;
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const query = input.value.trim();
+      if (query) runSearch(query);
+    });
+  </script>
+)}

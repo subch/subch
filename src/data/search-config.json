@@ -1,0 +1,5 @@
+{
+  "_comment": "Fill in after creating a Google Programmable Search Engine at https://programmablesearchengine.google.com/. See github.com/subch/no-ai-search for setup steps. Leave blank to show the setup instructions instead of a search box.",
+  "apiKey": "",
+  "searchEngineId": ""
+}

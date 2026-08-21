@@ -6,11 +6,20 @@ import Base from '../layouts/Base.astro';
 const live = [
   {
     name: 'The Game Room',
-    href: '/gameroom/',
-    action: 'Play',
-    blurb: 'Board & card games for the whole crew — checkers, chess, war, crazy 8’s and more, with computer opponents. Works offline once loaded.',
+    href: 'https://play.subch.us',
+    action: 'Play live',
+    external: true,
+    blurb: 'Board & card games with real online tables — join by name, play friends on their own phones, stats that follow you.',
     hue: '158',
     icon: 'M20 70 L28 35 L42 52 L50 22 L58 52 L72 35 L80 70 Z M20 70 h60 v9 h-60 z',
+  },
+  {
+    name: 'Game Room · Road Trip',
+    href: '/gameroom/',
+    action: 'Play offline',
+    blurb: 'The pass-and-play edition: loads once, then works with zero signal. Syncs your stats home when you’re back online.',
+    hue: '120',
+    icon: 'M14 66 L24 46 h30 l10 12 h12 a8 8 0 0 1 8 8 v4 h-8 a9 9 0 0 0-18 0 h-20 a9 9 0 0 0-18 0 h-4 z M60 30 a12 12 0 0 1 12-12 M60 30 h14',
   },
   {
     name: 'No Baloney',
@@ -82,7 +91,7 @@ const workshop = [
       other live projects. Everything below works right now — pick one.
     </p>
     <div class="hero-cta">
-      <a class="btn primary" href="/gameroom/">🎲 Play The Game Room</a>
+      <a class="btn primary" href="https://play.subch.us">🎲 Play The Game Room</a>
       <a class="btn" href="/search/">🔎 Search with No Baloney</a>
     </div>
   </section>

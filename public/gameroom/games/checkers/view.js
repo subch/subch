@@ -5,15 +5,20 @@ import { checker, disc } from '/app/pieces.js';
 
 const CSS = `
 .ckv { display: grid; gap: 10px; width: 100%; }
-.ckv .board { grid-template-columns: repeat(8, 1fr); width: 100%; }
+/* min-width:0 everywhere: otherwise long tray content stretches the grid and
+   the BOARD resizes mid-game (the owner's phone bug) */
+.ckv > * { min-width: 0; }
+.ckv .board { grid-template-columns: repeat(8, 1fr); width: 100%; max-width: 100%; }
 .ckv .sq { border: none; padding: 0; cursor: default; }
 .ckv .sq.from { cursor: pointer; }
 .ckv .sq.hint { cursor: pointer; }
 .ckv .pc.settle { animation: cksettle .2s cubic-bezier(.2,.8,.2,1); }
 @keyframes cksettle { from { transform: translateY(-14%) scale(1.06); } }
-.ck-trays { display: flex; justify-content: space-between; gap: 10px; }
-.ck-tray { display: flex; align-items: center; gap: 6px; min-height: 26px;
+.ck-trays { display: flex; justify-content: space-between; gap: 10px; height: 26px; }
+.ck-tray { display: flex; align-items: center; gap: 4px; flex: 1 1 0; min-width: 0;
+  overflow: hidden; white-space: nowrap;
   font: 700 12px var(--font-body); color: var(--ink); text-shadow: 0 1px 3px rgba(0,0,0,.4); }
+.ck-tray:last-child { justify-content: flex-end; }
 :root[data-theme="candy"] .ck-tray { text-shadow: none; }
 .ck-tray i { width: 18px; height: 18px; display: block; }
 .ck-tray svg { width: 100%; height: 100%; overflow: visible; }
@@ -86,7 +91,7 @@ export function mount(rootEl, ctx) {
       tray.innerHTML = captured === 0
         ? `<span style="opacity:.6">${name}: no captures yet</span>`
         : `<span>${name} ×${captured}</span>` +
-          Array.from({ length: Math.min(captured, 12) }, () => `<i>${disc(1 - seat)}</i>`).join('');
+          Array.from({ length: Math.min(captured, 6) }, () => `<i>${disc(1 - seat)}</i>`).join('');
     }
   }
 

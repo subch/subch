@@ -24,6 +24,16 @@ const CSS = `
 .mv-store span { font-size: 11px; color: var(--ink-2); text-align: center; }
 .mv-store .beads { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; max-width: 64px; }
 .mv-store .beads i { width: 11px; height: 11px; border-radius: 50%; box-shadow: inset -1px -2px 2px rgba(0,0,0,.4), inset 1px 1px 1px rgba(255,255,255,.5); }
+/* phone: the board goes vertical — stores top and bottom, two columns of
+   pits — so bowls stay finger-sized instead of shrinking to slivers */
+@media (max-width: 620px) {
+  .rail.mrail { width: 100%; }
+  .mv { grid-template-columns: 1fr; }
+  .mv-rows { grid-auto-flow: column; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mv-row { grid-template-columns: 1fr; gap: 8px; }
+  .mv-store { min-height: 66px; grid-template-columns: auto auto; gap: 10px; align-items: center; }
+  .mv-store .beads { max-width: 120px; }
+}
 `;
 
 const BEAD_COLORS = ['var(--p1)', 'var(--p2)', 'var(--accent)', 'var(--accent-2)', 'var(--p1-hi)', 'var(--q-light-2)'];

@@ -1,11 +1,16 @@
 // Tic-tac-toe view: taps → onMove, rules stay in the engine. X and O draw on
 // with a 200ms stroke animation; the winning line pulses.
 const CSS = `
-.board.ttt { gap: 10px; background: transparent; box-shadow: none; aspect-ratio: 1; padding: 2px; }
+.board.ttt { gap: 10px; background: transparent; box-shadow: none; aspect-ratio: 1; padding: 2px;
+  grid-template-rows: repeat(3, 1fr); }
+.ttt .sq { min-height: 0; min-width: 0; }
 .ttt .sq { border-radius: var(--radius-s); background: var(--sq-light); border: none; cursor: pointer;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.25), inset 0 -5px 0 rgba(0,0,0,.12); }
 .ttt .sq:active { transform: scale(.97); }
-.ttt .mark { position: absolute; inset: 12%; pointer-events: none; }
+/* static grid centering — absolute children inside <button> misplace on
+   some iOS WebKit versions, which showed the owner off-center marks */
+.ttt .sq { display: grid; place-items: center; }
+.ttt .mark { width: 76%; aspect-ratio: 1; pointer-events: none; }
 /* base state is FULLY DRAWN — the animation only plays the draw-on effect,
    so reduced-motion devices (and anything that skips animations) still see
    the marks. Never gate visibility on an animation finishing. */

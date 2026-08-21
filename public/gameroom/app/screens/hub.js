@@ -47,6 +47,11 @@ export async function hub(root) {
           ${others.map((p) => `<button class="chip" data-switch="${esc(p.id)}">${avHtml(p)}${esc(p.name)}</button>`).join('')}
         </div>
       </div>
+      ${me.role === 'admin' && session.settings.syncAlerts?.length ? `
+        <div class="recent-row" style="border-color:var(--accent-2);margin-bottom:14px">
+          ⚠️ <b>${esc(session.settings.syncAlerts[0].name)}</b> synced ${session.settings.syncAlerts[0].count}
+          records in a day — that smells automated. Worth a look.
+        </div>` : ''}
       ${rivalryHtml}
       <div data-strip></div>
       <div class="section-title">Games</div>

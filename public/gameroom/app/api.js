@@ -264,3 +264,8 @@ export const api = {
   put: (p, b) => req('PUT', p, b),
   del: (p) => req('DELETE', p),
 };
+
+// hook for the online-sync widget (roadtrip build only)
+window.__grRoadtrip = {
+  matches: () => db.matches.filter((m) => !m.voided),
+};

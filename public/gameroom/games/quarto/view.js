@@ -13,6 +13,10 @@ const CSS = `
 @media (max-width: 820px) {
   .qv { grid-template-columns: 1fr; }
   .qv-side { order: -1; }
+  /* phone: the tray becomes one swipeable strip so the board stays on screen */
+  .qv-tray { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
+  .qv-tray button { flex: none; }
+  .qv-given { min-height: 72px; }
 }
 .qv-given { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 96px; }
 .qv-given .qp { width: 64px; height: 84px; filter: drop-shadow(0 16px 12px rgba(0,0,0,.45)); animation: qfloat 1.6s ease-in-out infinite; }

@@ -39,10 +39,36 @@ export async function stats(root) {
     tabsEl.innerHTML = [
       `<button class="seg-btn" data-tab="all" aria-pressed="${tab === 'all'}">All games</button>`,
       ...games.map((g) => `<button class="seg-btn" data-tab="${g.id}" aria-pressed="${tab === g.id}">${esc(g.name)}</button>`),
+      `<button class="seg-btn" data-tab="solo" aria-pressed="${tab === 'solo'}">vs Computer</button>`,
     ].join('');
   }
 
   async function paintBoard() {
+    if (tab === 'solo') {
+      // tallied client-side straight from the solo match log
+      const list = await api.get('/api/matches?limit=100&mode=solo');
+      const per = new Map();
+      for (const m of list) {
+        for (const p of m.players) {
+          if (!p.profile_id) continue;
+          const row = per.get(p.profile_id) || { name: p.name, avatar: p.avatar, color: p.color, wins: 0, losses: 0, draws: 0 };
+          if (p.result === 'win') row.wins++;
+          else if (p.result === 'loss') row.losses++;
+          else row.draws++;
+          per.set(p.profile_id, row);
+        }
+      }
+      const rows = [...per.values()].sort((a, b) => b.wins - a.wins);
+      boardEl.innerHTML = `
+        <tr><th>Player</th><th class="num">W</th><th class="num">L</th><th class="num">D</th></tr>
+        ${rows.map((r) => `
+          <tr>
+            <td><span class="who-cell">${avHtml(r)}${esc(r.name)}</span></td>
+            <td class="num">${r.wins}</td><td class="num">${r.losses}</td><td class="num">${r.draws}</td>
+          </tr>`).join('')}
+        ${!rows.length ? '<tr><td colspan="4" class="muted">Nobody has taken on the computer yet.</td></tr>' : ''}`;
+      return;
+    }
     const rows = await api.get(`/api/stats/leaderboard?game=${tab}`);
     const rated = tab !== 'all';
     boardEl.innerHTML = `
@@ -81,11 +107,12 @@ export async function stats(root) {
   }
 
   async function paintRecent() {
-    const list = await api.get(`/api/matches?limit=15${tab !== 'all' ? `&game=${tab}` : ''}`);
+    const filter = tab === 'solo' ? '&mode=solo' : tab !== 'all' ? `&game=${tab}` : '';
+    const list = await api.get(`/api/matches?limit=15${filter}`);
     recentEl.innerHTML = list.length ? list.map((m) => {
       const gname = gameMeta(m.game_id)?.name || m.game_id;
       const players = m.players.map((p) => {
-        const label = p.name || 'Guest';
+        const label = p.name || (p.ai_level ? `Computer (${['', 'Easy', 'Medium', 'Hard'][p.ai_level] || p.ai_level})` : 'Guest');
         return p.result === 'win' ? `<b>${esc(label)}</b>` : esc(label);
       }).join(' vs ');
       const when = new Date(m.ended_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });

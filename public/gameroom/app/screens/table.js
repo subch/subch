@@ -26,7 +26,9 @@ export async function table(root) {
             <button class="btn" data-undo>Undo last move</button>
             <button class="btn" data-draw>Offer a draw</button>
             <button class="btn danger" data-resign>Resign</button>
+            <button class="btn ghost-btn" data-log>Moves ▾</button>
           </div>
+          <div class="movelog" data-movelog hidden></div>
         </div>
       </div>
     </div>`);
@@ -104,9 +106,32 @@ export async function table(root) {
   const otherThan = (seat) =>
     source.players.find((p) => p.seat !== seat) || source.players[seat];
 
+  // move log drawer, fed by engine.describe()
+  const logEl = el.querySelector('[data-movelog]');
+  const logEntries = [];
+  function logLine(text) {
+    logEntries.push(text);
+    if (logEntries.length > 250) logEntries.shift();
+    if (!logEl.hidden) paintLog();
+  }
+  function paintLog() {
+    logEl.innerHTML = logEntries.length
+      ? logEntries.map((t) => `<div>${esc(t)}</div>`).join('')
+      : '<div class="muted">No moves yet.</div>';
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+  el.querySelector('[data-log]').onclick = () => {
+    logEl.hidden = !logEl.hidden;
+    if (!logEl.hidden) paintLog();
+  };
+
   const unsub = source.subscribe(async (evt) => {
     if (evt.type === 'update') {
       if (evt.lastMove) sfx.tap();
+      if (evt.undo) logLine('↩ took a move back');
+      else if (evt.desc && evt.mover !== undefined) {
+        logLine(`${source.players[evt.mover]?.name || '?'} ${evt.desc}`);
+      }
       refresh(evt);
     } else if (evt.type === 'undoRequest') {
       const who = source.players[evt.seat];
@@ -124,6 +149,8 @@ export async function table(root) {
         yes: 'Accept the draw', no: 'Play on',
       });
       source.answerDraw(ok);
+    } else if (evt.type === 'drawDenied' && evt.byAI) {
+      toast('The computer plays on');
     } else if (evt.type === 'over') {
       clearTimer();
       setTimeout(() => navigate('#/result'), 750);
@@ -138,10 +165,16 @@ export async function table(root) {
     });
     if (ok) { source.abandon(); setCurrent(null); navigate('#/'); }
   };
+  // on a remote table you act for YOUR seat, not whoever's turn it is
+  const actingSeat = () => {
+    const turn = source.getState().turn;
+    return source.localSeats.includes(turn) ? turn : source.localSeats[0];
+  };
   undoBtn.onclick = () => source.requestUndo();
-  el.querySelector('[data-draw]').onclick = () => source.offerDraw(source.getState().turn);
+  el.querySelector('[data-draw]').onclick = () => source.offerDraw(actingSeat());
   el.querySelector('[data-resign]').onclick = async () => {
-    const seat = source.getState().turn;
+    const seat = actingSeat();
+    if (seat === undefined) return;
     const who = source.players[seat];
     const ok = await confirmSheet({
       title: `${who.name}, really resign?`,

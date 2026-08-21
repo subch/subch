@@ -131,8 +131,8 @@ export function mount(rootEl, ctx) {
     const s = cur;
     const over = !legal.length;
 
-    // opponents: everyone except the revealed seat
-    oppsEl.innerHTML = ctx.players.filter((p) => p.seat !== revealed).map((p) => `
+    // opponents: everyone except the revealed seat (all of them, on a TV)
+    oppsEl.innerHTML = ctx.players.filter((p) => p.seat !== revealed && s.hands[p.seat]).map((p) => `
       <div class="c8-opp ${!over && s.turn === p.seat ? 'active' : ''}">
         <div class="c8-fan">${s.hands[p.seat].slice(0, 8).map(() => `<div class="card">${cardBack()}</div>`).join('')}</div>
         <div class="who">${avatarHtml(p)}${p.name} · ${s.hands[p.seat].length}</div>
@@ -162,10 +162,12 @@ export function mount(rootEl, ctx) {
       suitBadge.className = `c8-suit ${s.currentSuit === 1 || s.currentSuit === 2 ? 'red' : 'blk'}`;
     }
 
-    // the revealed hand, sorted for humans
+    // the revealed hand, sorted for humans (spectators see nobody's hand)
     const me = ctx.players[revealed];
-    whoseEl.innerHTML = `${avatarHtml(me)}${me.name}'s hand`;
-    const hand = s.hands[revealed].slice().sort((a, b) => (suit(a) - suit(b)) || (rank(a) - rank(b)));
+    whoseEl.innerHTML = me ? `${avatarHtml(me)}${me.name}'s hand` : '';
+    const hand = (me ? s.hands[revealed] : []).slice()
+      .filter((c) => c >= 0)
+      .sort((a, b) => (suit(a) - suit(b)) || (rank(a) - rank(b)));
     handEl.innerHTML = hand.map((c) => {
       const ok = myTurn() && legal.some((m) => m.type === 'play' && m.card === c);
       return `<div class="card ${ok ? 'ok' : 'dead'}" data-card="${c}">${cardFace(cardName(c).slice(0, -1), SUIT_LETTER[suit(c)])}</div>`;

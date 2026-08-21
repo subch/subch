@@ -11,12 +11,15 @@ import { result } from './screens/result.js';
 import { stats } from './screens/stats.js';
 import { profile } from './screens/profile.js';
 import { family } from './screens/family.js';
+import { lobby } from './screens/lobby.js';
+import { tv } from './screens/tv.js';
 
 injectDefs();
 await session.init();
 setMuted(session.me ? !session.me.sound : false);
 
 setGuard((path) => {
+  if (path.startsWith('/tv/')) return null; // spectator screens need no login
   if (!session.me && path !== '/login') return '#/login';
   if (session.me && path === '/login') return '#/';
   return null;
@@ -30,6 +33,21 @@ route('/result', result);
 route('/stats', stats);
 route('/profile', profile);
 route('/family', family);
+route('/lobby/:code', lobby);
+route('/tv/:code', tv);
+
+// a reload mid-table: pick the live table back up before routing
+if (session.me) {
+  let stored = null;
+  try { stored = sessionStorage.getItem('gr-table'); } catch { /* fine */ }
+  if (stored && (location.hash.startsWith('#/play') || location.hash.startsWith('#/result'))) {
+    const { RoomSource } = await import('./match/room-source.js');
+    const { setCurrent } = await import('./match/current.js');
+    const src = new RoomSource(stored);
+    if (await src.ready()) setCurrent(src);
+    else src.destroy();
+  }
+}
 
 start(document.getElementById('app'));
 

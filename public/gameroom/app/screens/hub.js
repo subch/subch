@@ -5,6 +5,8 @@ import { h, avHtml, esc } from '../ui.js';
 import { tileIcon } from '../pieces.js';
 import { GAMES, gameMeta } from '/shared/games/index.js';
 import { loginAs, brandMark } from './login.js';
+import { onMessage, request } from '../net.js';
+import { toast } from '../ui.js';
 
 function ago(iso) {
   if (!iso) return 'never';
@@ -46,6 +48,7 @@ export async function hub(root) {
         </div>
       </div>
       ${rivalryHtml}
+      <div data-strip></div>
       <div class="section-title">Games</div>
       <div class="tiles">
         ${GAMES.map((g) => g.enabled ? `
@@ -78,8 +81,53 @@ export async function hub(root) {
     }
     if (e.target.closest('[data-again]') && rivalry) {
       navigate(`#/setup/${rivalry.topGame || 'tic-tac-toe'}`);
+      return;
+    }
+    const join = e.target.closest('[data-join]');
+    if (join) {
+      const code = join.dataset.join;
+      const seat = Number(join.dataset.seat);
+      try {
+        await request({ t: 'table.join', code, seat },
+          (x) => x.t === 'table.state' && x.table?.code === code);
+        navigate(`#/lobby/${code}`);
+      } catch (err) {
+        toast(err.message);
+      }
     }
   });
 
+  // live "Open tables" strip, pushed from the table server
+  const stripEl = el.querySelector('[data-strip]');
+  function paintStrip(open) {
+    const joinable = open.filter((t) => t.seats.some((s) => !s.taken) ||
+      t.seats.some((s) => s.profile?.id === me.id));
+    stripEl.innerHTML = joinable.length ? `
+      <div class="section-title">Open tables</div>
+      <div class="recent" style="margin-bottom:6px">
+        ${joinable.map((t) => {
+          const free = t.seats.find((s) => !s.taken);
+          const mine = t.seats.find((s) => s.profile?.id === me.id);
+          const who = t.seats.filter((s) => s.taken)
+            .map((s) => s.profile?.name || 'Guest').join(', ');
+          return `
+            <div class="recent-row">
+              <span style="font-weight:700">${esc(gameMeta(t.gameId)?.name || t.gameId)}</span>
+              <span class="muted">${esc(who)}</span>
+              <span class="spacer"></span>
+              ${mine
+                ? `<a class="btn" style="min-height:40px" href="#/lobby/${esc(t.code)}">Rejoin</a>`
+                : free
+                  ? `<button class="btn primary" style="min-height:40px" data-join="${esc(t.code)}" data-seat="${free.seat}">Join</button>`
+                  : ''}
+            </div>`;
+        }).join('')}
+      </div>` : '';
+  }
+  const unsubNet = onMessage((msg) => {
+    if (msg.t === 'tables.list') paintStrip(msg.tables || []);
+  });
+
   root.appendChild(el);
+  return { destroy() { unsubNet(); } };
 }

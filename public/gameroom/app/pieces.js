@@ -100,18 +100,18 @@ function beadPos(pitIndex, i) {
   const b = Math.sin(pitIndex * 61.3 + i * 29.9) * 0.5 + 0.5;
   const ring = Math.floor(i / 7);
   const angle = (i % 7) / 7 * Math.PI * 2 + a * 0.9;
-  const rx = 12 + ring * 13 + a * 8, ryr = 6 + ring * 6 + b * 4;
-  return [80 + Math.cos(angle) * rx, 52 + Math.sin(angle) * ryr];
+  const rx = 18 + ring * 17 + a * 10, ryr = 10 + ring * 9 + b * 5;
+  return [80 + Math.cos(angle) * rx, 48 + Math.sin(angle) * ryr];
 }
 
 export function pit(count, pitIndex = 0) {
-  let s = '<svg viewBox="0 0 160 100" class="pit"><ellipse class="bowl" cx="80" cy="54" rx="56" ry="30"/><ellipse class="rim" cx="80" cy="54" rx="56" ry="30"/>';
+  let s = '<svg viewBox="0 0 160 112" class="pit"><ellipse class="bowl" cx="80" cy="50" rx="72" ry="42"/><ellipse class="rim" cx="80" cy="50" rx="72" ry="42"/>';
   for (let i = 0; i < Math.min(count, 24); i++) {
     const [x, y] = beadPos(pitIndex, i);
-    s += `<circle class="bead" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9" fill="${BEAD_COLORS[i % BEAD_COLORS.length]}"/>` +
-      `<ellipse class="bead-hl" cx="${(x - 3).toFixed(1)}" cy="${(y - 4).toFixed(1)}" rx="3" ry="2"/>`;
+    s += `<circle class="bead" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="12" fill="${BEAD_COLORS[i % BEAD_COLORS.length]}"/>` +
+      `<ellipse class="bead-hl" cx="${(x - 4).toFixed(1)}" cy="${(y - 5).toFixed(1)}" rx="4" ry="2.6"/>`;
   }
-  return s + `<text class="count" x="80" y="96" text-anchor="middle">${count}</text></svg>`;
+  return s + `<text class="count" x="80" y="108" text-anchor="middle">${count}</text></svg>`;
 }
 
 // ---------- cards ----------------------------------------------------------

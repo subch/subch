@@ -3,6 +3,8 @@ import { navigate } from '../router.js';
 import { h, avHtml, esc } from '../ui.js';
 import { crownIcon } from '../pieces.js';
 import { sfx } from '../sounds.js';
+import { api } from '../api.js';
+import { avatarSvg } from '../avatars.js';
 
 const CONFETTI_COLORS = ['var(--accent)', 'var(--accent-2)', 'var(--p1)', 'var(--p2)'];
 
@@ -40,8 +42,22 @@ export async function result(root) {
   if (winner) sfx.win(); else sfx.chime();
 
   const deltaEl = el.querySelector('[data-delta]');
+  // Heidi trots across the card when the winner is on a 5+ win streak
+  async function maybeHeidi(rec) {
+    if (!winner?.profileId || !rec || rec.mode === 'practice') return;
+    try {
+      const rows = await api.get(`/api/stats/leaderboard?game=${source.meta.id}`);
+      const row = rows.find((r) => r.id === winner.profileId);
+      if (row && row.streak >= 5 && !el.querySelector('.heidi')) {
+        el.querySelector('.result').insertAdjacentHTML('beforeend',
+          `<div class="heidi">${avatarSvg('dog')}</div>`);
+      }
+    } catch { /* no dog today */ }
+  }
+
   function paintDelta(rec) {
     if (!rec) return;
+    maybeHeidi(rec);
     if (rec.rated) {
       deltaEl.innerHTML = rec.seats.map((s) => {
         const p = source.players[s.seat];

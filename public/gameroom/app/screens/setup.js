@@ -1,9 +1,10 @@
 import { session } from '../session.js';
 import { api } from '../api.js';
 import { navigate } from '../router.js';
-import { h, avHtml, esc, pinPad, facePicker, toast, segRow, toggleRow, backBar } from '../ui.js';
+import { h, avHtml, esc, pinPad, facePicker, levelPicker, toast, segRow, toggleRow, backBar } from '../ui.js';
 import { gameMeta } from '/shared/games/index.js';
 import { startLocalMatch } from '../match/controller.js';
+import { request } from '../net.js';
 
 const optsKey = (gameId) => `gr:opts:${session.me?.id}:${gameId}`;
 
@@ -33,6 +34,7 @@ export async function setup(root, params) {
         </div>
         ${meta.options?.length ? '<div class="panel" data-options><div class="section-title" style="margin-top:0">Rules</div></div>' : ''}
         <button class="btn primary big" data-start>Start</button>
+        <button class="btn big" data-open-table>Open to other devices</button>
       </div>
     </div>`);
   el.firstElementChild.replaceWith(backBar(meta.name, '#/'));
@@ -46,7 +48,8 @@ export async function setup(root, params) {
       if (!s) {
         return `<button class="seatrow empty" data-fill="${i}">Tap to add a player</button>`;
       }
-      const av = s.guest ? '<span class="av guest med">?</span>' : avHtml({ color: s.color, avatar: s.avatar }, 'med');
+      const av = s.guest ? '<span class="av guest med">?</span>'
+        : avHtml({ color: s.color, avatar: s.avatar }, 'med');
       return `
         <div class="seatrow">
           ${av}
@@ -66,11 +69,23 @@ export async function setup(root, params) {
       profiles: session.profiles,
       title: 'Who takes this seat?',
       allowGuest: true,
+      allowComputer: true,
       exclude: seated,
     });
     if (!pick) return;
     if (pick === 'guest') {
       seats[i] = { guest: true, name: 'Guest' };
+      paintSeats();
+      return;
+    }
+    if (pick === 'computer') {
+      const level = await levelPicker();
+      if (!level) return;
+      seats[i] = {
+        ai: level,
+        name: `Computer · ${['', 'Easy', 'Medium', 'Hard'][level]}`,
+        avatar: 'robot', color: '#6d7480',
+      };
       paintSeats();
       return;
     }
@@ -122,6 +137,29 @@ export async function setup(root, params) {
       try { localStorage.setItem(optsKey(meta.id), JSON.stringify(options)); } catch { /* ignore */ }
       await startLocalMatch({ gameId: meta.id, options: { ...options }, seats: seats.slice() });
       navigate('#/play');
+      return;
+    }
+    if (e.target.closest('[data-open-table]')) {
+      if (seats.some((s) => s?.ai)) {
+        toast("Computer players can't join a shared table yet");
+        return;
+      }
+      // seated players ride this device; empty rows become open seats that
+      // family members claim from their own hubs
+      try { localStorage.setItem(optsKey(meta.id), JSON.stringify(options)); } catch { /* ignore */ }
+      const seated = seats
+        .map((s, i) => (s ? (s.guest
+          ? { seat: i, guest: true }
+          : { seat: i, profileId: s.profileId, seatToken: s.seatToken }) : null))
+        .filter(Boolean);
+      try {
+        const m = await request(
+          { t: 'table.create', gameId: meta.id, options: { ...options }, seatCount: seats.length, seats: seated },
+          (x) => x.t === 'table.state');
+        navigate(`#/lobby/${m.table.code}`);
+      } catch (err) {
+        toast(err.message);
+      }
     }
   });
 

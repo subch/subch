@@ -4,16 +4,19 @@
 //   resign(seat) offerDraw(seat) answerDraw(ok) rematch() abandon() subscribe(fn)
 import { api } from '../api.js';
 import { seedFromClock } from '/shared/rng.js';
+import { aiMove } from '../ai.js';
 
 export class LocalSource {
   constructor({ engine, meta, options, seats }) {
     this.engine = engine;
     this.meta = meta;
     this.options = options || {};
-    this.baseSeats = seats;            // [{profileId, seatToken, guest, name, avatar, color, level}]
+    this.baseSeats = seats;            // [{profileId, seatToken, guest, ai, name, avatar, color, level}]
     this.assign = seats.map((_, i) => i); // seat -> base index; rematch rotates this
     this.listeners = new Set();
-    this.mode = 'local';
+    // vs computer = solo; one human alone = practice (no tallies for either)
+    this.mode = seats.some((s) => s.ai) ? 'solo'
+      : seats.length === 1 ? 'practice' : 'local';
   }
 
   get players() {
@@ -21,7 +24,8 @@ export class LocalSource {
   }
 
   get localSeats() {
-    return this.players.map((p) => p.seat);
+    // AI seats never accept taps
+    return this.players.filter((p) => !p.ai).map((p) => p.seat);
   }
 
   start() {
@@ -39,6 +43,25 @@ export class LocalSource {
     this.recorded = null;
     this.recording = null;
     this.emit({ type: 'update', lastMove: null });
+    this.maybeAI();
+  }
+
+  // If it's a computer seat's turn, think (in the worker) and move. A short
+  // floor delay keeps it from feeling like a slot machine.
+  maybeAI() {
+    if (this.over) return;
+    const p = this.players[this.state.turn];
+    if (!p?.ai || this._aiBusy) return;
+    this._aiBusy = true;
+    const histLen = this.history.length;
+    Promise.all([
+      aiMove(this.meta.id, this.state, p.ai),
+      new Promise((r) => setTimeout(r, 600)),
+    ]).then(([move]) => {
+      this._aiBusy = false;
+      if (this.over || this.history.length !== histLen || !move) return;
+      this.move(move).catch(() => {});
+    }).catch(() => { this._aiBusy = false; });
   }
 
   subscribe(fn) {
@@ -62,6 +85,7 @@ export class LocalSource {
     this.emit({ type: 'update', lastMove: m, mover, desc });
     const st = this.engine.status(this.state);
     if (st.over) this.finish(st);
+    else this.maybeAI();
   }
 
   finish(st) {
@@ -82,7 +106,9 @@ export class LocalSource {
         startedAt: this.startedAt,
         seats: this.players.map((p) => (p.guest
           ? { seat: p.seat, guest: true }
-          : { seat: p.seat, profileId: p.profileId, seatToken: p.seatToken || undefined })),
+          : p.ai
+            ? { seat: p.seat, ai: p.ai }
+            : { seat: p.seat, profileId: p.profileId, seatToken: p.seatToken || undefined })),
         winnerSeat: st.winner ?? null,
         reason: st.reason || '',
         scores: st.scores || undefined,
@@ -105,7 +131,13 @@ export class LocalSource {
 
   requestUndo() {
     if (this.over || this.history.length < 2) return;
-    this.emit({ type: 'undoRequest', seat: this.lastMover() });
+    const requester = this.lastMover();
+    const others = this.players.filter((p) => p.seat !== requester);
+    if (others.length && others.every((p) => p.ai)) {
+      this.answerUndo(true); // the computer is a gracious opponent
+      return;
+    }
+    this.emit({ type: 'undoRequest', seat: requester });
   }
 
   answerUndo(ok) {
@@ -120,6 +152,7 @@ export class LocalSource {
         this.moveLog = this.moveLog.slice(0, i);
         this.state = this.history[i].state;
         this.emit({ type: 'update', lastMove: null, undo: true });
+        this.maybeAI();
         return;
       }
     }
@@ -134,6 +167,11 @@ export class LocalSource {
 
   offerDraw(seat) {
     if (this.over) return;
+    const others = this.players.filter((p) => p.seat !== seat);
+    if (others.length && others.every((p) => p.ai)) {
+      this.emit({ type: 'drawDenied', byAI: true }); // computers play on
+      return;
+    }
     this.emit({ type: 'drawOffer', seat });
   }
 

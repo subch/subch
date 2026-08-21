@@ -152,7 +152,7 @@ export function pinPad(profile, { claim = false, verify, subtitle }) {
 // ---------- face picker ----------------------------------------------------
 // Resolves the picked profile, the string 'guest' when allowed, or null.
 
-export function facePicker({ profiles, title = 'Who is it?', allowGuest = false, exclude = [] }) {
+export function facePicker({ profiles, title = 'Who is it?', allowGuest = false, allowComputer = false, exclude = [] }) {
   return new Promise((resolve) => {
     const list = profiles.filter((p) => !exclude.includes(p.id));
     const el = h(`
@@ -165,6 +165,11 @@ export function facePicker({ profiles, title = 'Who is it?', allowGuest = false,
               <span class="face-name">${esc(p.name)}</span>
               ${!p.claimed ? '<span class="face-sub">pick your code</span>' : ''}
             </button>`).join('')}
+          ${allowComputer ? `
+            <button class="face" data-computer>
+              ${avHtml({ color: '#6d7480', avatar: 'robot' }, 'big')}
+              <span class="face-name">Computer</span>
+            </button>` : ''}
           ${allowGuest ? `
             <button class="face" data-guest>
               <span class="av big guest">?</span>
@@ -178,7 +183,28 @@ export function facePicker({ profiles, title = 'Who is it?', allowGuest = false,
       if (!face) return;
       close();
       if (face.hasAttribute('data-guest')) resolve('guest');
+      else if (face.hasAttribute('data-computer')) resolve('computer');
       else resolve(list.find((p) => p.id === face.dataset.id) || null);
+    });
+  });
+}
+
+// Easy / Medium / Hard for a computer seat.
+export function levelPicker() {
+  return new Promise((resolve) => {
+    const el = h(`
+      <div class="confirm">
+        <h3>How strong?</h3>
+        <div class="row">
+          <button class="btn" data-l="1">Easy</button>
+          <button class="btn" data-l="2">Medium</button>
+          <button class="btn" data-l="3">Hard</button>
+        </div>
+      </div>`);
+    const { close } = sheet(el);
+    el.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-l]');
+      if (b) { close(); resolve(Number(b.dataset.l)); }
     });
   });
 }

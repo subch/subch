@@ -1,7 +1,7 @@
 // Checkers AI: alpha-beta; eval = men + 1.6×kings + advancement, from the
 // plan's spec (mobility folded into search depth instead — cheaper).
 import * as engine from './engine.js';
-import { bestMove } from '../../ai/minimax.js';
+import { bestMove, safeRandomMove } from '../../ai/minimax.js';
 
 function evaluate(state, me) {
   let score = 0;
@@ -18,7 +18,9 @@ function evaluate(state, me) {
 }
 
 export function chooseMove(state, level, rng = Math.random) {
-  const depth = level >= 3 ? 8 : level === 2 ? 6 : 4;
-  const timeMs = level >= 3 ? 1500 : level === 2 ? 800 : 350;
+  if (level <= 1 && rng() < 0.35) return safeRandomMove(engine, state, rng);
+  if (level === 2 && rng() < 0.15) return safeRandomMove(engine, state, rng);
+  const depth = level >= 3 ? 8 : level === 2 ? 4 : 3;
+  const timeMs = level >= 3 ? 1500 : level === 2 ? 600 : 300;
   return bestMove(engine, state, { evaluate, maxDepth: depth, timeMs, rng });
 }

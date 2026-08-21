@@ -7,7 +7,8 @@ const CSS = `
 .mv { display: grid; grid-template-columns: 86px 1fr 86px; gap: 8px; align-items: stretch; }
 .mv-rows { display: grid; gap: 6px; }
 .mv-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
-.mv-pit { position: relative; border: none; padding: 2px; background: none; border-radius: 12px; cursor: default; }
+.mv-pit { position: relative; border: none; padding: 2px; background: none; border-radius: 50%; cursor: default;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.35), inset 0 -1px 0 rgba(255,255,255,.14); }
 .mv-pit svg { width: 100%; height: auto; display: block; overflow: visible; }
 .mv-pit.mine { cursor: pointer; }
 .mv-pit.mine::after { content: ""; position: absolute; inset: 6px; border-radius: 50%;

@@ -139,13 +139,16 @@ function resolve(s) {
   }
 
   const w = tied[0];
+  // keep what everyone showed this round — the view displays it until the
+  // next flip, so a fast opponent's (or the computer's) card is actually seen
+  const shown = s.faceUp.map((f) => (f && f.length ? [...f] : null));
   const take = [...s.pot];
   for (let i = 0; i < s.players; i++) {
     if (s.faceUp[i]) { take.push(...s.faceUp[i]); s.faceUp[i] = null; }
   }
   s.pot = [];
   s.wons[w].push(...take);
-  s.lastRound = { winner: w, take: take.length, war: s.warDepth > 0 };
+  s.lastRound = { winner: w, take: take.length, war: s.warDepth > 0, cards: shown };
   startRound(s);
 }
 

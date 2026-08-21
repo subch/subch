@@ -11,7 +11,7 @@ const CSS = `
   font-family: var(--font-display); font-size: clamp(26px, 4vw, 44px); font-weight: 700; color: var(--ink); }
 .tv-banner .av { width: 52px; height: 52px; }
 .tv-stage { display: grid; place-items: center; min-height: 0; }
-.tv-stage .rail { width: min(96vw, calc(100dvh - 140px), 760px); }
+.tv-stage .rail { width: min(96vw, calc(100svh - 140px), 760px); }
 .tv-code { position: fixed; right: 16px; bottom: 12px; font: 700 14px var(--font-body);
   color: var(--ink-2); letter-spacing: .2em; }
 `;

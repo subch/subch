@@ -79,7 +79,11 @@ export async function table(root) {
   function paintTurn(st) {
     const state = source.getState();
     const p = source.players[state.turn];
-    turnEl.innerHTML = `${avHtml(p, 'med')}<div><div class="t1">${esc(p.name)}'s move</div><div class="t2">${esc(st?.note || '')}</div></div>`;
+    // on a live table, a dropped player's status trumps the game note
+    const gone = source.players.find((x) => x.connected === false && !x.guest && !x.ai);
+    const sub = gone ? `waiting for ${gone.name} to reconnect…` : (st?.note || '');
+    turnEl.classList.toggle('waiting', !!gone);
+    turnEl.innerHTML = `${avHtml(p, 'med')}<div><div class="t1">${esc(p.name)}'s move</div><div class="t2">${esc(sub)}</div></div>`;
   }
 
   function refresh(evt) {

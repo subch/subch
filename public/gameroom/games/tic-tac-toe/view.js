@@ -6,14 +6,17 @@ const CSS = `
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.25), inset 0 -5px 0 rgba(0,0,0,.12); }
 .ttt .sq:active { transform: scale(.97); }
 .ttt .mark { position: absolute; inset: 12%; pointer-events: none; }
+/* base state is FULLY DRAWN — the animation only plays the draw-on effect,
+   so reduced-motion devices (and anything that skips animations) still see
+   the marks. Never gate visibility on an animation finishing. */
 .ttt .mark path, .ttt .mark circle { fill: none; stroke-width: 9; stroke-linecap: round;
-  stroke-dasharray: 300; stroke-dashoffset: 300; animation: tttdraw .2s ease-out forwards; }
+  stroke-dasharray: 300; stroke-dashoffset: 0; animation: tttdraw .2s ease-out; }
 .ttt .mark.x path { stroke: var(--p1); }
 .ttt .mark.o circle { stroke: var(--p2); }
-.ttt .mark.x path:nth-child(2) { animation-delay: .12s; }
+.ttt .mark.x path:nth-child(2) { animation-duration: .32s; }
 :root[data-theme="arcade"] .ttt .mark.x path { filter: drop-shadow(0 0 8px var(--p1)); }
 :root[data-theme="arcade"] .ttt .mark.o circle { filter: drop-shadow(0 0 8px var(--p2)); }
-@keyframes tttdraw { to { stroke-dashoffset: 0; } }
+@keyframes tttdraw { from { stroke-dashoffset: 300; } }
 `;
 
 const X = '<svg class="mark x" viewBox="0 0 100 100"><path d="M18 18 L82 82"/><path d="M82 18 L18 82"/></svg>';

@@ -70,22 +70,24 @@ export function chessPiece(kind, seat) {
 
 // ---------- quarto ---------------------------------------------------------
 
+// Trait legibility beats subtlety: tall/short heights are exaggerated,
+// hollow bores are big and dark, and every piece carries a defining outline.
 export function quarto(tall, dark, round, hollow) {
-  const h = tall ? 62 : 36, top = 80 - h, ry = 9;
+  const h = tall ? 72 : 26, top = 84 - h, ry = 9;
   let s = `<svg viewBox="0 0 100 100" class="qp ${dark ? 'dark' : 'light'}">`;
-  s += '<ellipse class="shadow" cx="52" cy="86" rx="30" ry="7"/>';
+  s += '<ellipse class="shadow" cx="52" cy="90" rx="30" ry="6"/>';
   if (round) {
     s += `<path class="side" d="M22 ${top} v${h} a28 ${ry} 0 0 0 56 0 v-${h} z"/>`;
     s += `<ellipse class="top" cx="50" cy="${top}" rx="28" ry="${ry}"/><ellipse class="top-edge" cx="50" cy="${top}" rx="28" ry="${ry}"/>`;
-    if (hollow) s += `<ellipse class="hole" cx="50" cy="${top}" rx="12" ry="4"/>`;
-    s += `<ellipse class="gloss" cx="34" cy="${top + 14}" rx="4" ry="${h * 0.35}"/>`;
+    if (hollow) s += `<ellipse class="hole" cx="50" cy="${top}" rx="16" ry="6"/>`;
+    s += `<ellipse class="gloss" cx="34" cy="${top + 12}" rx="4" ry="${h * 0.35}"/>`;
   } else {
     const t8 = top + 8;
     s += `<path class="side" d="M22 ${t8} v${h} h52 v-${h} z"/>`;
     s += `<path class="side-r" d="M74 ${t8} l10-8 v${h} l-10 8 z"/>`;
     s += `<path class="top" d="M22 ${t8} l10-8 h52 l-10 8 z"/><path class="top-edge" d="M22 ${t8} l10-8 h52 l-10 8 z"/>`;
-    if (hollow) s += `<path class="hole" d="M40 ${t8 - 2} l5-4 h20 l-5 4 z"/>`;
-    s += `<rect class="gloss" x="26" y="${t8 + 6}" width="5" height="${h * 0.7}" rx="2"/>`;
+    if (hollow) s += `<path class="hole" d="M36 ${t8 - 1} l6-5 h24 l-6 5 z"/>`;
+    s += `<rect class="gloss" x="26" y="${t8 + 5}" width="5" height="${h * 0.7}" rx="2"/>`;
   }
   return s + '</svg>';
 }

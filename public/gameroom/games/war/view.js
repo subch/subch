@@ -29,6 +29,8 @@ const CSS = `
   box-shadow: var(--glow) var(--accent), 0 2px 4px rgba(0,0,0,.4); padding: 0 4px; }
 .war-up { display: flex; gap: 6px; }
 .war-up .card { width: 72px; animation: cardflip .28s cubic-bezier(.2,.8,.2,1); }
+.war-up .card.prev { opacity: .5; filter: saturate(.75); animation: none; }
+.war-up .card.prev.won { opacity: 1; filter: none; box-shadow: 0 0 0 3px var(--accent), 0 8px 16px rgba(0,0,0,.38); }
 @keyframes cardflip { from { transform: rotateY(90deg) scale(.9); } to { transform: rotateY(0) scale(1); } }
 .war-mid { display: grid; justify-items: center; gap: 6px; min-height: 66px; align-content: center; }
 .war-banner { font-family: var(--font-display); font-weight: 700; font-size: clamp(17px, 3vw, 24px);
@@ -122,12 +124,19 @@ export function mount(rootEl, ctx) {
       deckEl.classList.toggle('can-flip', myTurn && ctx.localSeats.includes(s));
       zoneEl.classList.toggle('active', myTurn);
       zoneEl.classList.toggle('dead', state.out[s]);
-      const cards = state.faceUp[s] || [];
-      const key = cards.join(',');
+      // show this round's cards; between rounds, keep LAST round's cards up
+      // (dimmed, winner ringed) so nobody misses a fast flip
+      const anyLive = state.faceUp.some((f) => f && f.length);
+      const live = state.faceUp[s] || [];
+      const prev = (!anyLive && state.lastRound?.cards?.[s]) || [];
+      const cards = live.length ? live : prev;
+      const isPrev = !live.length && prev.length > 0;
+      const won = isPrev && state.lastRound?.winner === s;
+      const key = `${cards.join(',')}:${isPrev ? 'p' : 'l'}${won ? 'w' : ''}`;
       if (upEl.dataset.key !== key) {
         upEl.dataset.key = key;
         upEl.innerHTML = cards.map((c) =>
-          `<div class="card" title="${cardName(c)}">${cardFace(
+          `<div class="card ${isPrev ? 'prev' : ''} ${won ? 'won' : ''}" title="${cardName(c)}">${cardFace(
             cardName(c).slice(0, -1), 'shdc'[(c / 13) | 0])}</div>`).join('');
       }
     }

@@ -2,7 +2,7 @@
 // depth 2/3/4 by level. (DECISIONS.md notes Stockfish-WASM as the future
 // upgrade if Dad ever wants a real fight.)
 import * as engine from './engine.js';
-import { bestMove } from '../../ai/minimax.js';
+import { bestMove, safeRandomMove } from '../../ai/minimax.js';
 
 const VAL = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 0 };
 
@@ -42,7 +42,9 @@ function evaluate(state, me) {
 }
 
 export function chooseMove(state, level, rng = Math.random) {
-  const depth = level >= 3 ? 4 : level === 2 ? 3 : 2;
-  const timeMs = level >= 3 ? 2500 : level === 2 ? 1400 : 600;
+  if (level <= 1 && rng() < 0.3) return safeRandomMove(engine, state, rng);
+  if (level === 2 && rng() < 0.12) return safeRandomMove(engine, state, rng);
+  const depth = level >= 3 ? 4 : level === 2 ? 2 : 1;
+  const timeMs = level >= 3 ? 2500 : level === 2 ? 1000 : 400;
   return bestMove(engine, state, { evaluate, maxDepth: depth, timeMs, rng });
 }

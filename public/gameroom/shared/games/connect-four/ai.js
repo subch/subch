@@ -1,6 +1,6 @@
 // Connect Four AI: alpha-beta with a center-column + open-window heuristic.
 import * as engine from './engine.js';
-import { bestMove } from '../../ai/minimax.js';
+import { bestMove, safeRandomMove } from '../../ai/minimax.js';
 import { COLS, ROWS } from './engine.js';
 
 function windows() {
@@ -43,7 +43,11 @@ function evaluate(state, me) {
 }
 
 export function chooseMove(state, level, rng = Math.random) {
-  const depth = level >= 3 ? 8 : level === 2 ? 6 : 4;
-  const timeMs = level >= 3 ? 1400 : level === 2 ? 800 : 350;
+  // blunder rates keep Easy/Medium human-beatable (owner feedback: the old
+  // Medium was too strong). safeRandom still takes/blocks immediate wins.
+  if (level <= 1 && rng() < 0.35) return safeRandomMove(engine, state, rng);
+  if (level === 2 && rng() < 0.15) return safeRandomMove(engine, state, rng);
+  const depth = level >= 3 ? 8 : level === 2 ? 4 : 3;
+  const timeMs = level >= 3 ? 1400 : level === 2 ? 600 : 300;
   return bestMove(engine, state, { evaluate, maxDepth: depth, timeMs, rng });
 }

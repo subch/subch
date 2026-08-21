@@ -11,9 +11,12 @@ const CSS = `
 .dbv .dot { fill: var(--ink-2); }
 .dbv .hit { stroke: transparent; stroke-width: 44; cursor: pointer; pointer-events: stroke; }
 .dbv .ghost { stroke: var(--sq-dark); stroke-width: 6; stroke-linecap: round; opacity: .18; pointer-events: none; }
-.dbv .edge { stroke-width: 7; stroke-linecap: round; pointer-events: none; }
-.dbv .edge.fresh { stroke-dasharray: 130; stroke-dashoffset: 130; animation: dbdraw .18s ease-out forwards; }
-@keyframes dbdraw { to { stroke-dashoffset: 0; } }
+/* drawn edges are visible at rest; the animation only adds the draw-on
+   flourish (reduced-motion safe) */
+.dbv .edge { stroke-width: 7; stroke-linecap: round; pointer-events: none;
+  stroke-dasharray: 130; stroke-dashoffset: 0; }
+.dbv .edge.fresh { animation: dbdraw .18s ease-out; }
+@keyframes dbdraw { from { stroke-dashoffset: 130; } }
 .dbv .boxfill { opacity: .35; }
 .dbv .boxtag { font: 700 34px var(--font-display); text-anchor: middle; fill: #fff; paint-order: stroke; stroke: rgba(0,0,0,.35); stroke-width: 2px; }
 `;

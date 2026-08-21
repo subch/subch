@@ -1,46 +1,273 @@
 ---
 import Base from '../layouts/Base.astro';
-import data from '../data/repos.json';
+
+// The splash is a launcher: live, usable things only. Workshop/reference
+// pages live in the quiet row at the bottom.
+const live = [
+  {
+    name: 'The Game Room',
+    href: '/gameroom/',
+    action: 'Play',
+    blurb: 'Board & card games for the whole crew — checkers, chess, war, crazy 8’s and more, with computer opponents. Works offline once loaded.',
+    hue: '158',
+    icon: 'M20 70 L28 35 L42 52 L50 22 L58 52 L72 35 L80 70 Z M20 70 h60 v9 h-60 z',
+  },
+  {
+    name: 'No Baloney',
+    href: '/search/',
+    action: 'Search',
+    blurb: 'A search engine tuned to skip the junk and find real answers.',
+    hue: '215',
+    icon: 'M42 14 a28 28 0 1 0 0 56 a28 28 0 1 0 0-56 z M42 26 a16 16 0 1 1 0 32 a16 16 0 1 1 0-32 z M62 62 L86 86 L78 92 L56 70 z',
+  },
+  {
+    name: 'Wyatt & Heidi’s Candy Adventure',
+    href: '/candy/',
+    action: 'Play',
+    blurb: 'A homemade candy-collecting game starring one kid and one very good dog.',
+    hue: '330',
+    icon: 'M50 30 a20 20 0 1 0 0 40 a20 20 0 1 0 0-40 z M28 42 L10 30 L16 50 L10 70 L28 58 z M72 42 L90 30 L84 50 L90 70 L72 58 z',
+  },
+  {
+    name: 'Goon Turismo',
+    href: 'https://goon-turismo.com',
+    action: 'Visit',
+    external: true,
+    blurb: 'Our crew’s Gran Turismo 7 time-trial results and season standings.',
+    hue: '0',
+    icon: 'M14 62 L26 40 h28 l8 12 h14 a8 8 0 0 1 8 8 v6 h-8 a10 10 0 0 0-20 0 h-16 a10 10 0 0 0-20 0 h-6 z M28 78 a6 6 0 1 0 0.1 0 z M68 78 a6 6 0 1 0 0.1 0 z',
+  },
+  {
+    name: 'Schaefer TX Consulting',
+    href: 'https://schaefertx.com',
+    action: 'Visit',
+    external: true,
+    blurb: 'Clinical & toxicology lab consulting — LC-MS/MS, QC, and interface work.',
+    hue: '38',
+    icon: 'M36 30 v-8 a6 6 0 0 1 6-6 h16 a6 6 0 0 1 6 6 v8 h16 a6 6 0 0 1 6 6 v40 a6 6 0 0 1-6 6 h-60 a6 6 0 0 1-6-6 v-40 a6 6 0 0 1 6-6 z M44 30 h12 v-6 h-12 z',
+  },
+  {
+    name: 'Weather Station',
+    href: '/weather/',
+    action: 'View live',
+    blurb: 'Backyard conditions and history, straight from the sensors.',
+    hue: '190',
+    icon: 'M30 62 a16 16 0 1 1 4-31 a20 20 0 0 1 38 6 a14 14 0 0 1-2 25 z M32 74 l-6 12 M50 74 l-6 12 M68 74 l-6 12',
+  },
+  {
+    name: 'RC Garage',
+    href: '/rc/',
+    action: 'Browse',
+    blurb: 'The fleet: builds, upgrades, and what’s on the bench.',
+    hue: '265',
+    icon: 'M12 60 L28 42 h30 l14 14 h10 a6 6 0 0 1 6 6 v6 h-10 a10 10 0 0 0-20 0 h-18 a10 10 0 0 0-20 0 h-8 v-14 z M20 34 l10-12 M34 30 l6-14',
+  },
+];
+
+const workshop = [
+  { name: '3D Printing', href: '/3d-printing/' },
+  { name: 'ESP32 / Arduino', href: '/esp32-arduino/' },
+  { name: 'Data Projects', href: '/data/' },
+  { name: 'GitHub', href: 'https://github.com/subch' },
+];
 ---
-<Base title="Home" description="Travis Schaefer's project hub — RC, 3D printing, ESP32/Arduino, weather tracking, and data projects.">
-  <h1>subch<span style="color: var(--accent)">.us</span></h1>
-  <p class="tagline">A hub for what I'm building — RC, 3D printing, microcontrollers, weather tracking, and data projects.</p>
+<Base title="Home" description="Travis Schaefer's live projects — games, search, sites, and sensors. Pick one and go.">
+  <section class="hero">
+    <h1>Things I built.<br /><span class="grad">Ready to use.</span></h1>
+    <p class="lede">
+      Games for the family, a search engine that skips the junk, and a few
+      other live projects. Everything below works right now — pick one.
+    </p>
+    <div class="hero-cta">
+      <a class="btn primary" href="/gameroom/">🎲 Play The Game Room</a>
+      <a class="btn" href="/search/">🔎 Search with No Baloney</a>
+    </div>
+  </section>
 
-  <div class="card-grid">
-    {data.categories.map((cat) => (
-      <a class="card" href={`/${cat.slug}/`} style="text-decoration:none; color:inherit;">
-        <h3>{cat.title}</h3>
-        <p>{cat.tagline}</p>
-      </a>
-    ))}
-  </div>
-
-  <section class="section">
-    <h2>Separately hosted</h2>
-    <div class="card-grid">
-      {data.featured.map((proj) => (
-        <div class="card">
-          <h3>{proj.name}</h3>
-          <p>{proj.description}</p>
-          <a class="repo-link" href={proj.url}>{proj.url.replace('https://', '')} →</a>
-        </div>
+  <section class="live">
+    <h2>Live projects</h2>
+    <div class="grid">
+      {live.map((p) => (
+        <a
+          class="proj"
+          href={p.href}
+          style={`--h:${p.hue}`}
+          target={p.external ? '_blank' : undefined}
+          rel={p.external ? 'noopener' : undefined}
+        >
+          <span class="mark" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><path d={p.icon} /></svg>
+          </span>
+          <span class="body">
+            <span class="name">{p.name}</span>
+            <span class="blurb">{p.blurb}</span>
+          </span>
+          <span class="go">{p.action} {p.external ? '↗' : '→'}</span>
+        </a>
       ))}
     </div>
   </section>
 
-  <section class="section">
-    <h2>Other repos</h2>
-    <p class="tagline">Forked repos and misc code — linked, not featured.</p>
-    <ul class="fork-list">
-      {data.other.map((r) => (
-        <li><a href={`https://github.com/${r.repo}`}>{r.name}</a></li>
-      ))}
-      {data.forks.map((r) => (
-        <li>
-          <a href={`https://github.com/${r.repo}`}>{r.name}</a>
-          {' '}(fork of <a href={`https://github.com/${r.originalRepo}`}>{r.originalRepo}</a>)
-        </li>
+  <section class="workshop">
+    <h2>From the workshop</h2>
+    <p>Notes, parts lists, and works-in-progress — less polished, still public.</p>
+    <ul>
+      {workshop.map((w) => (
+        <li><a href={w.href}>{w.name}</a></li>
       ))}
     </ul>
   </section>
 </Base>
+
+<style>
+  /* ---------- hero ---------- */
+  .hero {
+    padding: 3.5rem 0 2.5rem;
+  }
+  .hero h1 {
+    margin: 0 0 0.9rem;
+    font-size: clamp(2.1rem, 6vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-weight: 800;
+  }
+  .grad {
+    background: linear-gradient(92deg, var(--accent), #34c9a3 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .lede {
+    margin: 0;
+    max-width: 46ch;
+    font-size: 1.08rem;
+    color: var(--muted);
+  }
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 1.6rem;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.72rem 1.15rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--fg);
+    font-weight: 650;
+    text-decoration: none;
+    transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+  }
+  .btn:hover { transform: translateY(-1px); border-color: var(--accent); }
+  .btn.primary {
+    background: var(--accent);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+
+  /* ---------- live project cards ---------- */
+  h2 {
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 2.2rem 0 1rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 0.9rem;
+  }
+  .proj {
+    --tint: oklch(62% 0.14 var(--h));
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.35rem 0.85rem;
+    align-items: start;
+    padding: 1.1rem 1.15rem 1rem;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background:
+      radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--tint) 12%, transparent), transparent 55%),
+      var(--card-bg);
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  }
+  .proj:hover, .proj:focus-visible {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
+    box-shadow: 0 10px 26px color-mix(in srgb, var(--tint) 18%, transparent);
+  }
+  .mark {
+    grid-row: 1 / 3;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: color-mix(in srgb, var(--tint) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--tint) 30%, transparent);
+  }
+  .mark svg { width: 26px; height: 26px; }
+  .mark path {
+    fill: none;
+    stroke: var(--tint);
+    stroke-width: 7;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .name {
+    display: block;
+    font-weight: 750;
+    font-size: 1.02rem;
+    line-height: 1.25;
+  }
+  .blurb {
+    display: block;
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+  .go {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 0.35rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--tint);
+  }
+
+  /* ---------- workshop row ---------- */
+  .workshop { margin-top: 1rem; padding-bottom: 1rem; }
+  .workshop p { margin: 0 0 0.6rem; color: var(--muted); font-size: 0.9rem; }
+  .workshop ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .workshop li a {
+    display: inline-block;
+    padding: 0.42rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: color 0.14s, border-color 0.14s;
+  }
+  .workshop li a:hover { color: var(--fg); border-color: var(--accent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn, .proj { transition: none; }
+  }
+</style>

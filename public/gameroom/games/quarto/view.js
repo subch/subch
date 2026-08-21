@@ -8,7 +8,7 @@ const pieceSvg = (p) => quarto(isTall(p), isDark(p), isRound(p), isHollow(p));
 
 const CSS = `
 .rail.qrail { width: auto; max-width: 100%; }
-.qv { display: grid; grid-template-columns: minmax(0, calc(100dvh - 385px)) 168px; gap: 14px; align-items: start; }
+.qv { display: grid; grid-template-columns: minmax(0, calc(100svh - 385px)) 204px; gap: 14px; align-items: start; }
 .qv-side { display: grid; gap: 12px; }
 @media (max-width: 820px) {
   .qv { grid-template-columns: 1fr; }
@@ -22,15 +22,15 @@ const CSS = `
 @keyframes qfloat { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
 .qv .board { grid-template-columns: repeat(4, 1fr); width: 100%; }
 .qv .sq { border: none; padding: 0; background: var(--sq-light); }
-.qv .sq::before { content: ""; position: absolute; inset: 12%; border-radius: 50%;
-  background: radial-gradient(circle at 50% 42%, rgba(0,0,0,.28), rgba(0,0,0,.1) 65%, transparent 72%);
-  box-shadow: inset 0 2px 5px rgba(0,0,0,.3); }
-.qv .sq.hint::before { inset: 12%; }
-.qv .pc { inset: 4%; }
+.qv .sq::before { content: ""; position: absolute; inset: 16%; border-radius: 50%;
+  background: radial-gradient(circle at 50% 42%, rgba(0,0,0,.18), rgba(0,0,0,.06) 65%, transparent 72%);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.22); }
+.qv .sq.hint::before { inset: 16%; }
+.qv .pc { inset: 2%; }
 .qv .sq.win { animation: winpulse .7s ease-in-out 3; }
-.qv-tray { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 10px;
+.qv-tray { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; padding: 8px;
   border-radius: var(--radius-s); background: color-mix(in srgb, var(--rail-edge) 40%, transparent); }
-.qv-tray button { width: 44px; height: 58px; border: none; padding: 0; background: none; cursor: default; border-radius: 8px; }
+.qv-tray button { width: 56px; height: 74px; border: none; padding: 0; background: none; cursor: default; border-radius: 8px; }
 .qv-tray button svg { width: 100%; height: 100%; overflow: visible; }
 .qv-tray.picking button { cursor: pointer; }
 .qv-tray.picking button:hover, .qv-tray.picking button:focus-visible { background: color-mix(in srgb, var(--accent) 25%, transparent); }
@@ -111,7 +111,10 @@ export function mount(rootEl, ctx) {
 
     const picking = !over && state.phase === 'give' && myTurn();
     trayEl.classList.toggle('picking', picking);
-    trayEl.innerHTML = state.remaining.map((p) =>
+    // grouped so lookalikes sit together: dark/light, then tall/short
+    const sorted = state.remaining.slice().sort((a, b) =>
+      ((isDark(b) - isDark(a)) || (isTall(b) - isTall(a)) || (isRound(b) - isRound(a)) || (a - b)));
+    trayEl.innerHTML = sorted.map((p) =>
       `<button data-piece="${p}" title="${traitsOf(p)}" aria-label="${traitsOf(p)}">${pieceSvg(p)}</button>`).join('');
   }
 

@@ -56,29 +56,32 @@ test('hard tic-tac-toe never loses to random (20 games)', async () => {
   }
 });
 
-test('connect four medium beats random at least 8 of 10', async () => {
+// Levels were softened on owner feedback (Medium now blunders 15% of the
+// time, Easy 35%), so strength floors are asserted at Medium/Hard with
+// slacker thresholds — "still clearly better than random", not "crushing".
+test('connect four medium beats random at least 7 of 10', async () => {
   let wins = 0;
   for (let seed = 1; seed <= 10; seed++) {
     const st = await playAiVsRandom('connect-four', 2, seed, 60);
     if (st.winner === 0) wins++;
   }
-  assert.ok(wins >= 8, `only ${wins}/10`);
-});
-
-test('checkers easy beats random at least 7 of 10', async () => {
-  let wins = 0;
-  for (let seed = 1; seed <= 10; seed++) {
-    const st = await playAiVsRandom('checkers', 1, seed, 700);
-    if (st.winner === 0) wins++;
-  }
   assert.ok(wins >= 7, `only ${wins}/10`);
 });
 
-test('mancala medium beats random at least 8 of 10', async () => {
+test('checkers medium beats random at least 6 of 10', async () => {
+  let wins = 0;
+  for (let seed = 1; seed <= 10; seed++) {
+    const st = await playAiVsRandom('checkers', 2, seed, 700);
+    if (st.winner === 0) wins++;
+  }
+  assert.ok(wins >= 6, `only ${wins}/10`);
+});
+
+test('mancala medium beats random at least 7 of 10', async () => {
   let wins = 0;
   for (let seed = 1; seed <= 10; seed++) {
     const st = await playAiVsRandom('mancala', 2, seed, 400);
     if (st.winner === 0) wins++;
   }
-  assert.ok(wins >= 8, `only ${wins}/10`);
+  assert.ok(wins >= 7, `only ${wins}/10`);
 });

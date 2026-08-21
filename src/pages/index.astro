@@ -73,6 +73,9 @@ const workshop = [
 ---
 <Base title="Home" description="Travis Schaefer's live projects — games, search, sites, and sensors. Pick one and go.">
   <section class="hero">
+    <div class="orb orb-a" aria-hidden="true"></div>
+    <div class="orb orb-b" aria-hidden="true"></div>
+    <p class="kicker">subch.us · the Schaefer build shelf</p>
     <h1>Things I built.<br /><span class="grad">Ready to use.</span></h1>
     <p class="lede">
       Games for the family, a search engine that skips the junk, and a few
@@ -122,14 +125,43 @@ const workshop = [
 <style>
   /* ---------- hero ---------- */
   .hero {
-    padding: 3.5rem 0 2.5rem;
+    position: relative;
+    padding: 4rem 0 2.6rem;
+    isolation: isolate;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.4;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .orb-a {
+    width: 380px; height: 380px;
+    left: -140px; top: -120px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 55%, transparent), transparent 70%);
+  }
+  .orb-b {
+    width: 320px; height: 320px;
+    right: -60px; top: 30px;
+    background: radial-gradient(circle, oklch(65% 0.13 165 / 0.55), transparent 70%);
+  }
+  .kicker {
+    margin: 0 0 0.8rem;
+    font-family: var(--display);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
   .hero h1 {
     margin: 0 0 0.9rem;
-    font-size: clamp(2.1rem, 6vw, 3.4rem);
-    line-height: 1.08;
-    letter-spacing: -0.02em;
-    font-weight: 800;
+    font-size: clamp(2.2rem, 6.4vw, 3.6rem);
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    font-weight: 700;
   }
   .grad {
     background: linear-gradient(92deg, var(--accent), #34c9a3 90%);
@@ -172,11 +204,20 @@ const workshop = [
 
   /* ---------- live project cards ---------- */
   h2 {
-    font-size: 0.85rem;
-    letter-spacing: 0.12em;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);
-    margin: 2.2rem 0 1rem;
+    margin: 2.4rem 0 1rem;
+  }
+  h2::before {
+    content: '';
+    width: 26px; height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent), #34c9a3);
   }
   .grid {
     display: grid;
@@ -200,6 +241,18 @@ const workshop = [
     text-decoration: none;
     transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
   }
+  .proj { position: relative; overflow: hidden; }
+  .proj::after {
+    /* a soft sheen that sweeps on hover */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 30%, color-mix(in srgb, var(--tint) 10%, transparent) 48%, transparent 62%);
+    transform: translateX(-70%);
+    transition: transform 0.5s ease;
+    pointer-events: none;
+  }
+  .proj:hover::after { transform: translateX(70%); }
   .proj:hover, .proj:focus-visible {
     transform: translateY(-3px);
     border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
@@ -207,15 +260,18 @@ const workshop = [
   }
   .mark {
     grid-row: 1 / 3;
-    width: 46px;
-    height: 46px;
-    border-radius: 12px;
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
     display: grid;
     place-items: center;
     background: color-mix(in srgb, var(--tint) 16%, transparent);
     border: 1px solid color-mix(in srgb, var(--tint) 30%, transparent);
+    box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--tint) 18%, transparent);
+    transition: transform 0.18s ease;
   }
-  .mark svg { width: 26px; height: 26px; }
+  .proj:hover .mark { transform: rotate(-6deg) scale(1.07); }
+  .mark svg { width: 27px; height: 27px; }
   .mark path {
     fill: none;
     stroke: var(--tint);
@@ -242,7 +298,9 @@ const workshop = [
     font-size: 0.82rem;
     font-weight: 700;
     color: var(--tint);
+    transition: letter-spacing 0.16s ease;
   }
+  .proj:hover .go { letter-spacing: 0.04em; }
 
   /* ---------- workshop row ---------- */
   .workshop { margin-top: 1rem; padding-bottom: 1rem; }
@@ -268,6 +326,6 @@ const workshop = [
   .workshop li a:hover { color: var(--fg); border-color: var(--accent); }
 
   @media (prefers-reduced-motion: reduce) {
-    .btn, .proj { transition: none; }
+    .btn, .proj, .proj::after, .mark, .go { transition: none; }
   }
 </style>

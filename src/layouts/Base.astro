@@ -1,4 +1,6 @@
 ---
+import '@fontsource/space-grotesk/500.css';
+import '@fontsource/space-grotesk/700.css';
 const { title, description = "Travis Schaefer's project hub." } = Astro.props;
 // primary nav is live things only; workshop pages are linked from the splash
 const nav = [
@@ -40,7 +42,9 @@ const currentPath = Astro.url.pathname;
       <slot />
     </main>
     <footer class="wrap">
-      <p>
+      <p class="foot-line">
+        <span>Built by Travis Schaefer in Texas</span>
+        <span class="foot-dot">·</span>
         <a href="https://github.com/subch">github.com/subch</a>
       </p>
     </footer>
@@ -93,12 +97,18 @@ const currentPath = Astro.url.pathname;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
+  :root {
+    --display: 'Space Grotesk', system-ui, sans-serif;
+  }
   body {
     background: var(--bg);
     color: var(--fg);
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     line-height: 1.5;
   }
+  h1, h2, h3, .brand { font-family: var(--display); }
+  .foot-line { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; color: var(--muted); font-size: 0.88rem; }
+  .foot-dot { opacity: 0.5; }
   a { color: var(--accent); }
   .wrap {
     max-width: 860px;

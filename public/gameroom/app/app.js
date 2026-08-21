@@ -13,13 +13,14 @@ import { profile } from './screens/profile.js';
 import { family } from './screens/family.js';
 import { lobby } from './screens/lobby.js';
 import { tv } from './screens/tv.js';
+import { tvLounge } from './screens/tv-lounge.js';
 
 injectDefs();
 await session.init();
 setMuted(session.me ? !session.me.sound : false);
 
 setGuard((path) => {
-  if (path.startsWith('/tv/')) return null; // spectator screens need no login
+  if (path === '/tv' || path.startsWith('/tv/')) return null; // spectator screens need no login
   if (!session.me && path !== '/login') return '#/login';
   if (session.me && path === '/login') return '#/';
   return null;
@@ -34,6 +35,7 @@ route('/stats', stats);
 route('/profile', profile);
 route('/family', family);
 route('/lobby/:code', lobby);
+route('/tv', tvLounge);
 route('/tv/:code', tv);
 
 // a reload mid-table: pick the live table back up before routing

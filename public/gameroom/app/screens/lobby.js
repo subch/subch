@@ -90,12 +90,13 @@ export async function lobby(root, params) {
     navigate('#/');
   };
   el.querySelector('[data-tv]').onclick = () => {
-    const url = `${location.origin}/#/tv/${code}`;
     const content = h(`
       <div class="confirm">
         <h3>Watch on the TV</h3>
-        <p class="muted">Open this on the device that's plugged into (or AirPlaying to) the TV:</p>
-        <div class="tvurl">${esc(url)}</div>
+        <p class="muted">Open this once on the TV device and just leave it — it idles as a family
+        lounge screen and shows every game live as tables open:</p>
+        <div class="tvurl">${esc(`${location.origin}/#/tv`)}</div>
+        <p class="muted" style="font-size:12px">Just this table: ${esc(`${location.origin}/#/tv/${code}`)}</p>
         <button class="btn primary" data-done>Done</button>
       </div>`);
     const { close } = sheet(content);

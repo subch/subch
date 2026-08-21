@@ -104,21 +104,24 @@ export async function hub(root) {
 
   // live "Open tables" strip, pushed from the table server
   const stripEl = el.querySelector('[data-strip]');
-  function paintStrip(open) {
-    const joinable = open.filter((t) => t.seats.some((s) => !s.taken) ||
+  function paintStrip(active) {
+    // the list now carries playing tables too (for the TV lounge) — hubs
+    // offer Join only on open seats, and Rejoin on your own games
+    const relevant = active.filter((t) =>
+      (t.status === 'open' && t.seats.some((s) => !s.taken)) ||
       t.seats.some((s) => s.profile?.id === me.id));
-    stripEl.innerHTML = joinable.length ? `
+    stripEl.innerHTML = relevant.length ? `
       <div class="section-title">Open tables</div>
       <div class="recent" style="margin-bottom:6px">
-        ${joinable.map((t) => {
-          const free = t.seats.find((s) => !s.taken);
+        ${relevant.map((t) => {
+          const free = t.status === 'open' ? t.seats.find((s) => !s.taken) : null;
           const mine = t.seats.find((s) => s.profile?.id === me.id);
           const who = t.seats.filter((s) => s.taken)
             .map((s) => s.profile?.name || 'Guest').join(', ');
           return `
             <div class="recent-row">
               <span style="font-weight:700">${esc(gameMeta(t.gameId)?.name || t.gameId)}</span>
-              <span class="muted">${esc(who)}</span>
+              <span class="muted">${esc(who)}${t.status === 'playing' ? ' · in progress' : ''}</span>
               <span class="spacer"></span>
               ${mine
                 ? `<a class="btn" style="min-height:40px" href="#/lobby/${esc(t.code)}">Rejoin</a>`

@@ -8,6 +8,7 @@ import { next, randInt } from '../rng.js';
 const GAMES = [
   'tic-tac-toe', 'connect-four', 'checkers', 'mancala',
   'quarto', 'dots-and-boxes', 'chess', 'crazy-8s',
+  'go-fish', 'memory-match',
 ];
 
 function seededRng(n) {

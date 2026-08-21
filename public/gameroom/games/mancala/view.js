@@ -47,15 +47,18 @@ export function mount(rootEl, ctx) {
   }
   rootEl.closest('.rail')?.classList.add('mrail');
 
-  // top row: opponent pits 11..6 (counter-clockwise flow); bottom: 0..5
+  // your pits are always the bottom row on your own device
+  const flip = ctx.localSeats.length === 1 && ctx.localSeats[0] === 1;
+  const top = flip ? [5, 4, 3, 2, 1, 0] : [11, 10, 9, 8, 7, 6];
+  const bottom = flip ? [6, 7, 8, 9, 10, 11] : [0, 1, 2, 3, 4, 5];
   rootEl.innerHTML = `
     <div class="mv">
-      <div class="mv-store" data-store="1"></div>
+      <div class="mv-store" data-store="${flip ? 0 : 1}"></div>
       <div class="mv-rows">
-        <div class="mv-row">${[11, 10, 9, 8, 7, 6].map((i) => `<button class="mv-pit" data-pit="${i}"></button>`).join('')}</div>
-        <div class="mv-row">${[0, 1, 2, 3, 4, 5].map((i) => `<button class="mv-pit" data-pit="${i}"></button>`).join('')}</div>
+        <div class="mv-row">${top.map((i) => `<button class="mv-pit" data-pit="${i}"></button>`).join('')}</div>
+        <div class="mv-row">${bottom.map((i) => `<button class="mv-pit" data-pit="${i}"></button>`).join('')}</div>
       </div>
-      <div class="mv-store" data-store="0"></div>
+      <div class="mv-store" data-store="${flip ? 1 : 0}"></div>
     </div>`;
 
   let cur = null;

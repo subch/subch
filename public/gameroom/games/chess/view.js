@@ -40,13 +40,16 @@ export function mount(rootEl, ctx) {
 
   const showLegal = ctx.options?.showLegal !== false;
 
+  // A device that only owns the black seat sees the board from black's side.
+  const flip = ctx.localSeats.length === 1 && ctx.localSeats[0] === 1;
   let cellsHtml = '';
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 8; c++) {
+      const i = flip ? 63 - (r * 8 + c) : r * 8 + c;
       const dark = (r + c) % 2 === 1;
-      const coord = (r === 7 ? `<span class="coord f">${FILES[c]}</span>` : '') +
-                    (c === 0 ? `<span class="coord r">${8 - r}</span>` : '');
-      cellsHtml += `<button class="sq${dark ? ' d' : ''}" data-i="${r * 8 + c}">${coord}</button>`;
+      const coord = (r === 7 ? `<span class="coord f">${FILES[i % 8]}</span>` : '') +
+                    (c === 0 ? `<span class="coord r">${8 - ((i / 8) | 0)}</span>` : '');
+      cellsHtml += `<button class="sq${dark ? ' d' : ''}" data-i="${i}">${coord}</button>`;
     }
   }
   rootEl.innerHTML = `<div class="chessv"><div class="board" aria-label="chess board">${cellsHtml}</div></div>`;
@@ -74,7 +77,8 @@ export function mount(rootEl, ctx) {
     const checkSq = checkedSquare(cur);
     const checkIdx = checkSq ? sqIdx(checkSq) : -1;
 
-    cells.forEach((sq, i) => {
+    cells.forEach((sq) => {
+      const i = Number(sq.dataset.i); // display order may be flipped
       const p = board[i];
       const key = p ? p.t + p.c : '';
       if (sq.dataset.pc !== key) {

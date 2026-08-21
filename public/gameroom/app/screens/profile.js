@@ -68,7 +68,9 @@ export async function profile(root) {
   prefs.appendChild(segRow('Math Duel level', [[1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5']], me.mathLevel, (v) => save({ mathLevel: Number(v) }, true)));
 
   el.addEventListener('click', async (e) => {
-    const th = e.target.closest('[data-theme]');
+    // NB: closest('[data-theme]') would match <html data-theme="…"> and eat
+    // every click on this screen (the un-tappable Sign out bug)
+    const th = e.target.closest('.theme-card');
     if (th) {
       el.querySelectorAll('.theme-card').forEach((c) => c.classList.toggle('on', c === th));
       applyTheme(th.dataset.theme);

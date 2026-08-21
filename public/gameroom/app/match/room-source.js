@@ -6,8 +6,9 @@ import { send, onMessage } from '../net.js';
 import { gameMeta, loadEngine } from '/shared/games/index.js';
 
 export class RoomSource {
-  constructor(code) {
+  constructor(code, { spectate = false } = {}) {
     this.code = code;
+    this.spectate = spectate;
     this.kind = 'room';
     this.meta = null;
     this.engine = {}; // filled async (describe/timer for display only)
@@ -25,8 +26,10 @@ export class RoomSource {
     this.listeners = new Set();
     this._pendingKey = null;
     this._unsub = onMessage((m) => this._handle(m));
-    try { sessionStorage.setItem('gr-table', code); } catch { /* fine */ }
-    send({ t: 'table.sync', code });
+    if (!spectate) {
+      try { sessionStorage.setItem('gr-table', code); } catch { /* fine */ }
+    }
+    send({ t: 'table.sync', code, spectate });
   }
 
   // waits until the first sync lands (used after a page reload)
@@ -46,7 +49,7 @@ export class RoomSource {
   emit(evt) { this.listeners.forEach((fn) => fn(evt)); }
 
   _handle(msg) {
-    if (msg.t === 'net.open') { send({ t: 'table.sync', code: this.code }); return; }
+    if (msg.t === 'net.open') { send({ t: 'table.sync', code: this.code, spectate: this.spectate }); return; }
     if (msg.t !== 'table.state' || msg.table?.code !== this.code) return;
 
     const tbl = msg.table;

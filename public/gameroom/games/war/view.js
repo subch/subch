@@ -53,12 +53,16 @@ export function mount(rootEl, ctx) {
   rootEl.closest('.rail')?.classList.add('cards');
 
   const n = ctx.players.length;
-  // bottom row = seat 0 (+ seat 3 in a 4-player game); top row faces away
-  const topSeats = n === 2 ? [1] : n === 3 ? [1, 2] : [1, 2];
-  const bottomSeats = n === 4 ? [0, 3] : [0];
+  // on a remote device, YOUR seats sit at the bottom; pass-and-play keeps
+  // the tabletop split with far seats rotated to face their players
+  const allSeats = ctx.players.map((p) => p.seat);
+  const mine = ctx.localSeats.filter((s) => allSeats.includes(s));
+  const remotePerspective = mine.length > 0 && mine.length < n;
+  const bottomSeats = remotePerspective ? mine : (n === 4 ? [0, 3] : [0]);
+  const topSeats = allSeats.filter((s) => !bottomSeats.includes(s));
 
   const zone = (p) => `
-    <div class="war-zone ${topSeats.includes(p.seat) ? 'rot' : ''}" data-zone="${p.seat}">
+    <div class="war-zone ${!remotePerspective && topSeats.includes(p.seat) ? 'rot' : ''}" data-zone="${p.seat}">
       <div class="war-hand">
         <button class="war-deck" data-deck="${p.seat}" aria-label="${p.name}'s deck"></button>
         <div class="war-up" data-up="${p.seat}"></div>

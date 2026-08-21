@@ -32,14 +32,18 @@ export function mount(rootEl, ctx) {
     document.head.appendChild(style);
   }
 
+  // On a device that only owns seat 1, rotate the board so that player sits
+  // at the bottom (nobody plays upside-down on their own phone).
+  const flip = ctx.localSeats.length === 1 && ctx.localSeats[0] === 1;
   const files = 'abcdefgh';
   let cellsHtml = '';
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 8; c++) {
+      const i = flip ? 63 - (r * 8 + c) : r * 8 + c;
       const dark = (r + c) % 2 === 1;
-      const coord = (r === 7 ? `<span class="coord f">${files[c]}</span>` : '') +
-                    (c === 0 ? `<span class="coord r">${8 - r}</span>` : '');
-      cellsHtml += `<button class="sq${dark ? ' d' : ''}" data-i="${r * 8 + c}">${coord}</button>`;
+      const coord = (r === 7 ? `<span class="coord f">${files[i % 8]}</span>` : '') +
+                    (c === 0 ? `<span class="coord r">${8 - ((i / 8) | 0)}</span>` : '');
+      cellsHtml += `<button class="sq${dark ? ' d' : ''}" data-i="${i}">${coord}</button>`;
     }
   }
   rootEl.innerHTML = `
@@ -66,7 +70,8 @@ export function mount(rootEl, ctx) {
     const hints = sel === null ? new Set()
       : new Set(legal.filter((m) => m.from === sel).map((m) => m.to));
 
-    cells.forEach((sq, i) => {
+    cells.forEach((sq) => {
+      const i = Number(sq.dataset.i); // display order may be flipped
       const piece = cur.board[i];
       const key = piece ? `${piece.p}${piece.k ? 'k' : ''}` : '';
       if (sq.dataset.pc !== key) {

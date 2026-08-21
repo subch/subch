@@ -11,10 +11,12 @@ import { meta as quarto } from './quarto/meta.js';
 import { meta as mancala } from './mancala/meta.js';
 import { meta as dotsAndBoxes } from './dots-and-boxes/meta.js';
 import { meta as mathDuel } from './math-duel/meta.js';
+import { meta as goFish } from './go-fish/meta.js';
+import { meta as memoryMatch } from './memory-match/meta.js';
 import { meta as go } from './go/meta.js';
 
 // Hub display order (mirrors the approved mockup; games appear as they land).
-export const GAMES = [checkers, chess, quarto, war, crazy8s, ticTacToe, connectFour, mancala, dotsAndBoxes, mathDuel, go];
+export const GAMES = [checkers, chess, quarto, war, crazy8s, goFish, memoryMatch, ticTacToe, connectFour, mancala, dotsAndBoxes, mathDuel, go];
 
 export const gameMeta = (id) => GAMES.find((g) => g.id === id) || null;
 

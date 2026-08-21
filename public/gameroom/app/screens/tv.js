@@ -24,7 +24,17 @@ export async function tv(root, params) {
     document.head.appendChild(style);
   }
   const code = params.code.toUpperCase();
-  const source = new RoomSource(code);
+  const source = new RoomSource(code, { spectate: true });
+
+  // keep the screen awake while it's the television
+  let wakeLock = null;
+  try { wakeLock = await navigator.wakeLock?.request('screen'); } catch { /* unsupported */ }
+  const rewake = () => {
+    if (document.visibilityState === 'visible') {
+      navigator.wakeLock?.request('screen').then((l) => { wakeLock = l; }).catch(() => {});
+    }
+  };
+  document.addEventListener('visibilitychange', rewake);
 
   const el = h(`
     <div class="tvv">
@@ -73,6 +83,8 @@ export async function tv(root, params) {
       unsub();
       view?.destroy?.();
       source.destroy();
+      document.removeEventListener('visibilitychange', rewake);
+      wakeLock?.release?.().catch?.(() => {});
     },
   };
 }

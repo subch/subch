@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script type="importmap">
+{ "imports": { "/app/": "./app/", "/shared/": "./shared/", "/games/": "./games/" } }
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>The Game Room</title>
+<meta name="theme-color" content="#0d2b21">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="stylesheet" href="./app/themes.css">
+<link rel="stylesheet" href="./app/base.css">
+</head>
+<body>
+<div id="app" class="app"><div class="boot-splash"><div class="boot-mark"></div></div></div>
+<script type="module" src="./app/app.js"></script>
+<script>
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+</script>
+</body>
+</html>

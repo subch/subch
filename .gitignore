@@ -3,3 +3,8 @@ dist/
 .astro/
 .DS_Store
 dev.log
+.cache/
+
+# Local scratch and secrets - never commit
+_to_delete/
+*emergency_kit*

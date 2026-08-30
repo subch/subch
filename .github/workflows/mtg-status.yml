@@ -1,0 +1,99 @@
+name: Check XMage server status
+
+# GitHub Pages is static, so the page cannot open a TCP socket to see whether
+# the Commander server is up. This job does the check and commits the answer as
+# a small JSON file that /mtg reads.
+#
+# It also carries the current XMage build forward from XMage's own release
+# manifest, so the download link on the page never goes stale.
+
+on:
+  schedule:
+    # Every 5 minutes. GitHub queues cron jobs on a best-effort basis, so a run
+    # can be several minutes late - the page accounts for that.
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mtg-status
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      HOST: mtg.subch.us
+      PORT: '17171'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Probe the server
+        id: probe
+        run: |
+          set -uo pipefail
+          up=false
+          if timeout 8 bash -c "</dev/tcp/${HOST}/${PORT}" 2>/dev/null; then
+            up=true
+          fi
+          echo "up=$up" >> "$GITHUB_OUTPUT"
+          echo "Server ${HOST}:${PORT} up=$up"
+
+      - name: Read the current XMage build
+        id: xmage
+        run: |
+          set -uo pipefail
+          # Never fail the job over this; a missing manifest just means we keep
+          # whatever version string is already committed.
+          manifest=$(curl -fsSL --max-time 20 https://xmage.today/config.json || echo '')
+          if [ -n "$manifest" ]; then
+            echo "version=$(echo "$manifest" | jq -r '.XMage.version // empty')" >> "$GITHUB_OUTPUT"
+            echo "download=$(echo "$manifest" | jq -r '.XMage.full // empty')" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Write status.json
+        run: |
+          set -euo pipefail
+          mkdir -p public/mtg
+          prev_version=$(jq -r '.xmage.version // empty' public/mtg/status.json 2>/dev/null || true)
+          prev_download=$(jq -r '.xmage.download // empty' public/mtg/status.json 2>/dev/null || true)
+          version="${{ steps.xmage.outputs.version }}"
+          download="${{ steps.xmage.outputs.download }}"
+          [ -z "$version" ] && version="$prev_version"
+          [ -z "$download" ] && download="$prev_download"
+
+          jq -n \
+            --argjson up ${{ steps.probe.outputs.up }} \
+            --arg host "$HOST" \
+            --argjson port "$PORT" \
+            --arg checkedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg version "$version" \
+            --arg download "$download" \
+            '{up: $up, host: $host, port: $port, checkedAt: $checkedAt,
+              xmage: {version: $version, download: $download}}' \
+            > public/mtg/status.json
+          cat public/mtg/status.json
+
+      - name: Commit when the answer changed
+        run: |
+          set -euo pipefail
+          # Ignore checkedAt when deciding whether anything changed, otherwise
+          # this would commit every five minutes forever and republish the site
+          # each time.
+          if git diff --quiet -- public/mtg/status.json; then
+            echo "No change."; exit 0
+          fi
+          old=$(git show HEAD:public/mtg/status.json 2>/dev/null | jq -S 'del(.checkedAt)' || echo 'null')
+          new=$(jq -S 'del(.checkedAt)' public/mtg/status.json)
+          if [ "$old" = "$new" ]; then
+            echo "Only the timestamp moved; not committing."
+            git checkout -- public/mtg/status.json
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/mtg/status.json
+          git commit -m "MTG: server $( [ "${{ steps.probe.outputs.up }}" = "true" ] && echo up || echo down )"
+          git push

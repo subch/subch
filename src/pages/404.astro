@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+// GitHub Pages served its own 404. Caddy does not, so the site has to bring
+// one - the Caddyfile falls back to /404.html for anything try_files misses.
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/mtg/', label: 'Commander' },
+  { href: '/rc/', label: 'RC' },
+  { href: '/weather/', label: 'Weather' },
+  { href: '/search/', label: 'No Baloney' },
+];
+---
+<Base title="Not found" description="That page does not exist on subch.us.">
+  <h1>404 — not found</h1>
+  <p class="tagline">That page does not exist. It may have moved, or never existed at all.</p>
+  <ul class="fork-list">
+    {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+  </ul>
+</Base>

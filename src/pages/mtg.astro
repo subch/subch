@@ -3,7 +3,8 @@ import Base from '../layouts/Base.astro';
 
 const HOST = 'mtg.subch.us';
 const PORT = '17171';
-const DISCORD = 'https://discord.gg/YOUR-INVITE-CODE';
+// Set this to the real invite to make the Discord button appear.
+const DISCORD = '';
 ---
 
 <Base
@@ -87,9 +88,11 @@ const DISCORD = 'https://discord.gg/YOUR-INVITE-CODE';
           players. Voice chat happens on Discord; there is also a text chat in
           the client if you would rather type.
         </p>
-        <p>
-          <a class="btn secondary" href={DISCORD} target="_blank" rel="noopener">Join the Discord</a>
-        </p>
+        {DISCORD && (
+          <p>
+            <a class="btn secondary" href={DISCORD} target="_blank" rel="noopener">Join the Discord</a>
+          </p>
+        )}
       </li>
     </ol>
   </section>
@@ -176,10 +179,10 @@ const DISCORD = 'https://discord.gg/YOUR-INVITE-CODE';
     <details class="faq">
       <summary>The server says it is down. Now what?</summary>
       <p>
-        It runs from a machine at Travis's house, so it is not up around the
-        clock. The status above is rechecked every few minutes and can lag a
-        little, so it is worth trying the connect button anyway. If it really is
-        down, shout on Discord.
+        It runs on a server that stays on around the clock, so this should be
+        rare. The status above is rechecked every few minutes and can lag a
+        little, so try connecting anyway before assuming the worst. If it really
+        is down, shout and it will get restarted.
       </p>
     </details>
 

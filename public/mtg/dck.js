@@ -187,6 +187,8 @@ export async function resolveCards(names, onProgress) {
         number: c.collector_number,
         colorIdentity: c.color_identity ?? [],
         typeLine: c.type_line ?? face?.type_line ?? '',
+        manaCost: c.mana_cost || face?.mana_cost || '',
+        cmc: c.cmc ?? 0,
         gameChanger: c.game_changer === true,
         legal: c.legalities?.commander ?? 'not_legal',
         image: c.image_uris?.small ?? face?.image_uris?.small ?? null,
@@ -218,8 +220,10 @@ export function validateCommanderDeck({ commanders, cards, resolved, banned = []
   const bannedSet = new Set(banned);
   const gcSet = new Set(gameChangers);
 
-  const mainCount = cards.reduce((n, c) => n + c.count, 0);
-  const total = mainCount + commanders.reduce((n, c) => n + c.count, 0);
+  // A commander entry carries no count - it is always exactly one.
+  const qty = (c) => c.count ?? 1;
+  const mainCount = cards.reduce((n, c) => n + qty(c), 0);
+  const total = mainCount + commanders.reduce((n, c) => n + qty(c), 0);
 
   if (!commanders.length) {
     errors.push('No commander identified. Mark one with a "Commander" section or pick one below.');
@@ -253,7 +257,7 @@ export function validateCommanderDeck({ commanders, cards, resolved, banned = []
 
   // Singleton, basics exempt.
   for (const c of [...cards, ...commanders]) {
-    if (c.count > 1 && !isBasicLand(c.name)) {
+    if (qty(c) > 1 && !isBasicLand(c.name)) {
       errors.push(`${c.name} appears ${c.count} times. Commander is singleton.`);
     }
   }

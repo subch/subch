@@ -12,8 +12,8 @@
  *                tracks whatever the server actually enforces.
  *
  * Output (all static, served from GitHub Pages):
- *   public/mtg/decks/index.json   lightweight catalogue for the picker
- *   public/mtg/decks/<id>.json    full list, fetched only when a deck is opened
+ *   public/mtg/data/decks/index.json  lightweight catalogue for the picker
+ *   public/mtg/data/decks/<id>.json   full list, fetched only when a deck is opened
  *   public/mtg/banned.json        XMage's Commander ban list
  *   public/mtg/gamechangers.json  the 50-odd Game Changers, for bracket scoring
  *
@@ -26,7 +26,7 @@ import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const OUT = path.join(ROOT, 'public', 'mtg');
-const DECK_OUT = path.join(OUT, 'decks');
+const DECK_OUT = path.join(OUT, 'data', 'decks');
 const CACHE = path.join(ROOT, '.cache', 'mtg');
 
 const UA = {
@@ -451,6 +451,14 @@ async function main() {
   // deck has been scored.
   assignThemes(index);
   for (const rec of index) {
+    // Top creature types by card count, so the site can rank decks by tribe
+    // rather than relying on the much stricter tribal:X tag.
+    rec.tribeCounts = Object.fromEntries(
+      Object.entries(rec.tribes)
+        .filter(([, n]) => n >= 3)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 8)
+    );
     delete rec.scores;
     delete rec.tribes;
     delete rec.tribeRefs;
@@ -470,7 +478,7 @@ async function main() {
   await writeFile(path.join(OUT, 'gamechangers.json'), JSON.stringify({ gameChangers }));
 
   const byBracket = index.reduce((acc, d) => ((acc[d.bracket] = (acc[d.bracket] ?? 0) + 1), acc), {});
-  console.log(`\nWrote ${index.length} decks to public/mtg/decks/`);
+  console.log(`\nWrote ${index.length} decks to public/mtg/data/decks/`);
   console.log('  by estimated bracket:', byBracket);
   const themeCounts = {};
   for (const d of index) for (const t of d.themes) themeCounts[t] = (themeCounts[t] ?? 0) + 1;

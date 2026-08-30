@@ -1,0 +1,55 @@
+---
+import Pod from '../../layouts/Pod.astro';
+---
+
+<Pod title="All decks" description="Every official Commander precon, filterable by colour, tribe, theme and power bracket." wide={true}>
+  <section class="section" style="padding-top:2rem">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">The whole shelf</p>
+        <h2>All decks</h2>
+        <p>
+          Every official Commander preconstructed deck. Open one to see the list,
+          change it, and export a <code>.dck</code>.
+        </p>
+      </div>
+      <a class="btn ghost" href="/mtg/">← Back to the pod</a>
+    </div>
+
+    <div class="filters">
+      <div class="colors" role="group" aria-label="Filter by colour">
+        <button class="color-btn" data-color="W" title="White" aria-label="White">W</button>
+        <button class="color-btn" data-color="U" title="Blue" aria-label="Blue">U</button>
+        <button class="color-btn" data-color="B" title="Black" aria-label="Black">B</button>
+        <button class="color-btn" data-color="R" title="Red" aria-label="Red">R</button>
+        <button class="color-btn" data-color="G" title="Green" aria-label="Green">G</button>
+      </div>
+
+      <select id="filter-tribe" aria-label="Filter by tribe"><option value="all">Any tribe</option></select>
+      <select id="filter-theme" aria-label="Filter by theme"><option value="all">Any theme</option></select>
+      <select id="filter-bracket" aria-label="Filter by bracket">
+        <option value="all">Any bracket</option>
+        <option value="2">Bracket 2 · Core</option>
+        <option value="3">Bracket 3 · Upgraded</option>
+        <option value="4">Bracket 4 · Optimized</option>
+      </select>
+      <select id="filter-sort" aria-label="Sort">
+        <option value="new">Newest first</option>
+        <option value="old">Oldest first</option>
+        <option value="az">A to Z</option>
+      </select>
+
+      <input type="search" id="filter-q" placeholder="Deck or commander" aria-label="Search decks" />
+      <button class="ghost" id="filter-reset">Reset</button>
+    </div>
+
+    <p class="filter-meta">
+      <span id="deck-shown">…</span> of <span id="deck-total">…</span> decks.
+      Colours show decks playable with <em>only</em> those colours.
+    </p>
+
+    <div class="deck-grid" id="deck-grid"></div>
+  </section>
+
+  <script type="module" src="/mtg/browse.js"></script>
+</Pod>

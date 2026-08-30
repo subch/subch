@@ -1,0 +1,232 @@
+---
+import { readFileSync } from 'node:fs';
+import Pod from '../../layouts/Pod.astro';
+
+const HOST = 'mtg.subch.us';
+const PORT = '17171';
+const DISCORD = 'https://discord.gg/APWGjyvg';
+
+// Artist credit comes from the fetch script's output so it cannot drift from
+// the images actually on disk.
+// Astro builds with cwd at the project root, so a plain relative path is
+// steadier here than resolving against import.meta.url.
+const credits = JSON.parse(readFileSync('public/mtg/img/credits.json', 'utf8')).credits;
+const credit = (key) => credits.find((c) => c.key === key) ?? {};
+
+// Listed in Travis's order of preference.
+const TRIBES = [
+  { key: 'elf', color: 'G', tribe: 'Elf', name: 'Elves',
+    blurb: 'Make a mana elf, make ten. Then make them all enormous at once. The oldest good idea in Magic.' },
+  { key: 'goblin', color: 'R', tribe: 'Goblin', name: 'Goblins',
+    blurb: 'Quantity is its own quality. Throw bodies at the problem until the problem is on fire.' },
+  { key: 'merfolk', color: 'U', tribe: 'Merfolk', name: 'Merfolk',
+    blurb: 'Small blue creatures that quietly become unblockable and end the game while nobody was watching.' },
+  { key: 'angel', color: 'W', tribe: 'Angel', name: 'Angels',
+    blurb: 'Fly over everything. Cost a fortune. Win anyway, with excellent posture.' },
+  { key: 'vampire', color: 'B', tribe: 'Vampire', name: 'Vampires',
+    blurb: 'Drain them a point at a time, grow on every death, and look good doing it.' },
+];
+---
+
+<Pod title="Commander night">
+  <section class="hero">
+    <span class="pips">
+      {['W', 'U', 'B', 'R', 'G'].map((c) => <span class={`pip pip-${c}`}>{c}</span>)}
+    </span>
+    <p class="eyebrow">Four-player EDH · our own server</p>
+    <h1>Commander night</h1>
+    <p class="lede">
+      Every card in the game, free, with the rules enforced for you. No account,
+      nothing to buy, and you can be sat at a table in about ten minutes.
+    </p>
+
+    <div class="hero-actions" style="margin-bottom:1.4rem">
+      <span class="status" id="server-status" data-state="unknown">
+        <span class="dot" id="status-dot"></span>
+        <span><strong id="status-text">Checking…</strong> <small id="status-sub"></small></span>
+      </span>
+    </div>
+
+    <div class="connect" style="margin-bottom:1.4rem">
+      <span class="field">
+        <span class="k">Server</span><code>{HOST}</code>
+        <button class="ghost tiny" data-copy={HOST}>Copy</button>
+      </span>
+      <span class="field">
+        <span class="k">Port</span><code>{PORT}</code>
+        <button class="ghost tiny" data-copy={PORT}>Copy</button>
+      </span>
+    </div>
+
+    <div class="hero-actions">
+      <a class="btn" href="#start">How to join</a>
+      <a class="btn ghost" href="/mtg/decks/">Browse all decks</a>
+      {DISCORD && <a class="btn ghost" href={DISCORD} target="_blank" rel="noopener">Discord</a>}
+    </div>
+  </section>
+
+  <section class="section" id="tribes">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Pick your side</p>
+        <h2>Five colours, five tribes</h2>
+        <p>The house favourites. Every deck here is ready to download and play.</p>
+      </div>
+    </div>
+
+    <div class="tribes">
+      {TRIBES.map((t) => {
+        const c = credit(t.key);
+        return (
+          <a class="tribe" data-c={t.color} href={`/mtg/decks/?tribe=${t.tribe}`}>
+            <div class="tribe-art">
+              <img src={`/mtg/img/${t.key}.jpg`} alt={`${c.card} by ${c.artist}`} loading="lazy" width="626" height="457" />
+            </div>
+            <div class="tribe-body">
+              <span class="pips"><span class={`pip pip-${t.color}`}>{t.color}</span></span>
+              <h3>{t.name}</h3>
+              <p>{t.blurb}</p>
+              <span class="tribe-count" data-tribe={t.tribe} data-plural={t.name}>counting decks…</span>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="section" id="featured">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Ready to play</p>
+        <h2>A few to start with</h2>
+        <p>Five from each power bracket. Open one to see the list, tweak it, and export.</p>
+      </div>
+      <a class="btn ghost" href="/mtg/decks/">See all <span id="all-count"></span> →</a>
+    </div>
+    <div id="featured-decks"></div>
+  </section>
+
+  <section class="section" id="start">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">First time?</p>
+        <h2>Getting in</h2>
+      </div>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <h3>Install XMage</h3>
+        <p>
+          A free program that plays Magic with every rule enforced, so nobody has
+          to remember how the stack works. It is a desktop app, not a website.
+        </p>
+        <p><a class="btn" href="https://xmage.today/" target="_blank" rel="noopener">Download XMage</a></p>
+        <ul>
+          <li>Take the <strong>full</strong> download, about 250&nbsp;MB.</li>
+          <li>Unzip anywhere, then run <code>run-LAUNCHER.cmd</code> on Windows, or the <code>XMageLauncher</code> jar on Mac and Linux.</li>
+          <li>The launcher handles Java and updates itself. Say yes to what it offers.</li>
+        </ul>
+      </li>
+      <li class="step">
+        <h3>Connect</h3>
+        <p>
+          Hit <strong>Launch Client</strong>, choose <strong>Connect to another
+          server</strong>, and enter <code>{HOST}</code> on port <code>{PORT}</code>.
+          Pick any username and leave the password blank — there is no registration.
+        </p>
+      </li>
+      <li class="step">
+        <h3>Bring a deck</h3>
+        <p>
+          Grab one from above, or paste a list you already have into the converter
+          below. Drop the <code>.dck</code> file into the <code>Decks</code> folder
+          inside your XMage directory.
+        </p>
+      </li>
+      <li class="step">
+        <h3>Sit down</h3>
+        <p>
+          Open <strong>Tables</strong>, create a game, pick <strong>Commander</strong>
+          and four players. Put a password on the table if you want a private pod.
+          Voice on Discord, or use the in-client chat.
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section" id="convert">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Already have a list?</p>
+        <h2>Convert a decklist</h2>
+        <p>
+          Paste from Moxfield, Archidekt, or plain text. Every card gets checked
+          against what XMage actually refuses, before you download.
+        </p>
+      </div>
+    </div>
+
+    <form id="convert-form">
+      <input type="text" id="deckname" placeholder="Deck name" style="width:100%;max-width:22rem;margin-bottom:0.6rem" />
+      <textarea
+        id="decklist"
+        aria-label="Decklist"
+        placeholder={"1 Atraxa, Praetors' Voice\n1 Sol Ring\n1 Arcane Signet\n…\n\nA Commander section or Moxfield *CMDR* markers are understood."}
+      ></textarea>
+      <div class="hero-actions" style="margin-top:0.6rem">
+        <button type="submit">Check and convert</button>
+        <button type="button" class="ghost" id="convert-clear">Clear</button>
+      </div>
+    </form>
+    <div id="convert-out"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><h2>Good to know</h2></div></div>
+
+    <details class="faq">
+      <summary>What do the bracket numbers mean?</summary>
+      <p>
+        Wizards' own power scale. Bracket 2 is precon level, 3 is an upgraded
+        deck, 4 is seriously tuned. The number shown is worked out from the
+        deck's actual contents — how many cards from the official Game Changers
+        list it runs, plus whether it does mass land destruction or chains extra
+        turns. Agree a bracket before you shuffle and the evening goes better.
+      </p>
+    </details>
+
+    <details class="faq">
+      <summary>Do I need to buy anything?</summary>
+      <p>No. XMage gives you every card ever printed. That is rather the point.</p>
+    </details>
+
+    <details class="faq">
+      <summary>The table says it is down.</summary>
+      <p>
+        The server runs around the clock, so this should be rare. The check runs
+        every few minutes and can lag, so try connecting anyway before assuming
+        the worst — then shout on Discord.
+      </p>
+    </details>
+
+    <details class="faq">
+      <summary>XMage rejected my deck.</summary>
+      <p>
+        Nearly always one of three things: not exactly 100 cards, a card outside
+        your commander's colour identity, or something on this server's ban list
+        (stricter than paper — Mana Crypt, Jeweled Lotus, Dockside and Nadu are
+        all out). The converter above tells you which before you load the client.
+      </p>
+    </details>
+
+    <details class="faq">
+      <summary>Where do deck files go?</summary>
+      <p>
+        The <code>Decks</code> folder inside wherever you unzipped XMage. Drop the
+        <code>.dck</code> in and it appears when you sit down at a table.
+      </p>
+    </details>
+  </section>
+
+  <script type="module" src="/mtg/home.js"></script>
+</Pod>

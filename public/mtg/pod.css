@@ -119,6 +119,52 @@ h3 { font-size: 1.06rem; margin: 0 0 0.3rem; }
 .pip-B { background: var(--b); } .pip-R { background: var(--r); }
 .pip-G { background: var(--g); } .pip-C { background: #9aa0aa; }
 
+
+/* --------------------------------------------------------- tribe backdrop */
+
+.hero { position: relative; }
+.tribe-strip {
+  position: absolute;
+  inset: 0 0 0 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 0 0 20px 20px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.75), transparent 88%);
+  mask-image: linear-gradient(180deg, rgba(0,0,0,0.75), transparent 88%);
+}
+.tribe-strip span {
+  position: relative;
+  background-size: cover;
+  background-position: center 28%;
+  opacity: 0.22;
+  filter: grayscale(0.15) contrast(1.05);
+}
+/* Tint each band toward its own colour so the five identities read even at
+   this opacity. */
+.tribe-strip span::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: color;
+}
+.tribe-strip span[data-c='G']::after { background: var(--g); }
+.tribe-strip span[data-c='R']::after { background: var(--r); }
+.tribe-strip span[data-c='U']::after { background: var(--u); }
+.tribe-strip span[data-c='W']::after { background: var(--w); }
+.tribe-strip span[data-c='B']::after { background: var(--b); }
+
+@media (max-width: 700px) {
+  /* Five slivers is noise on a phone; show the outer three. */
+  .tribe-strip { grid-template-columns: repeat(3, 1fr); }
+  .tribe-strip span:nth-child(n+4) { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tribe-strip span { transition: opacity 0.4s ease; }
+}
+
 /* -------------------------------------------------------------------- hero */
 
 .hero { padding: clamp(2.5rem, 8vw, 5rem) 0 2rem; }
@@ -203,47 +249,6 @@ button.link {
 .step p:last-child { margin-bottom: 0; }
 .step ul { margin: 0.4rem 0 0; padding-left: 1.05rem; color: var(--muted); font-size: 0.9rem; }
 .step code { font-family: var(--mono); font-size: 0.86em; background: var(--panel-2); padding: 0.1rem 0.32rem; border-radius: 4px; }
-
-/* ------------------------------------------------------------------ tribes */
-
-.tribes { display: grid; gap: 1rem; }
-.tribe {
-  position: relative; overflow: hidden;
-  border: 1px solid var(--line); border-radius: 14px;
-  display: grid; grid-template-columns: minmax(0, 260px) 1fr;
-  min-height: 168px; text-decoration: none; color: inherit;
-  background: var(--panel);
-  transition: border-color 0.16s ease, transform 0.16s ease;
-}
-.tribe:hover { transform: translateY(-2px); }
-.tribe-art { position: relative; overflow: hidden; }
-.tribe-art img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(1.05); }
-.tribe-art::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent 40%, var(--panel) 100%);
-}
-.tribe-body { padding: 1.15rem 1.3rem; display: flex; flex-direction: column; justify-content: center; }
-.tribe-body h3 { font-size: 1.5rem; margin: 0.1rem 0 0.3rem; }
-.tribe-body p { color: var(--muted); margin: 0 0 0.7rem; font-size: 0.93rem; max-width: 52ch; }
-.tribe-count { font-size: 0.82rem; color: var(--muted); }
-.tribe-count b { color: var(--fg); font-weight: 700; }
-
-.tribe[data-c='G'] { border-color: rgba(85,167,101,0.4);  background: linear-gradient(100deg, var(--g-deep) -10%, var(--panel) 55%); }
-.tribe[data-c='R'] { border-color: rgba(226,89,60,0.4);   background: linear-gradient(100deg, var(--r-deep) -10%, var(--panel) 55%); }
-.tribe[data-c='U'] { border-color: rgba(75,147,216,0.4);  background: linear-gradient(100deg, var(--u-deep) -10%, var(--panel) 55%); }
-.tribe[data-c='W'] { border-color: rgba(246,230,189,0.34);background: linear-gradient(100deg, var(--w-deep) -10%, var(--panel) 55%); }
-.tribe[data-c='B'] { border-color: rgba(155,127,192,0.4); background: linear-gradient(100deg, var(--b-deep) -10%, var(--panel) 55%); }
-.tribe[data-c='G']:hover { border-color: var(--g); }
-.tribe[data-c='R']:hover { border-color: var(--r); }
-.tribe[data-c='U']:hover { border-color: var(--u); }
-.tribe[data-c='W']:hover { border-color: var(--w); }
-.tribe[data-c='B']:hover { border-color: var(--b); }
-
-@media (max-width: 620px) {
-  .tribe { grid-template-columns: 1fr; }
-  .tribe-art { height: 120px; }
-  .tribe-art::after { background: linear-gradient(180deg, transparent 30%, var(--panel) 100%); }
-}
 
 /* ------------------------------------------------------------- deck cards  */
 

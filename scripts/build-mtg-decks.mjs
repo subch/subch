@@ -36,12 +36,24 @@ const UA = {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function getJSON(url, cacheKey) {
+async function getJSON(url, cacheKey, tries = 4) {
   const cacheFile = cacheKey ? path.join(CACHE, cacheKey) : null;
   if (cacheFile && existsSync(cacheFile)) {
     return JSON.parse(await readFile(cacheFile, 'utf8'));
   }
-  const res = await fetch(url, { headers: UA });
+
+  let res;
+  for (let attempt = 1; ; attempt++) {
+    res = await fetch(url, { headers: UA });
+    // Archidekt rate-limits in bursts. Back off and retry rather than dropping
+    // the deck - losing them silently is how we ended up with 9 bracket-4s.
+    if (res.status !== 429 || attempt >= tries) break;
+    const retryAfter = Number(res.headers.get('retry-after'));
+    const waitMs = Number.isFinite(retryAfter) && retryAfter > 0
+      ? retryAfter * 1000
+      : 2000 * attempt ** 2;
+    await sleep(waitMs);
+  }
   if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${url}`);
   const json = await res.json();
   if (cacheFile) {
@@ -115,6 +127,160 @@ async function fetchCommanderDecks() {
   return out;
 }
 
+
+
+// Precons and Archidekt decks arrive in different shapes; both are flattened to
+// { meta, commanders, cards } so the rest of the pipeline sees one thing.
+function normalisePrecon({ meta, data }) {
+  const pick = (c) => ({
+    name: c.name,
+    faceName: c.faceName,
+    layout: c.layout,
+    setCode: c.setCode,
+    number: c.number,
+  });
+  const commanders = (data.commander ?? []).map(pick);
+  if (!commanders.length) return null;
+
+  const cards = (data.mainBoard ?? []).map((c) => ({ ...pick(c), count: c.count }));
+  const total = cards.reduce((n, c) => n + c.count, 0) + commanders.length;
+  if (total !== 100) {
+    console.warn(`  ! ${meta.name} (${meta.code}) has ${total} cards, not 100 - skipping`);
+    return null;
+  }
+
+  return {
+    meta: {
+      source: 'precon',
+      name: meta.name,
+      code: meta.code,
+      date: meta.releaseDate ?? '',
+      views: 0,
+      author: null,
+      url: meta.source ?? null,
+      declaredBracket: null,
+    },
+    commanders,
+    cards,
+  };
+}
+
+/* ------------------------------------------------------- archidekt source */
+
+// Precons only ever reach bracket 3, so the strong end of the range has to come
+// from real player decks. Archidekt exposes a public search API with view
+// counts and dates, which is what "popular right now" needs.
+//
+// We keep the author's name and a link back on every deck - these are other
+// people's lists and should be credited as such.
+const ARCHIDEKT_API = 'https://archidekt.com/api';
+const ARCHIDEKT_PAGES = 8;
+const ARCHIDEKT_WANTED = 220;
+
+async function fetchArchidektCandidates() {
+  const seen = new Map();
+  // Two orderings: what people look at most, and what has been touched
+  // recently, so the set is not purely a hall of fame from 2021.
+  for (const order of ['-viewCount', '-updatedAt']) {
+    for (let page = 1; page <= ARCHIDEKT_PAGES; page++) {
+      let body;
+      try {
+        body = await getJSON(
+          `${ARCHIDEKT_API}/decks/v3/?formats=3&orderBy=${order}&size=100&page=${page}`,
+          `archidekt/search-${order}-${page}.json`
+        );
+      } catch (err) {
+        console.warn(`  ! archidekt search ${order} p${page}: ${err.message}`);
+        break;
+      }
+      const rows = body.results ?? [];
+      if (!rows.length) break;
+      for (const r of rows) {
+        // Only whole decks. A lot of public "decks" are 3-card commander
+        // shortlists or work in progress.
+        if (r.size !== 100 || r.private || r.unlisted) continue;
+        if (!seen.has(r.id)) seen.set(r.id, r);
+      }
+      process.stdout.write(`\r  archidekt candidates: ${seen.size}`);
+      await sleep(250);
+      if (seen.size >= ARCHIDEKT_WANTED * 2) break;
+    }
+  }
+  process.stdout.write('\n');
+  return [...seen.values()]
+    .sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0))
+    .slice(0, ARCHIDEKT_WANTED);
+}
+
+async function fetchArchidektDecks() {
+  const candidates = await fetchArchidektCandidates();
+  const out = [];
+  for (const [i, meta] of candidates.entries()) {
+    let raw;
+    try {
+      raw = await getJSON(`${ARCHIDEKT_API}/decks/${meta.id}/`, `archidekt/deck-${meta.id}.json`);
+    } catch (err) {
+      console.warn(`  ! archidekt deck ${meta.id}: ${err.message}`);
+      continue;
+    }
+    const deck = normaliseArchidekt(raw);
+    if (deck) out.push(deck);
+    process.stdout.write(`\r  archidekt decks: ${out.length}/${i + 1}`);
+    await sleep(650);
+  }
+  process.stdout.write('\n');
+  return out;
+}
+
+function normaliseArchidekt(raw) {
+  // A deck's own categories say which buckets actually count; Maybeboard and
+  // friends come through with includedInDeck false.
+  const excluded = new Set(
+    (raw.categories ?? []).filter((c) => c.includedInDeck === false).map((c) => c.name)
+  );
+
+  const commanders = [];
+  const cards = [];
+
+  for (const entry of raw.cards ?? []) {
+    const cats = entry.categories ?? [];
+    if (cats.some((c) => excluded.has(c))) continue;
+
+    const card = entry.card ?? {};
+    const oracle = card.oracleCard ?? {};
+    const name = oracle.name;
+    if (!name) continue;
+
+    const rec = {
+      name,
+      setCode: (card.edition?.editioncode ?? '').toUpperCase() || null,
+      number: card.collectorNumber ?? null,
+      count: entry.quantity ?? 1,
+    };
+    if (cats.includes('Commander')) commanders.push({ ...rec, count: undefined });
+    else cards.push(rec);
+  }
+
+  if (!commanders.length || commanders.length > 2) return null;
+  const total = cards.reduce((n, c) => n + c.count, 0) + commanders.length;
+  if (total !== 100) return null;
+
+  return {
+    meta: {
+      source: 'archidekt',
+      name: raw.name?.trim() || `Deck ${raw.id}`,
+      code: 'ARCH',
+      date: (raw.updatedAt ?? raw.createdAt ?? '').slice(0, 10),
+      views: raw.viewCount ?? 0,
+      author: raw.owner?.username ?? null,
+      url: `https://archidekt.com/decks/${raw.id}`,
+      declaredBracket: raw.edhBracket ?? null,
+    },
+    commanders,
+    cards,
+  };
+}
+
 /* ------------------------------------------------------------ card oracle  */
 
 // XMage resolves a card by name when it cannot match the exact printing, so
@@ -147,6 +313,7 @@ async function fetchOracle(names) {
       const info = {
         name: c.name,
         layout: c.layout ?? 'normal',
+        frontFace: c.card_faces?.[0]?.name ?? c.name,
         type_line: c.type_line ?? faces.map((f) => f.type_line).join(' // '),
         oracle: faces.map((f) => f.oracle_text ?? '').join(' \n '),
         ci: c.color_identity ?? [],
@@ -295,11 +462,20 @@ function assignThemes(records) {
 // Handing the importer a back-face name gets an explicit "you can't use night
 // card in deck" error, so everything but split collapses to the front face.
 // MTGJSON hands us layout and faceName directly, so no guessing is needed.
-const xmageName = (c) => (c.layout === 'split' ? c.name : c.faceName ?? c.name);
+// MTGJSON hands us layout and faceName outright. Archidekt does not, so for
+// those we fall back to Scryfall's layout, resolved during the oracle pass.
+function xmageName(c, oracle) {
+  if (c.faceName) return c.layout === 'split' ? c.name : c.faceName;
+  if (!c.name.includes(' // ')) return c.name;
+  const info = oracle?.get(lookupName(c));
+  if (info?.layout === 'split') return c.name;
+  return info?.frontFace ?? c.name.split(' // ')[0];
+}
 
 // Scryfall's collection endpoint matches on the FACE name and returns
 // not_found for the combined "A // B" form, so every lookup uses the face.
-const lookupName = (c) => c.faceName ?? c.name;
+const lookupName = (c) =>
+  c.faceName ?? (c.name.includes(' // ') ? c.name.split(' // ')[0] : c.name);
 
 /* ---------------------------------------------------------------- brackets */
 
@@ -361,13 +537,19 @@ async function main() {
   const gcSet = new Set(gameChangers);
   console.log(`  ${gameChangers.length} game changers`);
 
-  console.log('Fetching Commander precon decklists from MTGJSON...');
-  const decks = await fetchCommanderDecks();
-  console.log(`  ${decks.length} decks`);
+  console.log('Fetching Commander precons from MTGJSON...');
+  const precons = (await fetchCommanderDecks()).map(normalisePrecon).filter(Boolean);
+  console.log(`  ${precons.length} precons`);
+
+  console.log('Fetching popular decks from Archidekt...');
+  const community = await fetchArchidektDecks();
+  console.log(`  ${community.length} community decks`);
+
+  const decks = [...precons, ...community];
 
   const allNames = [];
-  for (const { data } of decks) {
-    for (const c of [...(data.commander ?? []), ...(data.mainBoard ?? [])]) allNames.push(lookupName(c));
+  for (const d of decks) {
+    for (const c of [...d.commanders, ...d.cards]) allNames.push(lookupName(c));
   }
   console.log(`Fetching oracle data for ${new Set(allNames).size} unique cards...`);
   const oracle = await fetchOracle(allNames);
@@ -375,29 +557,8 @@ async function main() {
   const index = [];
   const seenIds = new Set();
 
-  for (const { meta, data } of decks) {
-    const commanders = (data.commander ?? []).map((c) => ({
-      name: c.name,
-      faceName: c.faceName,
-      layout: c.layout,
-      setCode: c.setCode,
-      number: c.number,
-    }));
-    if (!commanders.length) continue; // not a real Commander deck
-
-    const cards = (data.mainBoard ?? []).map((c) => ({
-      name: c.name,
-      faceName: c.faceName,
-      layout: c.layout,
-      setCode: c.setCode,
-      number: c.number,
-      count: c.count,
-    }));
-    const total = cards.reduce((n, c) => n + c.count, 0) + commanders.length;
-    if (total !== 100) {
-      console.warn(`  ! ${meta.name} (${meta.code}) has ${total} cards, not 100 - skipping`);
-      continue;
-    }
+  for (const { meta, commanders, cards } of decks) {
+    if (!commanders.length) continue;
 
     let id = slug(`${meta.name}-${meta.code}`);
     while (seenIds.has(id)) id += '-x';
@@ -408,15 +569,21 @@ async function main() {
     ci.sort((a, b) => order[a] - order[b]);
 
     const all = [...cards, ...commanders.map((c) => ({ ...c, count: 1 }))];
-    const bracketInfo = estimateBracket(all, oracle, gcSet);
+    const { bracket: estimated, ...bracketInfo } = estimateBracket(all, oracle, gcSet);
+
+    // Brackets are meant to be self-declared, so an author's own label wins
+    // where there is one. Undeclared decks fall back to what the contents say.
+    const declared = [2, 3, 4, 5].includes(meta.declaredBracket) ? meta.declaredBracket : null;
+    const bracket = declared ?? estimated;
+
     const bannedHere = [...cards, ...commanders]
-      .map(xmageName)
+      .map((c) => xmageName(c, oracle))
       .filter((n) => bans.banned.includes(n));
 
-    // Scoring above uses Scryfall's full names so oracle lookups hit; only the
+    // Scoring uses Scryfall's full names so oracle lookups hit; only the
     // written file gets the XMage-facing name.
     const forXMage = (c) => ({
-      name: xmageName(c),
+      name: xmageName(c, oracle),
       setCode: c.setCode,
       number: c.number,
       ...(c.count === undefined ? {} : { count: c.count }),
@@ -428,6 +595,9 @@ async function main() {
         id,
         name: meta.name,
         setCode: meta.code,
+        source: meta.source,
+        author: meta.author,
+        url: meta.url,
         commanders: commanders.map(forXMage),
         cards: cards.map(forXMage),
       })
@@ -437,11 +607,18 @@ async function main() {
       id,
       name: meta.name,
       setCode: meta.code,
-      releaseDate: meta.releaseDate,
-      commanders: commanders.map(xmageName),
+      source: meta.source,
+      author: meta.author,
+      url: meta.url,
+      views: meta.views ?? 0,
+      date: meta.date ?? '',
+      commanders: commanders.map((c) => xmageName(c, oracle)),
       colorIdentity: ci,
       themes: [],
       ...themeScores(all, oracle),
+      bracket,
+      estimatedBracket: estimated,
+      bracketSource: declared ? 'declared' : 'estimated',
       ...bracketInfo,
       bannedInXMage: bannedHere,
     });
@@ -465,10 +642,7 @@ async function main() {
     delete rec.bodies;
   }
 
-  index.sort(
-    (a, b) =>
-      (b.releaseDate ?? '').localeCompare(a.releaseDate ?? '') || a.name.localeCompare(b.name)
-  );
+  index.sort((a, b) => (b.views ?? 0) - (a.views ?? 0) || (b.date ?? '').localeCompare(a.date ?? ''));
 
   await writeFile(
     path.join(DECK_OUT, 'index.json'),
@@ -477,17 +651,13 @@ async function main() {
   await writeFile(path.join(OUT, 'banned.json'), JSON.stringify(bans));
   await writeFile(path.join(OUT, 'gamechangers.json'), JSON.stringify({ gameChangers }));
 
-  const byBracket = index.reduce((acc, d) => ((acc[d.bracket] = (acc[d.bracket] ?? 0) + 1), acc), {});
-  console.log(`\nWrote ${index.length} decks to public/mtg/data/decks/`);
-  console.log('  by estimated bracket:', byBracket);
-  const themeCounts = {};
-  for (const d of index) for (const t of d.themes) themeCounts[t] = (themeCounts[t] ?? 0) + 1;
-  console.log(
-    '  themes:',
-    Object.entries(themeCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 12)
-  );
+  const tally = (key) =>
+    index.reduce((acc, d) => ((acc[d[key]] = (acc[d[key]] ?? 0) + 1), acc), {});
+  console.log('');
+  console.log(`Wrote ${index.length} decks to public/mtg/data/decks/`);
+  console.log('  by bracket:', tally('bracket'));
+  console.log('  by source :', tally('source'));
+  console.log('  bracket from:', tally('bracketSource'));
 }
 
 main().catch((err) => {

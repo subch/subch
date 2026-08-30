@@ -26,9 +26,9 @@ const COLORS = ['W', 'U', 'B', 'R', 'G'];
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title ? `${title} · The Pod` : 'The Pod · Commander'}</title>
+    <title>{title ? `${title} · Goon Cardismo` : 'Goon Cardismo'}</title>
     <meta name="description" content={description} />
-    <meta property="og:title" content={title ?? 'The Pod'} />
+    <meta property="og:title" content={title ?? 'Goon Cardismo'} />
     <meta property="og:description" content={description} />
     <meta name="theme-color" content="#0a0a0e" />
     <link
@@ -45,7 +45,7 @@ const COLORS = ['W', 'U', 'B', 'R', 'G'];
           <span class="pips">
             {COLORS.map((c) => <span class={`pip pip-${c}`}>{c}</span>)}
           </span>
-          The Pod
+          Goon Cardismo
         </a>
         <nav class="pod-nav">
           {nav.map((item) => (
@@ -64,14 +64,15 @@ const COLORS = ['W', 'U', 'B', 'R', 'G'];
     <footer class="pod-footer">
       <div class="wrap">
         <p style="margin:0">
-          Commander night at <a href="https://subch.us">subch.us</a> ·
+          Goon Cardismo, part of <a href="https://subch.us">subch.us</a> ·
           server <code>mtg.subch.us:17171</code>
         </p>
         <p class="credits">
           Card images and names are property of Wizards of the Coast. This is
           unofficial fan content, not affiliated with or endorsed by Wizards.
-          Deck data from <a href="https://mtgjson.com">MTGJSON</a>, card data
-          from <a href="https://scryfall.com">Scryfall</a>.
+          Precon data from <a href="https://mtgjson.com">MTGJSON</a>, community
+          decklists from <a href="https://archidekt.com">Archidekt</a> (credited to
+          their authors), card data from <a href="https://scryfall.com">Scryfall</a>.
         </p>
       </div>
     </footer>

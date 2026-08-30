@@ -1,6 +1,9 @@
 import { $, $$, esc, loadIndex, themeLabel, deckCardHtml, plural } from './common.js';
 
-const state = { decks: [], colors: new Set(), bracket: 'all', theme: 'all', tribe: 'all', q: '', sort: 'new' };
+const state = {
+  decks: [], colors: new Set(), bracket: 'all', theme: 'all', tribe: 'all',
+  source: 'all', q: '', sort: 'popular',
+};
 
 /* Filters live in the URL so a filtered view can be linked and shared - the
    landing page's tribe tiles rely on this. */
@@ -10,6 +13,8 @@ function readUrl() {
   if (p.get('bracket')) state.bracket = p.get('bracket');
   if (p.get('theme')) state.theme = p.get('theme');
   if (p.get('q')) state.q = p.get('q').toLowerCase();
+  if (p.get('source')) state.source = p.get('source');
+  if (p.get('sort')) state.sort = p.get('sort');
   for (const c of (p.get('colors') ?? '')) if ('WUBRG'.includes(c)) state.colors.add(c);
 }
 
@@ -19,6 +24,8 @@ function writeUrl() {
   if (state.bracket !== 'all') p.set('bracket', state.bracket);
   if (state.theme !== 'all') p.set('theme', state.theme);
   if (state.q) p.set('q', state.q);
+  if (state.source !== 'all') p.set('source', state.source);
+  if (state.sort !== 'popular') p.set('sort', state.sort);
   if (state.colors.size) p.set('colors', [...state.colors].join(''));
   const qs = p.toString();
   history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
@@ -58,6 +65,7 @@ function syncControls() {
   $('#filter-tribe').value = [...$('#filter-tribe').options].some((o) => o.value === state.tribe) ? state.tribe : 'all';
   $('#filter-q').value = state.q;
   $('#filter-sort').value = state.sort;
+  $('#filter-source').value = state.source;
   for (const b of $$('.color-btn')) b.classList.toggle('on', state.colors.has(b.dataset.color));
 }
 
@@ -78,11 +86,14 @@ function wire() {
   on('#filter-theme', 'theme');
   on('#filter-tribe', 'tribe');
   on('#filter-sort', 'sort');
+  on('#filter-source', 'source');
   on('#filter-q', 'q', (v) => v.trim().toLowerCase());
 
   $('#filter-reset').addEventListener('click', () => {
     state.colors.clear();
-    Object.assign(state, { bracket: 'all', theme: 'all', tribe: 'all', q: '', sort: 'new' });
+    Object.assign(state, {
+      bracket: 'all', theme: 'all', tribe: 'all', source: 'all', q: '', sort: 'popular',
+    });
     syncControls();
     render();
   });
@@ -92,6 +103,7 @@ function matches(d) {
   if (state.bracket !== 'all' && String(d.bracket) !== state.bracket) return false;
   if (state.theme !== 'all' && !(d.themes ?? []).includes(state.theme)) return false;
   if (state.tribe !== 'all' && !(d.tribeCounts ?? {})[state.tribe]) return false;
+  if (state.source !== 'all' && d.source !== state.source) return false;
   if (state.colors.size && !(d.colorIdentity ?? []).every((c) => state.colors.has(c))) return false;
   if (state.q) {
     const hay = `${d.name} ${(d.commanders ?? []).join(' ')} ${(d.themes ?? []).map(themeLabel).join(' ')}`.toLowerCase();
@@ -102,10 +114,13 @@ function matches(d) {
 
 function sorted(list) {
   const by = {
-    new: (a, b) => (b.releaseDate ?? '').localeCompare(a.releaseDate ?? ''),
-    old: (a, b) => (a.releaseDate ?? '').localeCompare(b.releaseDate ?? ''),
+    // Precons carry no view count, so popularity puts community decks first
+    // and falls back to recency behind them.
+    popular: (a, b) => (b.views ?? 0) - (a.views ?? 0) || (b.date ?? '').localeCompare(a.date ?? ''),
+    new: (a, b) => (b.date ?? '').localeCompare(a.date ?? ''),
+    old: (a, b) => (a.date ?? '').localeCompare(b.date ?? ''),
     az: (a, b) => a.name.localeCompare(b.name),
-  }[state.sort];
+  }[state.sort] ?? ((a, b) => (b.views ?? 0) - (a.views ?? 0));
   // When filtering by tribe, the decks with the most of that tribe are the
   // interesting ones, so they lead regardless of the chosen sort.
   if (state.tribe !== 'all') {

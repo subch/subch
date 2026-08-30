@@ -108,6 +108,13 @@ function render() {
           <span class="deck-set">${esc(ORIGINAL.setCode ?? '')}</span>
           <span id="edited-flag" class="edited" hidden>edited</span>
         </p>
+        ${ORIGINAL.source === 'archidekt' ? `
+          <p class="deck-sub" style="margin-top:-1rem">
+            <span class="deck-set">
+              Built by ${esc(ORIGINAL.author ?? 'an Archidekt user')} ·
+              <a href="${esc(ORIGINAL.url)}" target="_blank" rel="noopener">view the original</a>
+            </span>
+          </p>` : ''}
 
         <section class="cardgroup">
           <h2>Commander</h2>

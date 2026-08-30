@@ -11,33 +11,31 @@ const DISCORD = 'https://discord.gg/APWGjyvg';
 // Astro builds with cwd at the project root, so a plain relative path is
 // steadier here than resolving against import.meta.url.
 const credits = JSON.parse(readFileSync('public/mtg/img/credits.json', 'utf8')).credits;
-const credit = (key) => credits.find((c) => c.key === key) ?? {};
-
-// Listed in Travis's order of preference.
+// The five house tribes. They no longer get their own section - they are the
+// site's colour identity, painted across the hero as a backdrop.
 const TRIBES = [
-  { key: 'elf', color: 'G', tribe: 'Elf', name: 'Elves',
-    blurb: 'Make a mana elf, make ten. Then make them all enormous at once. The oldest good idea in Magic.' },
-  { key: 'goblin', color: 'R', tribe: 'Goblin', name: 'Goblins',
-    blurb: 'Quantity is its own quality. Throw bodies at the problem until the problem is on fire.' },
-  { key: 'merfolk', color: 'U', tribe: 'Merfolk', name: 'Merfolk',
-    blurb: 'Small blue creatures that quietly become unblockable and end the game while nobody was watching.' },
-  { key: 'angel', color: 'W', tribe: 'Angel', name: 'Angels',
-    blurb: 'Fly over everything. Cost a fortune. Win anyway, with excellent posture.' },
-  { key: 'vampire', color: 'B', tribe: 'Vampire', name: 'Vampires',
-    blurb: 'Drain them a point at a time, grow on every death, and look good doing it.' },
+  { key: 'elf', color: 'G' },
+  { key: 'goblin', color: 'R' },
+  { key: 'merfolk', color: 'U' },
+  { key: 'angel', color: 'W' },
+  { key: 'vampire', color: 'B' },
 ];
 ---
 
-<Pod title="Commander night">
+<Pod title="Goonmander">
   <section class="hero">
+    <div class="tribe-strip" aria-hidden="true">
+      {TRIBES.map((t) => (
+        <span data-c={t.color} style={`background-image:url(/mtg/img/${t.key}.jpg)`}></span>
+      ))}
+    </div>
     <span class="pips">
       {['W', 'U', 'B', 'R', 'G'].map((c) => <span class={`pip pip-${c}`}>{c}</span>)}
     </span>
-    <p class="eyebrow">Four-player EDH · our own server</p>
-    <h1>Commander night</h1>
+    <p class="eyebrow">Four-player EDH</p>
+    <h1>Goonmander</h1>
     <p class="lede">
-      Every card in the game, free, with the rules enforced for you. No account,
-      nothing to buy, and you can be sat at a table in about ten minutes.
+      Setup for xmage, private server, deckbuilder, gooning.
     </p>
 
     <div class="hero-actions" style="margin-bottom:1.4rem">
@@ -65,41 +63,13 @@ const TRIBES = [
     </div>
   </section>
 
-  <section class="section" id="tribes">
-    <div class="section-head">
-      <div>
-        <p class="eyebrow">Pick your side</p>
-        <h2>Five colours, five tribes</h2>
-        <p>The house favourites. Every deck here is ready to download and play.</p>
-      </div>
-    </div>
-
-    <div class="tribes">
-      {TRIBES.map((t) => {
-        const c = credit(t.key);
-        return (
-          <a class="tribe" data-c={t.color} href={`/mtg/decks/?tribe=${t.tribe}`}>
-            <div class="tribe-art">
-              <img src={`/mtg/img/${t.key}.jpg`} alt={`${c.card} by ${c.artist}`} loading="lazy" width="626" height="457" />
-            </div>
-            <div class="tribe-body">
-              <span class="pips"><span class={`pip pip-${t.color}`}>{t.color}</span></span>
-              <h3>{t.name}</h3>
-              <p>{t.blurb}</p>
-              <span class="tribe-count" data-tribe={t.tribe} data-plural={t.name}>counting decks…</span>
-            </div>
-          </a>
-        );
-      })}
-    </div>
-  </section>
 
   <section class="section" id="featured">
     <div class="section-head">
       <div>
         <p class="eyebrow">Ready to play</p>
-        <h2>A few to start with</h2>
-        <p>Five from each power bracket. Open one to see the list, tweak it, and export.</p>
+        <h2>What people are playing</h2>
+        <p>The most-viewed decks right now, split by power bracket. Open one to see the list, change it, and export.</p>
       </div>
       <a class="btn ghost" href="/mtg/decks/">See all <span id="all-count"></span> →</a>
     </div>
@@ -227,6 +197,13 @@ const TRIBES = [
       </p>
     </details>
   </section>
+
+  <p class="credits" style="margin-top:2.5rem">
+    Header art:
+    {credits.map((c, i) => (
+      <span>{i > 0 ? ' · ' : ''}<a href={c.scryfall} target="_blank" rel="noopener">{c.card}</a> by {c.artist}</span>
+    ))}
+  </p>
 
   <script type="module" src="/mtg/home.js"></script>
 </Pod>

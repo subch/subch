@@ -2,18 +2,18 @@
 import Pod from '../../layouts/Pod.astro';
 ---
 
-<Pod title="All decks" description="Every official Commander precon, filterable by colour, tribe, theme and power bracket." wide={true}>
+<Pod title="All decks" description="Popular Commander decks and every official precon, filterable by colour, tribe, theme and power bracket." wide={true}>
   <section class="section" style="padding-top:2rem">
     <div class="section-head">
       <div>
         <p class="eyebrow">The whole shelf</p>
         <h2>All decks</h2>
         <p>
-          Every official Commander preconstructed deck. Open one to see the list,
-          change it, and export a <code>.dck</code>.
+          Popular community decks and every official preconstructed deck. Open one
+          to see the list, change it, and export a <code>.dck</code>.
         </p>
       </div>
-      <a class="btn ghost" href="/mtg/">← Back to the pod</a>
+      <a class="btn ghost" href="/mtg/">← Back home</a>
     </div>
 
     <div class="filters">
@@ -32,8 +32,15 @@ import Pod from '../../layouts/Pod.astro';
         <option value="2">Bracket 2 · Core</option>
         <option value="3">Bracket 3 · Upgraded</option>
         <option value="4">Bracket 4 · Optimized</option>
+        <option value="5">Bracket 5 · cEDH</option>
+      </select>
+      <select id="filter-source" aria-label="Filter by source">
+        <option value="all">Any source</option>
+        <option value="archidekt">Community decks</option>
+        <option value="precon">Preconstructed</option>
       </select>
       <select id="filter-sort" aria-label="Sort">
+        <option value="popular">Most popular</option>
         <option value="new">Newest first</option>
         <option value="old">Oldest first</option>
         <option value="az">A to Z</option>

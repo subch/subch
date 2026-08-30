@@ -5,43 +5,28 @@ import {
   parseDecklist, resolveCards, validateCommanderDeck, toDck, downloadDck, slug,
 } from './dck.js';
 
-const FAVOURITES = ['Elf', 'Goblin', 'Merfolk', 'Angel', 'Vampire'];
 const BRACKET_NAMES = { 1: 'Exhibition', 2: 'Core', 3: 'Upgraded', 4: 'Optimized', 5: 'cEDH' };
-
-/* ------------------------------------------------------------------ tribes */
-
-function fillTribeCounts(decks) {
-  for (const el of document.querySelectorAll('[data-tribe]')) {
-    const tribe = el.dataset.tribe;
-    // Creature types do not pluralise by adding an s (Elves, Merfolk), so the
-    // page supplies the correct plural rather than us guessing.
-    const plural = el.dataset.plural ?? `${tribe}s`;
-    const matches = decks.filter((d) => (d.tribeCounts ?? {})[tribe]);
-    const best = Math.max(0, ...matches.map((d) => d.tribeCounts[tribe]));
-    el.innerHTML = matches.length
-      ? `<b>${matches.length}</b> deck${matches.length === 1 ? '' : 's'} · up to <b>${best}</b> ${esc(plural)} in one`
-      : 'no decks yet';
-  }
-}
 
 /* ---------------------------------------------------------------- featured */
 
-// Show a handful per bracket rather than the whole catalogue. Decks built
-// around one of the house tribes come first, then the most recent.
-function featuredFor(decks, bracket, n = 5) {
-  const favScore = (d) =>
-    Math.max(0, ...FAVOURITES.map((t) => (d.tribeCounts ?? {})[t] ?? 0));
+// A handful per bracket rather than the whole catalogue. Ordered by how much
+// people are actually looking at them; precons carry no view count, so
+// community decks lead and precons fill in behind by recency.
+function featuredFor(decks, bracket, n = 6) {
   return decks
     .filter((d) => d.bracket === bracket)
-    .map((d) => ({ d, fav: favScore(d) }))
-    .sort((a, b) => b.fav - a.fav || (b.d.releaseDate ?? '').localeCompare(a.d.releaseDate ?? ''))
-    .slice(0, n)
-    .map((x) => x.d);
+    .sort((a, b) => (b.views ?? 0) - (a.views ?? 0) || (b.date ?? '').localeCompare(a.date ?? ''))
+    .slice(0, n);
 }
 
 function renderFeatured(decks) {
   const host = $('#featured-decks');
-  const brackets = [...new Set(decks.map((d) => d.bracket))].sort();
+  // Brackets 2-4 only. Bracket 1 barely exists in the wild and bracket 5 is
+  // cEDH - neither belongs on the front page of a casual pod. Both are still
+  // reachable from the full catalogue.
+  const brackets = [...new Set(decks.map((d) => d.bracket))]
+    .filter((b) => b >= 2 && b <= 4)
+    .sort();
   host.innerHTML = brackets.map((b) => {
     const picks = featuredFor(decks, b);
     if (!picks.length) return '';
@@ -53,7 +38,7 @@ function renderFeatured(decks) {
             <h3 style="font-family:var(--display);font-size:1.15rem">
               Bracket ${b} · ${esc(BRACKET_NAMES[b] ?? '')}
             </h3>
-            <p style="margin:0;color:var(--muted);font-size:0.88rem">${total} decks at this level</p>
+            <p style="margin:0;color:var(--muted);font-size:0.88rem">${total} deck${total === 1 ? '' : 's'} at this level</p>
           </div>
           <a class="btn ghost tiny" href="/mtg/decks/?bracket=${b}">See all ${total} →</a>
         </div>
@@ -190,7 +175,6 @@ function finish(out, { name, commanders, cards, found, notFound, problems }) {
   try {
     const [idx, refs] = await Promise.all([loadIndex(), loadRefs()]);
     REFS = refs;
-    fillTribeCounts(idx.decks);
     renderFeatured(idx.decks);
     const all = $('#all-count');
     if (all) all.textContent = idx.count;

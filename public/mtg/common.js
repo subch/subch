@@ -110,6 +110,20 @@ export function pipsHtml(colors) {
 }
 
 /** Deck card. Links through to the detail/editor page. */
+const fmtViews = (n) =>
+  n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k views` : `${n} views`;
+
+/** The line along the bottom of a deck card: where it came from. */
+function provenance(d) {
+  if (d.source === 'archidekt') {
+    const bits = [];
+    if (d.author) bits.push(`by ${esc(d.author)}`);
+    if (d.views) bits.push(fmtViews(d.views));
+    return bits.join(' · ') || 'community deck';
+  }
+  return `${esc(d.setCode ?? '')} · ${(d.date ?? '').slice(0, 4)}`;
+}
+
 export function deckCardHtml(d, opts = {}) {
   const themes = (d.themes ?? []).slice(0, 3)
     .map((t) => `<span class="tag">${esc(themeLabel(t))}</span>`).join('');
@@ -128,7 +142,7 @@ export function deckCardHtml(d, opts = {}) {
       <div class="tags">${themes}</div>
       ${warn}
       <div class="deck-foot">
-        <span class="deck-set">${esc(d.setCode)} · ${(d.releaseDate ?? '').slice(0, 4)}</span>
+        <span class="deck-set">${provenance(d)}</span>
         <span class="deck-set">Open →</span>
       </div>
     </a>`;

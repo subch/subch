@@ -1,11 +1,14 @@
-name: Check XMage server status
+name: Check the Commander table
 
-# GitHub Pages is static, so the page cannot open a TCP socket to see whether
-# the Commander server is up. This job does the check and commits the answer as
-# a small JSON file that /mtg reads.
+# The site is static, so the page cannot tell on its own whether the table at
+# mtg.subch.us is up. This job asks every few minutes and commits the answer
+# as a small JSON file that /mtg reads.
 #
-# It also carries the current XMage build forward from XMage's own release
-# manifest, so the download link on the page never goes stale.
+# The table is Manabrew on the Forge engine, behind Caddy and a Discord gate.
+# /auth/health is the gate's health endpoint and is deliberately ungated, so it
+# answers 200 whenever Caddy and the gate are alive - which is the front door
+# a player would hit first. A deeper check (relay, engine) needs a login and is
+# not worth the noise here.
 
 on:
   schedule:
@@ -26,53 +29,30 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HOST: mtg.subch.us
-      PORT: '17171'
+      URL: https://mtg.subch.us/auth/health
     steps:
       - uses: actions/checkout@v4
 
-      - name: Probe the server
+      - name: Probe the table
         id: probe
         run: |
           set -uo pipefail
           up=false
-          if timeout 8 bash -c "</dev/tcp/${HOST}/${PORT}" 2>/dev/null; then
+          if curl -fsS --max-time 10 "$URL" >/dev/null 2>&1; then
             up=true
           fi
           echo "up=$up" >> "$GITHUB_OUTPUT"
-          echo "Server ${HOST}:${PORT} up=$up"
-
-      - name: Read the current XMage build
-        id: xmage
-        run: |
-          set -uo pipefail
-          # Never fail the job over this; a missing manifest just means we keep
-          # whatever version string is already committed.
-          manifest=$(curl -fsSL --max-time 20 https://xmage.today/config.json || echo '')
-          if [ -n "$manifest" ]; then
-            echo "version=$(echo "$manifest" | jq -r '.XMage.version // empty')" >> "$GITHUB_OUTPUT"
-            echo "download=$(echo "$manifest" | jq -r '.XMage.full // empty')" >> "$GITHUB_OUTPUT"
-          fi
+          echo "Table ${URL} up=$up"
 
       - name: Write status.json
         run: |
           set -euo pipefail
           mkdir -p public/mtg
-          prev_version=$(jq -r '.xmage.version // empty' public/mtg/status.json 2>/dev/null || true)
-          prev_download=$(jq -r '.xmage.download // empty' public/mtg/status.json 2>/dev/null || true)
-          version="${{ steps.xmage.outputs.version }}"
-          download="${{ steps.xmage.outputs.download }}"
-          [ -z "$version" ] && version="$prev_version"
-          [ -z "$download" ] && download="$prev_download"
-
           jq -n \
             --argjson up ${{ steps.probe.outputs.up }} \
             --arg host "$HOST" \
-            --argjson port "$PORT" \
             --arg checkedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-            --arg version "$version" \
-            --arg download "$download" \
-            '{up: $up, host: $host, port: $port, checkedAt: $checkedAt,
-              xmage: {version: $version, download: $download}}' \
+            '{up: $up, host: $host, checkedAt: $checkedAt}' \
             > public/mtg/status.json
           cat public/mtg/status.json
 
@@ -95,5 +75,5 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/mtg/status.json
-          git commit -m "MTG: server $( [ "${{ steps.probe.outputs.up }}" = "true" ] && echo up || echo down )"
+          git commit -m "MTG: table $( [ "${{ steps.probe.outputs.up }}" = "true" ] && echo up || echo down )"
           git push

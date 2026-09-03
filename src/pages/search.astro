@@ -55,29 +55,24 @@ const category = data.categories.find((c) => c.slug === 'search');
 </Base>
 
 <style>
+  /* The deli keeps its own identity -- it is a sandwich shop, not a parlour --
+     but the site is dark only now, so these are the dark values promoted out
+     of the prefers-color-scheme block that used to hold them. Without this,
+     a visitor on a light-set OS got a cream deli counter pasted onto a dark
+     timber page. */
   .deli-page {
-    --deli-paper: #f6e7c4;
-    --deli-paper-alt: #efd9a3;
-    --deli-red: #b5121b;
-    --deli-mustard: #c98a1f;
-    --deli-ink: #3b2a18;
-    --deli-line: #c9a86a;
+    --deli-paper: #241a10;
+    --deli-paper-alt: #2e2214;
+    --deli-red: #e2454f;
+    --deli-mustard: #e8b25a;
+    --deli-ink: #f3e6c9;
+    --deli-line: #5a3f22;
     background: var(--deli-paper);
     color: var(--deli-ink);
     border: 1px solid var(--deli-line);
     border-radius: 12px;
     padding: 1.75rem 1.75rem 2.25rem;
     margin-top: -0.5rem;
-  }
-  @media (prefers-color-scheme: dark) {
-    .deli-page {
-      --deli-paper: #241a10;
-      --deli-paper-alt: #2e2214;
-      --deli-red: #e2454f;
-      --deli-mustard: #e8b25a;
-      --deli-ink: #f3e6c9;
-      --deli-line: #5a3f22;
-    }
   }
   .deli-checker {
     height: 10px;

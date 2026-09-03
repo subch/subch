@@ -38,6 +38,11 @@ input, textarea { user-select: text; -webkit-user-select: text; }
 .av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: none; overflow: hidden;
   box-shadow: inset 0 -3px 0 rgba(0,0,0,.18), inset 0 2px 0 rgba(255,255,255,.22); }
 .av svg { width: 78%; height: 78%; }
+/* A painted cast portrait FILLS its circle; a glyph is inset at 78%. The bust
+   was cut to be a portrait in a round frame (arcade-art bust()), so insetting
+   it would leave a ring of profile colour around a already-small face. Same
+   treatment the dashboard medallions get. */
+.av .av-art { width: 100%; height: 100%; object-fit: cover; display: block; }
 .av.big { width: 84px; height: 84px; }
 .av.med { width: 48px; height: 48px; }
 .av.guest { background: var(--surface-2); border: 2px dashed var(--ink-2); color: var(--ink-2); font-weight: 800; font-size: 1.2em; display: grid; place-items: center; }
@@ -73,6 +78,10 @@ input, textarea { user-select: text; -webkit-user-select: text; }
 
 .footlinks { display: flex; gap: 20px; justify-content: center; padding: 26px 0 10px; flex-wrap: wrap; }
 .footlinks a { font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; }
+/* The link out of the app sits quieter than the links within it -- it is the
+   way home, not a fifth thing to do here. */
+.footlinks a.way-home { font-weight: 600; opacity: 0.62; }
+.footlinks a.way-home:hover, .footlinks a.way-home:focus-visible { opacity: 1; }
 
 .section-title { font-family: var(--font-display); font-size: 15px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); margin: 18px 0 10px; }
 

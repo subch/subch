@@ -5,6 +5,7 @@
 @font-face { font-family: "Fredoka"; font-weight: 500; font-style: normal; font-display: swap; src: url("../fonts/fredoka-latin-500-normal.woff2") format("woff2"); }
 @font-face { font-family: "Fredoka"; font-weight: 700; font-style: normal; font-display: swap; src: url("../fonts/fredoka-latin-700-normal.woff2") format("woff2"); }
 @font-face { font-family: "Chakra Petch"; font-weight: 700; font-style: normal; font-display: swap; src: url("../fonts/chakra-petch-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Rye"; font-weight: 400; font-style: normal; font-display: swap; src: url("../fonts/rye-latin-400-normal.woff2") format("woff2"); }
 @font-face { font-family: "Nunito Sans"; font-weight: 400; font-style: normal; font-display: swap; src: url("../fonts/nunito-sans-latin-400-normal.woff2") format("woff2"); }
 @font-face { font-family: "Nunito Sans"; font-weight: 600; font-style: normal; font-display: swap; src: url("../fonts/nunito-sans-latin-600-normal.woff2") format("woff2"); }
 @font-face { font-family: "Nunito Sans"; font-weight: 700; font-style: normal; font-display: swap; src: url("../fonts/nunito-sans-latin-700-normal.woff2") format("woff2"); }
@@ -54,6 +55,7 @@
     --glow: none;
     --gloss: .22; --groove: 1; --felt-noise: .16; --grain-alpha: .45;
     --tile-grad: linear-gradient(160deg, var(--surface-2), var(--surface));
+    --scene: none; --scene-scrim: none; --wood-img: none; --felt-img: none; --card-back-img: none; --mark-img: none;
   }
   /* ---------- THEME: Walnut Study ---------- */
   :root[data-theme="walnut"] {
@@ -73,6 +75,47 @@
     --glow: none;
     --gloss: .26; --groove: 1; --felt-noise: .10; --grain-alpha: .55;
     --tile-grad: linear-gradient(160deg, var(--surface-2), var(--surface));
+    --scene: none; --scene-scrim: none; --wood-img: none; --felt-img: none; --card-back-img: none; --mark-img: none;
+  }
+
+  /* ---------- THEME: T-Bone's Saloon ----------
+     The Golden Fart Saloon, painted. Same palette as the arcade front door
+     (ground #140D08, gold #D9A431, paper #F7F1E6, oxblood #7A2E22) so a game
+     opened from the saloon feels like the same room. Pieces are beans: seat 0
+     is a kidney bean, seat 1 a cannellini. The backdrop, the bar-top timber,
+     the baize and the card back are the owner-approved paintings in /art/saloon.
+     Home instances only; the public twin hides it (see profile.js + config.js). */
+  :root[data-theme="saloon"] {
+    --font-display: "Rye", "Fraunces", Georgia, serif;
+    --bg: #140D08; --bg-2: #2E2118;
+    --surface: #241A14; --surface-2: #2E2118; --line: rgba(217,164,49,.22);
+    --ink: #F7F1E6; --ink-2: #CDBBA1;
+    --accent: #D9A431; --accent-ink: #171003; --accent-2: #7A2E22;
+    --felt: #2B6647; --felt-hi: #357A55;
+    --rail: #5A3A22; --rail-2: #7B5232; --rail-edge: #3A2414;
+    --sq-light: #E8D9B5; --sq-dark: #7A4A26;
+    --p1: #A93B22; --p1-hi: #D4664A; --p2: #EFDFB6; --p2-hi: #FFF6DA;
+    --q-light: #E8D9B5; --q-light-2: #B8935C; --q-dark: #3A2414; --q-dark-2: #170D06;
+    --card-face: #F7F1E6; --card-ink: #1E1408; --card-red: #A93B22; --card-back: #1F3B2E; --card-back-2: #D9A431;
+    --radius: 6px; --radius-s: 4px;
+    --shadow: 0 14px 34px rgba(0,0,0,.55);
+    --glow: none;
+    --gloss: .24; --groove: 1; --felt-noise: .08; --grain-alpha: .35;
+    --tile-grad: linear-gradient(160deg, rgba(46,33,24,.96), rgba(36,26,20,.96));
+    --scene: url("/art/saloon/coffeehouse.webp");
+    /* light at the top so the room reads, heavier where the tiles and
+       boards sit; those are opaque anyway, so this is only for bare type */
+    --scene-scrim: linear-gradient(180deg, rgba(20,13,8,.34), rgba(20,13,8,.58) 42%, rgba(20,13,8,.80));
+    --wood-img: url("/art/saloon/tex-redgum.webp");
+    --felt-img: url("/art/saloon/tex-baize.webp");
+    --card-back-img: url("/art/saloon/card-back.webp");
+    --mark-img: url("/art/saloon/kookaburra.webp");
+    --sq-light-img: url("/art/saloon/sq-light.webp");
+    --sq-dark-img: url("/art/saloon/sq-dark.webp");
+    --card-stock: url("/art/saloon/tex-cardstock.webp");
+    --token-0-img: url("/art/saloon/token-0.webp");
+    --token-1-img: url("/art/saloon/token-1.webp");
+    --pit-img: url("/art/saloon/mancala-pit.webp");
   }
   /* ---------- THEME: Candy Shop ---------- */
   :root[data-theme="candy"] {
@@ -92,6 +135,7 @@
     --glow: none;
     --gloss: .55; --groove: 0; --felt-noise: .06; --grain-alpha: 0;
     --tile-grad: linear-gradient(160deg, #ffffff, #fff1f6);
+    --scene: none; --scene-scrim: none; --wood-img: none; --felt-img: none; --card-back-img: none; --mark-img: none;
   }
   /* ---------- THEME: Midnight Arcade ---------- */
   :root[data-theme="arcade"] {
@@ -111,27 +155,34 @@
     --glow: 0 0 18px;
     --gloss: .12; --groove: .5; --felt-noise: .10; --grain-alpha: 0;
     --tile-grad: linear-gradient(160deg, #192449, #121a38);
+    --scene: none; --scene-scrim: none; --wood-img: none; --felt-img: none; --card-back-img: none; --mark-img: none;
   }
 
 /* Shared rules that every theme relies on */
 html { background: var(--bg); }
 body {
   margin: 0; color: var(--ink); font-family: var(--font-body); line-height: 1.5;
-  background: radial-gradient(1200px 600px at 20% -10%, var(--bg-2), transparent 60%), var(--bg);
+  /* scrim + painted scene first (both `none` outside the saloon theme), then
+     the usual wash. One shorthand on purpose: a separate background-image
+     rule was silently reset by this one. */
+  background: var(--scene-scrim), var(--scene), radial-gradient(1200px 600px at 20% -10%, var(--bg-2), transparent 60%), var(--bg);
+  background-size: cover, cover, auto, auto; background-position: center 30%, center 30%, 0 0, 0 0; background-repeat: no-repeat;
   -webkit-font-smoothing: antialiased; touch-action: manipulation;
 }
+@media (min-width: 821px) { body { background-attachment: fixed, fixed, scroll, scroll; } }
 h1, h2, h3, .display { font-family: var(--font-display); text-wrap: balance; line-height: 1.1; }
 
 /* Table felt with nap */
 .table-surface { position: relative; background-color: var(--felt);
-  background-image: var(--noise), radial-gradient(circle at 50% 40%, var(--felt-hi), var(--felt) 70%);
-  background-blend-mode: overlay, normal; box-shadow: inset 0 0 70px rgba(0,0,0,.28), var(--shadow); isolation: isolate; }
+  background-image: var(--felt-img), var(--noise), radial-gradient(circle at 50% 40%, var(--felt-hi), var(--felt) 70%);
+  background-size: 512px 512px, auto, auto;
+  background-blend-mode: multiply, overlay, normal; box-shadow: inset 0 0 70px rgba(0,0,0,.28), var(--shadow); isolation: isolate; }
 .table-surface::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--noise); opacity: var(--felt-noise); mix-blend-mode: overlay; pointer-events: none; }
 
 /* Wood rail with grain + inlaid accent line */
 .rail { position: relative; background-color: var(--rail);
-  background-image: var(--grain), linear-gradient(135deg, var(--rail-2), var(--rail) 55%, var(--rail-edge));
-  background-blend-mode: multiply, normal; background-size: 400px 120px, auto;
+  background-image: var(--wood-img), var(--grain), linear-gradient(135deg, var(--rail-2), var(--rail) 55%, var(--rail-edge));
+  background-blend-mode: multiply, multiply, normal; background-size: 640px 640px, 400px 120px, auto;
   box-shadow: 0 18px 34px rgba(0,0,0,.45), 0 2px 0 rgba(255,255,255,.12) inset, 0 -3px 0 rgba(0,0,0,.25) inset; }
 .rail::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--grain); background-size: 400px 120px; opacity: var(--grain-alpha); mix-blend-mode: multiply; pointer-events: none; }
 .rail::after { content: ""; position: absolute; inset: 7px; border-radius: 4px; border: 1.5px solid var(--accent); opacity: .55; pointer-events: none; }
@@ -156,6 +207,44 @@ h1, h2, h3, .display { font-family: var(--font-display); text-wrap: balance; lin
 .btn, .key { box-shadow: inset 0 -3px 0 rgba(0,0,0,.15); }
 .av { box-shadow: inset 0 -3px 0 rgba(0,0,0,.18), inset 0 2px 0 rgba(255,255,255,.22); }
 
+/* Painted card back and mascot mark: only themes that set the image tokens
+   get them; everywhere else the tokens are `none` and the SVG stays. */
+.card:has(> .cb) { background-image: var(--card-back-img); background-size: cover; background-position: center; }
+:root[data-theme="saloon"] .card:has(> .cb) .cb { opacity: 0; }
+:root[data-theme="saloon"] .brand .mark { background: var(--mark-img) center / 86% no-repeat; border-radius: 0; box-shadow: none; }
+:root[data-theme="saloon"] .brand .mark svg { display: none; }
+:root[data-theme="saloon"] .brand { font-family: var(--font-display); font-weight: 400; letter-spacing: .01em; }
+:root[data-theme="saloon"] .sq { box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+/* the shared rail multiplies its grain over a dark gradient, which buries the
+   painted timber; here the timber IS the rail, just darkened a touch */
+:root[data-theme="saloon"] .rail { background-image: var(--wood-img), linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.34)); background-blend-mode: multiply, normal; background-size: 640px 640px, auto; }
+:root[data-theme="saloon"] .rail::before { opacity: .12; }
+/* bare type sitting straight on the painting */
+:root[data-theme="saloon"] .brand, :root[data-theme="saloon"] .section-title, :root[data-theme="saloon"] .topbar, :root[data-theme="saloon"] .foot, :root[data-theme="saloon"] h1 { text-shadow: 0 1px 2px rgba(0,0,0,.8), 0 2px 14px rgba(0,0,0,.7); }
+:root[data-theme="saloon"] .panel, :root[data-theme="saloon"] .picker, :root[data-theme="saloon"] .confirm { background: rgba(36,26,20,.96); }
+
+/* Painted tile icons. CSS only: the hub already stamps data-game on every
+   tile, so the drawn SVG is simply hidden and a painting takes its place.
+   Nothing outside this theme is touched. */
+:root[data-theme="saloon"] .tile .ico{
+  background-size:cover;background-position:center;
+  border-color:rgba(217,164,49,.28);
+}
+:root[data-theme="saloon"] .tile .ico svg{display:none}
+:root[data-theme="saloon"] .tile[data-game="checkers"] .ico{background-image:url("/art/saloon/icons/checkers.webp")}
+:root[data-theme="saloon"] .tile[data-game="chess"] .ico{background-image:url("/art/saloon/icons/chess.webp")}
+:root[data-theme="saloon"] .tile[data-game="connect-four"] .ico{background-image:url("/art/saloon/icons/connect-four.webp")}
+:root[data-theme="saloon"] .tile[data-game="crazy-8s"] .ico{background-image:url("/art/saloon/icons/crazy-8s.webp")}
+:root[data-theme="saloon"] .tile[data-game="dots-and-boxes"] .ico{background-image:url("/art/saloon/icons/dots-and-boxes.webp")}
+:root[data-theme="saloon"] .tile[data-game="go"] .ico{background-image:url("/art/saloon/icons/go.webp")}
+:root[data-theme="saloon"] .tile[data-game="go-fish"] .ico{background-image:url("/art/saloon/icons/go-fish.webp")}
+:root[data-theme="saloon"] .tile[data-game="mancala"] .ico{background-image:url("/art/saloon/icons/mancala.webp")}
+:root[data-theme="saloon"] .tile[data-game="math-duel"] .ico{background-image:url("/art/saloon/icons/math-duel.webp")}
+:root[data-theme="saloon"] .tile[data-game="memory-match"] .ico{background-image:url("/art/saloon/icons/memory-match.webp")}
+:root[data-theme="saloon"] .tile[data-game="quarto"] .ico{background-image:url("/art/saloon/icons/quarto.webp")}
+:root[data-theme="saloon"] .tile[data-game="tic-tac-toe"] .ico{background-image:url("/art/saloon/icons/tic-tac-toe.webp")}
+:root[data-theme="saloon"] .tile[data-game="war"] .ico{background-image:url("/art/saloon/icons/war.webp")}
+
 /* Theme-specific materials (approved) */
   :root[data-theme="arcade"] .ck .face { fill: color-mix(in srgb, var(--pc) 22%, #0b1128); }
   :root[data-theme="arcade"] .ck .edge { fill: color-mix(in srgb, var(--pc) 35%, #05091a); }
@@ -172,5 +261,142 @@ h1, h2, h3, .display { font-family: var(--font-display); text-wrap: balance; lin
   :root[data-theme="arcade"] .qp.dark .side, :root[data-theme="arcade"] .qp.dark .top { stroke: var(--accent-2); }
   :root[data-theme="arcade"] .card { box-shadow: 0 0 0 1px var(--accent), 0 0 16px rgba(46,242,197,.3); }
   :root[data-theme="arcade"] .cf .frame { stroke: var(--accent); opacity: .7; }
+
+/* ---------- THEME: T-Bone's Saloon, the painted chess set ----------
+   Chess does NOT go through pieces.js -- it renders the cburnett sprite via
+   <use href="#cb-XY">, untinted, so until now the saloon theme never touched
+   a chess piece at all. These rules swap the whole glyph for painted art.
+
+   Two armies of characters rather than a matched set of turned wood, on the
+   owner's call. Every role is a different species, so the pieces are told
+   apart by WHO they are; the two SIDES are told apart by the base under each
+   figure -- oxblood for T-Bone's mob, pale for the outlaws.
+
+   The art is bottom-aligned on a fixed 240x320 canvas with the figure scaled
+   by its role, so a king really is taller than a pawn without one per-piece
+   size living in this file. `.pc` is stretched ABOVE its square (negative top
+   inset) so a piece stands up out of the square with its base still on it,
+   the way a real one does.
+
+   The background sits on the SVG, not on .pc: --pc-img is set per piece by
+   the selectors below and a custom property cannot travel back up to the
+   parent. The vector is removed with `use { display: none }` rather than
+   hiding the svg -- visibility:hidden would take the background with it. */
+  /* Painted board squares. Scoped to the chess board for now -- checkers is
+     still on the vector discs and gets these when it is repainted.
+
+     Both go in the background SHORTHAND with the colour token as the layer
+     underneath. A separate background-image rule is silently reset by the
+     shorthand that base.css already sets on .sq -- the same trap the saloon
+     body background hit. */
+  :root[data-theme="saloon"] .chessv .sq { background: var(--sq-light-img) center / cover, var(--sq-light); }
+  :root[data-theme="saloon"] .chessv .sq.d { background: var(--sq-dark-img) center / cover, var(--sq-dark); }
+  :root[data-theme="saloon"] .chessv .pc { inset: -28% 4% 4%; }
+  :root[data-theme="saloon"] .chessv .pc svg,
+  :root[data-theme="saloon"] .promo button svg {
+    background: var(--pc-img) center bottom / contain no-repeat;
+  }
+  :root[data-theme="saloon"] .chessv .pc svg use,
+  :root[data-theme="saloon"] .promo button svg use { display: none; }
+  /* The art carries its own pooled shadow; the vector pieces needed a flat
+     drop-shadow and doubling them up muddies the foot of every piece. */
+  :root[data-theme="saloon"] .chessv .pc svg { filter: none; }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="k"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="k"] { --pc-img: url("/art/saloon/pieces/s0-king.webp") }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="q"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="q"] { --pc-img: url("/art/saloon/pieces/s0-queen.webp") }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="b"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="b"] { --pc-img: url("/art/saloon/pieces/s0-bishop.webp") }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="n"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="n"] { --pc-img: url("/art/saloon/pieces/s0-knight.webp") }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="r"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="r"] { --pc-img: url("/art/saloon/pieces/s0-rook.webp") }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="p"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="p"] { --pc-img: url("/art/saloon/pieces/s0-pawn.webp") }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="k"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="k"] { --pc-img: url("/art/saloon/pieces/s1-king.webp") }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="q"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="q"] { --pc-img: url("/art/saloon/pieces/s1-queen.webp") }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="b"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="b"] { --pc-img: url("/art/saloon/pieces/s1-bishop.webp") }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="n"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="n"] { --pc-img: url("/art/saloon/pieces/s1-knight.webp") }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="r"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="r"] { --pc-img: url("/art/saloon/pieces/s1-rook.webp") }
+  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="p"],
+  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="p"] { --pc-img: url("/art/saloon/pieces/s1-pawn.webp") }
+
+/* ---------- THEME: T-Bone's Saloon, the deck ----------
+   One deck serves War, Crazy 8s, Go Fish and Memory Match, so this is the
+   widest-reaching set in the theme.
+
+   The rank and suit in the corners stay DRAWN TEXT. The no-words rule is
+   about rooms and signage; a card whose rank you cannot read is a card you
+   cannot play, and the deck already printed them.
+
+   Six court images cover twelve court cards -- T-Bone is King of every suit
+   and the NUMBAT is Jack of every suit, so only the four Queens differ.
+   (It was the bilby until 2026-09-01; the bilby was retired from the whole
+   world and the numbat replaced it. T-Bone is a grey kangaroo as of the same
+   date. See arcade-art/STYLE.md sec 3.) The
+   parchment stock is one shared texture under all fifty-two rather than baked
+   into each court, and it goes on .card (which owns the rounded corners and
+   the overflow clip) with the colour token still underneath as a fallback. */
+  /* :not(:has(> .cb)) matters. This selector outranks the global
+     `.card:has(> .cb) { background-image: var(--card-back-img) }` rule, and a
+     background SHORTHAND resets background-image -- so without the exclusion
+     the kookaburra card back silently became blank stock. Same trap as the
+     saloon body background, running the other way. */
+  :root[data-theme="saloon"] .card:not(:has(> .cb)) { background: var(--card-stock) center / cover, var(--card-face); }
+  /* The stock shows through instead of the flat fill; the drawn grain would
+     double up on a texture that already has its own. */
+  :root[data-theme="saloon"] .cf .paper { fill: transparent; }
+  :root[data-theme="saloon"] .cf .grain { display: none; }
+  /* Courts: painted character in place of the drawn frame and big letter.
+     Corner indices are untouched. */
+  :root[data-theme="saloon"] .cf[data-r="K"],
+  :root[data-theme="saloon"] .cf[data-r="Q"],
+  :root[data-theme="saloon"] .cf[data-r="J"] {
+    background: var(--court-img) center / contain no-repeat;
+  }
+  :root[data-theme="saloon"] .cf .court { display: none; }
+  :root[data-theme="saloon"] .cf[data-r="K"] { --court-img: url("/art/saloon/cards/court-king.webp") }
+  :root[data-theme="saloon"] .cf[data-r="J"] { --court-img: url("/art/saloon/cards/court-jack.webp") }
+  :root[data-theme="saloon"] .cf[data-r="Q"][data-s="s"] { --court-img: url("/art/saloon/cards/court-q-s.webp") }
+  :root[data-theme="saloon"] .cf[data-r="Q"][data-s="h"] { --court-img: url("/art/saloon/cards/court-q-h.webp") }
+  :root[data-theme="saloon"] .cf[data-r="Q"][data-s="d"] { --court-img: url("/art/saloon/cards/court-q-d.webp") }
+  :root[data-theme="saloon"] .cf[data-r="Q"][data-s="c"] { --court-img: url("/art/saloon/cards/court-q-c.webp") }
+  /* The pip cards keep their single big suit glyph, softened so it reads as
+     printing on the stock rather than ink sitting on top of it. */
+  :root[data-theme="saloon"] .cf .pip { opacity: .82; }
+  :root[data-theme="saloon"] .cf .idx { font-family: var(--font-display); }
+
+/* ---------- THEME: T-Bone's Saloon, counters and pits ----------
+   ONE pair of counters serves draughts AND connect four -- they are the same
+   object in both games, and two assets doing four assets' work is what keeps
+   the two boards looking like they came from the same cupboard.
+
+   No character painted on them. Six attempts at a bilby face on a counter
+   returned framed portrait medallions and ignored the colour every time; the
+   characters belong on the chess board and the court cards. A crowned draught
+   keeps the DRAWN crown on top of the painted counter, which is the method
+   Travis approved -- generate the part that wants judgment, draw the part
+   that has to be unmistakable at fifty pixels. */
+  :root[data-theme="saloon"] .ck { background: var(--token-img) center / contain no-repeat; }
+  /* Everything except the crown goes: the disc is now paint, the crown is
+     still the drawn one sitting on top of it. */
+  :root[data-theme="saloon"] .ck > *:not(.crown):not(.crown-j) { display: none; }
+  :root[data-theme="saloon"] .ck.s0 { --token-img: var(--token-0-img); }
+  :root[data-theme="saloon"] .ck.s1 { --token-img: var(--token-1-img); }
+
+  /* Mancala: the painted hollow replaces the drawn bowl, the beans stay drawn
+     (a single bean is a shape, not a picture -- three passes at generating one
+     returned a pod, a bowlful and a landscape). The pit art is square and the
+     svg is 160x112, so it is STRETCHED rather than contained: a round hollow
+     squashed to that box is exactly the ellipse the drawn bowl was. */
+  :root[data-theme="saloon"] .pit { background: var(--pit-img) center / 100% 100% no-repeat; }
+  :root[data-theme="saloon"] .pit .bowl, :root[data-theme="saloon"] .pit .rim { display: none; }
+  :root[data-theme="saloon"] .pit .bead { stroke: rgba(40,22,12,.55); stroke-width: 1.2; }
+  :root[data-theme="saloon"] .pit .count { font-family: var(--font-display); }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

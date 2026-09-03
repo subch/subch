@@ -71,6 +71,11 @@ export async function hub(root) {
         <a href="#/stats">Leaderboard</a>
         <a href="#/profile">My profile</a>
         ${me.role === 'admin' ? '<a href="#/family">Family settings</a>' : ''}
+        <!-- The way home. subch.us is the hub every one of these sites hangs
+             off and the Game Room had no link back to it at all -- from here
+             the only way out was the browser's back button. Not target=_blank:
+             this is going HOME, not opening a citation. -->
+        <a href="https://subch.us" class="way-home">subch.us</a>
       </div>
     </div>`);
 

@@ -44,6 +44,11 @@ export async function login(root) {
       <div class="login-hint">${settings.signupOpen
         ? 'First time? Tap Join and pick a name — that name is you from now on.'
         : 'Forgot your code? Ask Mom or Dad — they can reset it in Family Settings.'}</div>
+      <!-- The way home, on the login screen as well as the hub. This is the
+           first screen a cold visitor sees and the one they see if they do
+           not have a profile at all -- a link only behind the sign-in is no
+           way out for the person most likely to want one. -->
+      <div class="footlinks"><a href="https://subch.us" class="way-home">subch.us</a></div>
     </div>`);
   el.addEventListener('click', async (e) => {
     const face = e.target.closest('.face');

@@ -32,9 +32,34 @@ export const AVATARS = {
   tree: `<path ${G} d="M50 14 L70 40 H60 L76 62 H24 L40 40 H30 Z"/><rect ${G} x="44" y="62" width="12" height="18" rx="2"/>`,
 };
 
-export const AVATAR_NAMES = Object.keys(AVATARS);
+// The painted cast, added 2026-09-02. These are the SAME busts the homelab
+// dashboard shows for the same characters -- one portrait per character
+// across the whole world, which is the point.
+//
+// They are cut out, not grounded, because `ui.js` wraps every avatar in a
+// span filled with the profile's own colour and that colour is how the app
+// says whose turn it is. A baked-in ground would cover it. The vector glyphs
+// work the same way: shape on top, profile colour behind.
+//
+// Built by arcade-art/tools/install-world.py (CAST_AVATARS); the filenames
+// are the contract.
+export const PAINTED = {
+  tbone: 'T-Bone',
+  mum: 'Mum',
+  koala: 'the koala',
+  quokka: 'the quokka',
+  heidi: 'Heidi',
+};
+
+// Painted first: they are the house cast, and the picker should open on them
+// rather than making you scroll past two dozen glyphs to find yourself.
+export const AVATAR_NAMES = [...Object.keys(PAINTED), ...Object.keys(AVATARS)];
 
 export function avatarSvg(name) {
+  if (PAINTED[name]) {
+    return `<img class="av-art" src="/art/saloon/cast/${name}.webp" alt="" ` +
+           `loading="lazy" decoding="async">`;
+  }
   const glyph = AVATARS[name] || AVATARS.star;
   return `<svg viewBox="0 0 100 100" aria-hidden="true">${glyph}</svg>`;
 }

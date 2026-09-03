@@ -13,10 +13,15 @@ const {
   wide = false,
 } = Astro.props;
 
+// The last item is the way home. /mtg keeps its own identity rather than the
+// subch.us chrome, which means it also had no visible way back to the hub
+// above the fold -- only a line of fine print in the footer. `home: true`
+// styles it as an exit rather than a fourth place to go inside the subsite.
 const nav = [
   { href: '/mtg/', label: 'Home' },
   { href: '/mtg/decks/', label: 'All decks' },
   { href: '/mtg/#convert', label: 'Convert a list' },
+  { href: '/', label: 'subch.us', home: true },
 ];
 const path = Astro.url.pathname;
 const COLORS = ['W', 'U', 'B', 'R', 'G'];
@@ -49,7 +54,11 @@ const COLORS = ['W', 'U', 'B', 'R', 'G'];
         </a>
         <nav class="pod-nav">
           {nav.map((item) => (
-            <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>
+            <a
+              href={item.href}
+              class={item.home ? 'pod-home' : undefined}
+              aria-current={!item.home && path === item.href ? 'page' : undefined}
+            >
               {item.label}
             </a>
           ))}

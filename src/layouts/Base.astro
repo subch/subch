@@ -78,7 +78,7 @@ const currentPath = Astro.url.pathname;
 
     /* The page ground. One line to swap the colourway; the file has to be in
        install-world.py's `subch` manifest or it will not be there to load. */
-    --wallpaper: url('/art/wallpaper/wattle.webp');
+    --wallpaper: url('/art/wallpaper/ochre.webp');
 
     /* Legacy names the inner pages already speak. Kept so /rc, /data,
        /3d-printing and the rest inherit this palette without touching them. */
@@ -153,19 +153,24 @@ const currentPath = Astro.url.pathname;
     opacity: 0.95;
   }
   body::after {
-    /* Sits the pattern back so text can live on it. The scrim is a COOL DEEP
-       GREEN-BLACK, not the timber brown it started as: washing #140d08 over a
-       forest-green tile at the strength text needs turned the whole page
-       muddy brown and threw the colourway away. Darkest across the reading
-       column, thinnest at the margins, so the paper is still paper where
-       nothing is written on it. */
+    /* Sits the pattern back so text can live on it. Darkest across the
+       reading column, thinnest at the margins, so the paper is still paper
+       where nothing is written on it.
+
+       THE SCRIM HAS TO AGREE WITH THE TILE, and this was learned twice in one
+       evening. A neutral or cool wash over a warm tile does not dim it, it
+       DESATURATES it: over the green wattle a timber-brown scrim went muddy,
+       and over this oxblood one the green-black that fixed wattle turned the
+       red to brown-purple. Both times the colourway -- the whole reason for
+       the tile -- was the thing thrown away. This is a deep oxblood-black,
+       and if the ground ever changes colourway again, retune this with it. */
     background:
       linear-gradient(90deg,
-        rgba(9, 18, 13, 0.10),
-        rgba(9, 18, 13, 0.62) 22%,
-        rgba(9, 18, 13, 0.68) 78%,
-        rgba(9, 18, 13, 0.10)),
-      linear-gradient(180deg, rgba(9, 18, 13, 0.3), rgba(9, 18, 13, 0.55));
+        rgba(26, 9, 6, 0.10),
+        rgba(26, 9, 6, 0.60) 22%,
+        rgba(26, 9, 6, 0.66) 78%,
+        rgba(26, 9, 6, 0.10)),
+      linear-gradient(180deg, rgba(26, 9, 6, 0.28), rgba(26, 9, 6, 0.52));
   }
   @media (max-width: 700px) {
     /* A tile sized for a desktop wall is a close-up on a phone -- 420px on a
@@ -174,7 +179,7 @@ const currentPath = Astro.url.pathname;
        are no side margins left for the pattern to breathe in. */
     body::before { background-size: 250px 250px; }
     body::after {
-      background: linear-gradient(180deg, rgba(9, 18, 13, 0.62), rgba(9, 18, 13, 0.74));
+      background: linear-gradient(180deg, rgba(26, 9, 6, 0.6), rgba(26, 9, 6, 0.72));
     }
   }
 

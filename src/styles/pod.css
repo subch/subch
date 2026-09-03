@@ -97,6 +97,15 @@ h3 { font-size: 1.06rem; margin: 0 0 0.3rem; }
 .pod-nav { display: flex; gap: 1.2rem; align-items: center; }
 .pod-nav a { color: var(--muted); text-decoration: none; font-size: 0.92rem; }
 .pod-nav a:hover, .pod-nav a[aria-current='page'] { color: var(--fg); }
+/* The way home. Set apart with a rule rather than a colour so it reads as
+   leaving this subsite, not as a fourth destination inside it. */
+.pod-nav a.pod-home {
+  padding-left: 1.2rem;
+  margin-left: -0.2rem;
+  border-left: 1px solid var(--line);
+  opacity: 0.72;
+}
+.pod-nav a.pod-home:hover { opacity: 1; }
 
 .pod-footer {
   border-top: 1px solid var(--line);

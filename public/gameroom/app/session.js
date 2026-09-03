@@ -39,7 +39,7 @@ export const session = {
   async logout() {
     await api.post('/api/logout');
     this.me = null;
-    applyTheme('felt');
+    applyTheme('saloon');
     emit();
   },
 

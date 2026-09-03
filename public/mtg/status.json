@@ -1,10 +1,5 @@
 {
   "up": false,
   "host": "mtg.subch.us",
-  "port": 17171,
-  "checkedAt": "2026-09-02T05:52:00Z",
-  "xmage": {
-    "version": "1.4.61-dev (2026-08-12 12-34)",
-    "download": "https://beta.xmage.today/files/mage-full_1.4.61-dev_2026-08-12_12-34.zip"
-  }
+  "checkedAt": "2026-09-02T06:40:00Z"
 }

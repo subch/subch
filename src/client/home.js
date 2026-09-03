@@ -149,7 +149,7 @@ function finish(out, { name, commanders, cards, found, notFound, problems }) {
           : '<span class="pip pip-C">C</span>'}</span>
         <span class="bracket b${v.bracket}">Bracket ${v.bracket}</span>
       </div>
-      ${errors.length ? `<div class="issues"><strong>XMage will reject this</strong><ul>${errors.map((e) => `<li>${e}</li>`).join('')}</ul></div>` : ''}
+      ${errors.length ? `<div class="issues"><strong>Not legal at our table</strong><ul>${errors.map((e) => `<li>${e}</li>`).join('')}</ul></div>` : ''}
       ${warnings.length ? `<details class="issues"><summary>${warnings.length} thing${warnings.length > 1 ? 's' : ''} worth a look</summary><ul>${warnings.map((w) => `<li>${w}</li>`).join('')}</ul></details>` : ''}
       <div class="result-actions">
         <button id="dl">${ok ? 'Download .dck' : 'Download anyway'}</button>

@@ -2,9 +2,8 @@
 import { readFileSync } from 'node:fs';
 import Pod from '../../layouts/Pod.astro';
 
-const HOST = 'mtg.subch.us';
-const PORT = '17171';
-const DISCORD = 'https://discord.gg/APWGjyvg';
+const TABLE = 'https://mtg.subch.us';
+const DISCORD = 'https://discord.gg/cGGjXK7Qa5';
 
 // Artist credit comes from the fetch script's output so it cannot drift from
 // the images actually on disk.
@@ -32,10 +31,11 @@ const TRIBES = [
     <span class="pips">
       {['W', 'U', 'B', 'R', 'G'].map((c) => <span class={`pip pip-${c}`}>{c}</span>)}
     </span>
-    <p class="eyebrow">Four-player EDH</p>
+    <p class="eyebrow">Four-player EDH, in the browser</p>
     <h1>Goonmander</h1>
     <p class="lede">
-      Setup for xmage, private server, deckbuilder, gooning.
+      Commander with every rule enforced and nothing to install. Open the table,
+      pick a deck, sit down.
     </p>
 
     <div class="hero-actions" style="margin-bottom:1.4rem">
@@ -45,19 +45,9 @@ const TRIBES = [
       </span>
     </div>
 
-    <div class="connect" style="margin-bottom:1.4rem">
-      <span class="field">
-        <span class="k">Server</span><code>{HOST}</code>
-        <button class="ghost tiny" data-copy={HOST}>Copy</button>
-      </span>
-      <span class="field">
-        <span class="k">Port</span><code>{PORT}</code>
-        <button class="ghost tiny" data-copy={PORT}>Copy</button>
-      </span>
-    </div>
-
     <div class="hero-actions">
-      <a class="btn" href="#start">How to join</a>
+      <a class="btn" href={TABLE}>Open the table</a>
+      <a class="btn ghost" href="#start">How to join</a>
       <a class="btn ghost" href="/mtg/decks/">Browse all decks</a>
       {DISCORD && <a class="btn ghost" href={DISCORD} target="_blank" rel="noopener">Discord</a>}
     </div>
@@ -85,40 +75,37 @@ const TRIBES = [
     </div>
     <ol class="steps">
       <li class="step">
-        <h3>Install XMage</h3>
+        <h3>Be on the Discord</h3>
         <p>
-          A free program that plays Magic with every rule enforced, so nobody has
-          to remember how the stack works. It is a desktop app, not a website.
+          The table is private. It checks that you are a member of our Discord
+          server and nothing else — no account to make, no password to remember.
         </p>
-        <p><a class="btn" href="https://xmage.today/" target="_blank" rel="noopener">Download XMage</a></p>
-        <ul>
-          <li>Take the <strong>full</strong> download, about 250&nbsp;MB.</li>
-          <li>Unzip anywhere, then run <code>run-LAUNCHER.cmd</code> on Windows, or the <code>XMageLauncher</code> jar on Mac and Linux.</li>
-          <li>The launcher handles Java and updates itself. Say yes to what it offers.</li>
-        </ul>
+        {DISCORD && <p><a class="btn" href={DISCORD} target="_blank" rel="noopener">Join the Discord</a></p>}
       </li>
       <li class="step">
-        <h3>Connect</h3>
+        <h3>Open the table</h3>
         <p>
-          Hit <strong>Launch Client</strong>, choose <strong>Connect to another
-          server</strong>, and enter <code>{HOST}</code> on port <code>{PORT}</code>.
-          Pick any username and leave the password blank — there is no registration.
+          Go to <a href={TABLE}><code>mtg.subch.us</code></a> in any desktop
+          browser. Accept the terms, pick a nickname, and you are in. Phones are
+          too small for a four-player board; a laptop or a big tablet is fine.
         </p>
       </li>
       <li class="step">
         <h3>Bring a deck</h3>
         <p>
-          Grab one from above, or paste a list you already have into the converter
-          below. Drop the <code>.dck</code> file into the <code>Decks</code> folder
-          inside your XMage directory.
+          Grab one from above, or open <strong>My Decks → Build / Import</strong>
+          and paste a Moxfield or Archidekt link, or the list itself. Starter
+          decks are built in if you just want to play. New sets show up on their
+          own, so there is nothing to update.
         </p>
       </li>
       <li class="step">
         <h3>Sit down</h3>
         <p>
-          Open <strong>Tables</strong>, create a game, pick <strong>Commander</strong>
-          and four players. Put a password on the table if you want a private pod.
-          Voice on Discord, or use the in-client chat.
+          Open <strong>Multiplayer</strong>, join a <strong>subch table</strong>,
+          choose <strong>Commander</strong> and your deck. The host presses start
+          when everyone is ready. Short a player? <strong>Add a bot</strong> fills
+          the seat. Voice on Discord, as always.
         </p>
       </li>
     </ol>
@@ -128,10 +115,11 @@ const TRIBES = [
     <div class="section-head">
       <div>
         <p class="eyebrow">Already have a list?</p>
-        <h2>Convert a decklist</h2>
+        <h2>Check a decklist</h2>
         <p>
-          Paste from Moxfield, Archidekt, or plain text. Every card gets checked
-          against what XMage actually refuses, before you download.
+          Paste from Moxfield, Archidekt, or plain text. It checks the count, the
+          colour identity, and our house ban list — the table imports the same
+          links directly, so this is the pre-flight, not the import.
         </p>
       </div>
     </div>
@@ -144,7 +132,7 @@ const TRIBES = [
         placeholder={"1 Atraxa, Praetors' Voice\n1 Sol Ring\n1 Arcane Signet\n…\n\nA Commander section or Moxfield *CMDR* markers are understood."}
       ></textarea>
       <div class="hero-actions" style="margin-top:0.6rem">
-        <button type="submit">Check and convert</button>
+        <button type="submit">Check the list</button>
         <button type="button" class="ghost" id="convert-clear">Clear</button>
       </div>
     </form>
@@ -166,34 +154,48 @@ const TRIBES = [
     </details>
 
     <details class="faq">
-      <summary>Do I need to buy anything?</summary>
-      <p>No. XMage gives you every card ever printed. That is rather the point.</p>
+      <summary>Do I need to buy or install anything?</summary>
+      <p>
+        No. Every card ever printed is in the table, and it runs in the browser.
+        That is rather the point.
+      </p>
+    </details>
+
+    <details class="faq">
+      <summary>Can I practise on my own?</summary>
+      <p>
+        Yes. <strong>Play Offline</strong> or a table with three bots gives you
+        a full game against the computer with the same rules engine. Good for
+        learning a deck before game night.
+      </p>
     </details>
 
     <details class="faq">
       <summary>The table says it is down.</summary>
       <p>
-        The server runs around the clock, so this should be rare. The check runs
-        every few minutes and can lag, so try connecting anyway before assuming
-        the worst — then shout on Discord.
+        It runs around the clock, so this should be rare. The check runs every
+        few minutes and can lag, so try opening it anyway before assuming the
+        worst — then shout on Discord.
       </p>
     </details>
 
     <details class="faq">
-      <summary>XMage rejected my deck.</summary>
+      <summary>The table rejected my deck.</summary>
       <p>
-        Nearly always one of three things: not exactly 100 cards, a card outside
-        your commander's colour identity, or something on this server's ban list
-        (stricter than paper — Mana Crypt, Jeweled Lotus, Dockside and Nadu are
-        all out). The converter above tells you which before you load the client.
+        Nearly always one of two things: not exactly 100 cards, or a card
+        outside your commander's colour identity. Our house ban list (stricter
+        than paper — Mana Crypt, Jeweled Lotus, Dockside and Nadu are all out)
+        is on the honour system for now; the checker above tells you before
+        you sit down.
       </p>
     </details>
 
     <details class="faq">
-      <summary>Where do deck files go?</summary>
+      <summary>What happened to XMage?</summary>
       <p>
-        The <code>Decks</code> folder inside wherever you unzipped XMage. Drop the
-        <code>.dck</code> in and it appears when you sit down at a table.
+        Retired. The old server is off and nothing needs downloading anymore. If
+        you still have <code>.dck</code> files, paste the list into the deck
+        importer and it comes straight across.
       </p>
     </details>
   </section>

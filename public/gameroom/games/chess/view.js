@@ -62,8 +62,12 @@ export function mount(rootEl, ctx) {
   let lastFromTo = [];
 
   const myTurn = () => cur && ctx.localSeats.includes(cur.turn);
+  // data-p / data-seat are here only so a theme can swap the whole piece for
+  // painted art (the saloon rules in themes.css do). White is seat 0, which
+  // keeps piece art on the same seat numbering every other game uses.
   const pieceGlyph = (p) =>
-    `<svg viewBox="0 0 45 45"><use href="#cb-${p.t}${p.c === 'w' ? 'l' : 'd'}"></use></svg>`;
+    `<svg viewBox="0 0 45 45" data-p="${p.t}" data-seat="${p.c === 'w' ? 0 : 1}">` +
+    `<use href="#cb-${p.t}${p.c === 'w' ? 'l' : 'd'}"></use></svg>`;
 
   function movesFromSel() {
     if (sel === null) return [];
@@ -102,7 +106,7 @@ export function mount(rootEl, ctx) {
           <h3>Promote to…</h3>
           <div class="row">
             ${['q', 'r', 'n', 'b'].map((t) => `
-              <button data-p="${t}"><svg viewBox="0 0 45 45"><use href="#cb-${t}${color}"></use></svg></button>`).join('')}
+              <button data-p="${t}"><svg viewBox="0 0 45 45" data-p="${t}" data-seat="${color === 'l' ? 0 : 1}"><use href="#cb-${t}${color}"></use></svg></button>`).join('')}
           </div>
         </div>`);
       const { close } = sheet(el, { dismissable: false });

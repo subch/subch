@@ -123,15 +123,19 @@ export const SUITS = { s: '♠', h: '♥', d: '♦', c: '♣' };
 export function cardFace(rank, suit) {
   const red = suit === 'h' || suit === 'd';
   const court = /^[KQJ]$/.test(rank);
-  let s = `<svg viewBox="0 0 100 140" class="cf${red ? ' red' : ''}"><rect class="paper" width="100" height="140" rx="8"/><rect width="100" height="140" rx="8" fill="url(#paper)" opacity=".5"/>`;
+  // data-r / data-s and the .court / .pip groups exist so a theme can swap
+  // the middle of the card for painted art while keeping the corner rank
+  // and suit, which have to stay readable to be playable.
+  let s = `<svg viewBox="0 0 100 140" class="cf${red ? ' red' : ''}" data-r="${rank}" data-s="${suit}">`;
+  s += `<rect class="paper" width="100" height="140" rx="8"/><rect class="grain" width="100" height="140" rx="8" fill="url(#paper)" opacity=".5"/>`;
   s += `<text class="ink idx" x="8" y="18">${rank}</text><text class="ink idx" x="8" y="32">${SUITS[suit]}</text>`;
   s += `<g transform="rotate(180 50 70)"><text class="ink idx" x="8" y="18">${rank}</text><text class="ink idx" x="8" y="32">${SUITS[suit]}</text></g>`;
   if (court) {
-    s += '<rect class="frame" x="22" y="30" width="56" height="80" rx="3"/><rect class="frame" x="25" y="33" width="50" height="74" rx="2"/>';
+    s += '<g class="court"><rect class="frame" x="22" y="30" width="56" height="80" rx="3"/><rect class="frame" x="25" y="33" width="50" height="74" rx="2"/>';
     s += `<text class="ink mono" x="50" y="84" text-anchor="middle">${rank}</text>`;
-    s += `<text class="ink" x="50" y="50" text-anchor="middle" font-size="14">${SUITS[suit]}</text><text class="ink" x="50" y="104" text-anchor="middle" font-size="14">${SUITS[suit]}</text>`;
+    s += `<text class="ink" x="50" y="50" text-anchor="middle" font-size="14">${SUITS[suit]}</text><text class="ink" x="50" y="104" text-anchor="middle" font-size="14">${SUITS[suit]}</text></g>`;
   } else {
-    s += `<text class="ink" x="50" y="86" text-anchor="middle" font-size="46">${SUITS[suit]}</text>`;
+    s += `<g class="pip"><text class="ink" x="50" y="86" text-anchor="middle" font-size="46">${SUITS[suit]}</text></g>`;
   }
   return s + '</svg>';
 }

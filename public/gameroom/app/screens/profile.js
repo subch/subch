@@ -11,6 +11,7 @@ const THEME_INFO = [
   ['walnut', 'Walnut Study', ['#1a110b', '#4b3020', '#c9973a', '#e8dcc2']],
   ['candy', 'Candy Shop', ['#fff0f6', '#ffd3e3', '#ff5c8a', '#5b8def']],
   ['arcade', 'Midnight Arcade', ['#070b1a', '#121b3d', '#2ef2c5', '#ff4fa3']],
+  ['saloon', "T-Bone's Saloon", ['#140D08', '#5A3A22', '#D9A431', '#A93B22']],
 ];
 
 const COLORS = ['#c98a2e', '#b8322a', '#1f8a8a', '#3f7ad9', '#7b4fd6', '#ff5c8a', '#2e8b57', '#d9552e', '#4a4a4a', '#0f7bb5', '#a3266e', '#6b8e23'];
@@ -25,7 +26,7 @@ export async function profile(root) {
         <div class="panel">
           <div class="section-title" style="margin:0">My theme</div>
           <div class="theme-cards" data-themes>
-            ${THEME_INFO.map(([id, name, cols]) => `
+            ${THEME_INFO.filter(([, , , o]) => !(o?.homeOnly && session.settings.signupOpen)).map(([id, name, cols]) => `
               <button class="theme-card ${me.theme === id ? 'on' : ''}" data-theme="${id}">
                 <span class="swatch">${cols.map((c) => `<i style="background:${c}"></i>`).join('')}</span>
                 <span class="l">${name}</span>

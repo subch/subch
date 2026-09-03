@@ -3,12 +3,13 @@ const THEME_BG = {
   walnut: '#1a110b',
   candy: '#fff0f6',
   arcade: '#070b1a',
+  saloon: '#140D08',
 };
 
 // ?theme= is a test-only override used by the screenshot script.
 export function applyTheme(theme) {
   const forced = new URLSearchParams(location.search).get('theme');
-  const t = THEME_BG[forced] ? forced : (THEME_BG[theme] ? theme : 'felt');
+  const t = THEME_BG[forced] ? forced : (THEME_BG[theme] ? theme : 'saloon');
   document.documentElement.dataset.theme = t;
   document.querySelector('meta[name="theme-color"]')
     ?.setAttribute('content', THEME_BG[t]);

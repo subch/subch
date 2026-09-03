@@ -1,8 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
 
-// The splash is a launcher: live, usable things only. Workshop/reference
-// pages live in the quiet row at the bottom.
+// The splash is a launcher: live, fun things only. Workshop/reference pages
+// live in the quiet row at the bottom.
+//
+// ONE REGISTER (STYLE.md sec 10 law 4). These cards are TYPE ONLY -- no
+// glyphs, no per-tile hues. The old inline SVG marks with an HSL `hue` each
+// were nine registers in one row, which is the note this world has spent the
+// most time relearning. The wallpaper is the picture on this page; the cards
+// are a printed bill on a timber panel. Do not add icons back one at a time.
 const live = [
   {
     name: 'The Game Room',
@@ -10,40 +16,24 @@ const live = [
     action: 'Play live',
     external: true,
     blurb: 'Board & card games with real online tables — join by name, play friends on their own phones, stats that follow you.',
-    hue: '158',
-    icon: 'M20 70 L28 35 L42 52 L50 22 L58 52 L72 35 L80 70 Z M20 70 h60 v9 h-60 z',
   },
   {
     name: 'Game Room · Road Trip',
     href: '/gameroom/',
     action: 'Play offline',
     blurb: 'The pass-and-play edition: loads once, then works with zero signal. Syncs your stats home when you’re back online.',
-    hue: '120',
-    icon: 'M14 66 L24 46 h30 l10 12 h12 a8 8 0 0 1 8 8 v4 h-8 a9 9 0 0 0-18 0 h-20 a9 9 0 0 0-18 0 h-4 z M60 30 a12 12 0 0 1 12-12 M60 30 h14',
   },
   {
     name: 'Commander',
     href: '/mtg/',
     action: 'Play MTG',
     blurb: 'Magic: The Gathering Commander on our own server — setup in ten minutes, 174 ready-made decks, and a decklist converter.',
-    hue: '268',
-    icon: 'M26 14 h34 a8 8 0 0 1 8 8 v56 a8 8 0 0 1-8 8 h-34 a8 8 0 0 1-8-8 v-56 a8 8 0 0 1 8-8 z M28 26 h30 v26 h-30 z M28 60 h30 v6 h-30 z M28 70 h20 v6 h-20 z',
   },
   {
     name: 'No Baloney',
     href: '/search/',
     action: 'Search',
     blurb: 'A search engine tuned to skip the junk and find real answers.',
-    hue: '215',
-    icon: 'M42 14 a28 28 0 1 0 0 56 a28 28 0 1 0 0-56 z M42 26 a16 16 0 1 1 0 32 a16 16 0 1 1 0-32 z M62 62 L86 86 L78 92 L56 70 z',
-  },
-  {
-    name: 'Wyatt & Heidi’s Candy Adventure',
-    href: '/candy/',
-    action: 'Play',
-    blurb: 'A homemade candy-collecting game starring one kid and one very good dog.',
-    hue: '330',
-    icon: 'M50 30 a20 20 0 1 0 0 40 a20 20 0 1 0 0-40 z M28 42 L10 30 L16 50 L10 70 L28 58 z M72 42 L90 30 L84 50 L90 70 L72 58 z',
   },
   {
     name: 'Goon Turismo',
@@ -51,33 +41,6 @@ const live = [
     action: 'Visit',
     external: true,
     blurb: 'Our crew’s Gran Turismo 7 time-trial results and season standings.',
-    hue: '0',
-    icon: 'M14 62 L26 40 h28 l8 12 h14 a8 8 0 0 1 8 8 v6 h-8 a10 10 0 0 0-20 0 h-16 a10 10 0 0 0-20 0 h-6 z M28 78 a6 6 0 1 0 0.1 0 z M68 78 a6 6 0 1 0 0.1 0 z',
-  },
-  {
-    name: 'Schaefer TX Consulting',
-    href: 'https://schaefertx.com',
-    action: 'Visit',
-    external: true,
-    blurb: 'Clinical & toxicology lab consulting — LC-MS/MS, QC, and interface work.',
-    hue: '38',
-    icon: 'M36 30 v-8 a6 6 0 0 1 6-6 h16 a6 6 0 0 1 6 6 v8 h16 a6 6 0 0 1 6 6 v40 a6 6 0 0 1-6 6 h-60 a6 6 0 0 1-6-6 v-40 a6 6 0 0 1 6-6 z M44 30 h12 v-6 h-12 z',
-  },
-  {
-    name: 'Weather Station',
-    href: '/weather/',
-    action: 'View live',
-    blurb: 'Backyard conditions and history, straight from the sensors.',
-    hue: '190',
-    icon: 'M30 62 a16 16 0 1 1 4-31 a20 20 0 0 1 38 6 a14 14 0 0 1-2 25 z M32 74 l-6 12 M50 74 l-6 12 M68 74 l-6 12',
-  },
-  {
-    name: 'RC Garage',
-    href: '/rc/',
-    action: 'Browse',
-    blurb: 'The fleet: builds, upgrades, and what’s on the bench.',
-    hue: '265',
-    icon: 'M12 60 L28 42 h30 l14 14 h10 a6 6 0 0 1 6 6 v6 h-10 a10 10 0 0 0-20 0 h-18 a10 10 0 0 0-20 0 h-8 v-14 z M20 34 l10-12 M34 30 l6-14',
   },
 ];
 
@@ -88,40 +51,32 @@ const workshop = [
   { name: 'GitHub', href: 'https://github.com/subch' },
 ];
 ---
-<Base title="Home" description="Travis Schaefer's live projects — games, search, sites, and sensors. Pick one and go.">
+<Base title="Home" description="Games, a search engine that skips the junk, and the other things Travis Schaefer builds for fun. Pick one and go.">
   <section class="hero">
-    <div class="orb orb-a" aria-hidden="true"></div>
-    <div class="orb orb-b" aria-hidden="true"></div>
     <p class="kicker">subch.us · the Schaefer build shelf</p>
-    <h1>Things I built.<br /><span class="grad">Ready to use.</span></h1>
+    <h1>Things I built<br />for the fun of it.</h1>
     <p class="lede">
       Games for the family, a search engine that skips the junk, and a few
       other live projects. Everything below works right now — pick one.
     </p>
     <div class="hero-cta">
-      <a class="btn primary" href="https://play.subch.us">🎲 Play The Game Room</a>
-      <a class="btn" href="/search/">🔎 Search with No Baloney</a>
+      <a class="btn primary" href="https://play.subch.us">Play The Game Room</a>
+      <a class="btn" href="/search/">Search with No Baloney</a>
     </div>
   </section>
 
   <section class="live">
-    <h2>Live projects</h2>
+    <h2 class="rail">Live projects</h2>
     <div class="grid">
       {live.map((p) => (
         <a
           class="proj"
           href={p.href}
-          style={`--h:${p.hue}`}
           target={p.external ? '_blank' : undefined}
           rel={p.external ? 'noopener' : undefined}
         >
-          <span class="mark" aria-hidden="true">
-            <svg viewBox="0 0 100 100"><path d={p.icon} /></svg>
-          </span>
-          <span class="body">
-            <span class="name">{p.name}</span>
-            <span class="blurb">{p.blurb}</span>
-          </span>
+          <span class="name">{p.name}</span>
+          <span class="blurb">{p.blurb}</span>
           <span class="go">{p.action} {p.external ? '↗' : '→'}</span>
         </a>
       ))}
@@ -129,7 +84,7 @@ const workshop = [
   </section>
 
   <section class="workshop">
-    <h2>From the workshop</h2>
+    <h2 class="rail">From the workshop</h2>
     <p>Notes, parts lists, and works-in-progress — less polished, still public.</p>
     <ul>
       {workshop.map((w) => (
@@ -143,185 +98,161 @@ const workshop = [
   /* ---------- hero ---------- */
   .hero {
     position: relative;
-    padding: 4rem 0 2.6rem;
     isolation: isolate;
+    padding: 3.2rem 0 2.4rem;
   }
-  .orb {
+  .hero::before {
+    /* The hero is the one block of running text that sits straight on the
+       wallpaper -- the cards below are opaque panels. A soft pool of dark
+       behind it does what a lamp does in a papered room, and it works at
+       every width, which a wider page-level scrim would not on a phone. */
+    content: '';
     position: absolute;
-    border-radius: 50%;
-    filter: blur(70px);
-    opacity: 0.4;
+    inset: -2rem -3rem;
     z-index: -1;
+    background: radial-gradient(78% 72% at 32% 45%, rgba(16, 6, 4, 0.86), rgba(16, 6, 4, 0) 72%);
     pointer-events: none;
   }
-  .orb-a {
-    width: 380px; height: 380px;
-    left: -140px; top: -120px;
-    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 55%, transparent), transparent 70%);
-  }
-  .orb-b {
-    width: 320px; height: 320px;
-    right: -60px; top: 30px;
-    background: radial-gradient(circle, oklch(65% 0.13 165 / 0.55), transparent 70%);
-  }
   .kicker {
-    margin: 0 0 0.8rem;
-    font-family: var(--display);
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.22em;
+    margin: 0 0 1rem;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
-    color: var(--muted);
+    /* gold, not gold-deep: shadowed gilt disappears against the pattern */
+    color: var(--gold);
   }
   .hero h1 {
-    margin: 0 0 0.9rem;
-    font-size: clamp(2.2rem, 6.4vw, 3.6rem);
-    line-height: 1.06;
-    letter-spacing: -0.025em;
-    font-weight: 700;
+    margin: 0 0 1.1rem;
+    font-size: clamp(2rem, 5.6vw, 3.1rem);
+    line-height: 1.16;
+    color: var(--paper);
+    /* Lamplight: the display face reads as gilt signwriting, not flat text. */
+    text-shadow: 0 1px 0 rgba(20, 13, 8, 0.9);
   }
-  .grad {
-    background: linear-gradient(92deg, var(--accent), #34c9a3 90%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+  .hero h1 :global(br) { display: block; }
   .lede {
     margin: 0;
     max-width: 46ch;
-    font-size: 1.08rem;
+    font-size: 1.06rem;
     color: var(--muted);
   }
   .hero-cta {
     display: flex;
     flex-wrap: wrap;
     gap: 0.7rem;
-    margin-top: 1.6rem;
+    margin-top: 1.7rem;
   }
   .btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.72rem 1.15rem;
-    border-radius: 12px;
+    padding: 0.72rem 1.2rem;
+    border-radius: 4px;
     border: 1px solid var(--border);
-    background: var(--card-bg);
-    color: var(--fg);
-    font-weight: 650;
+    background: var(--panel);
+    color: var(--paper);
+    font-weight: 600;
+    font-size: 0.95rem;
     text-decoration: none;
-    transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+    transition: border-color 0.14s ease, color 0.14s ease, background-color 0.14s ease;
   }
-  .btn:hover { transform: translateY(-1px); border-color: var(--accent); }
+  .btn:hover { border-color: var(--gold); color: var(--gold-bright); }
   .btn.primary {
-    background: var(--accent);
-    border-color: transparent;
-    color: #fff;
-    box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 35%, transparent);
+    background: var(--gold);
+    border-color: var(--gold-bright);
+    color: #140d08;
+  }
+  .btn.primary:hover {
+    background: var(--gold-bright);
+    color: #140d08;
+  }
+
+  /* ---------- section rails ---------- */
+  .rail {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    /* gold, not gold-deep. Shadowed gilt is a colour for sitting ON a panel;
+       over the wallpaper it is the same value as the pattern and vanishes. */
+    color: var(--gold);
+    margin: 2.4rem 0 1rem;
+  }
+  .rail::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold-deep), transparent);
   }
 
   /* ---------- live project cards ---------- */
-  h2 {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 0.82rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 2.4rem 0 1rem;
-  }
-  h2::before {
-    content: '';
-    width: 26px; height: 3px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, var(--accent), #34c9a3);
-  }
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 0.9rem;
   }
   .proj {
-    --tint: oklch(62% 0.14 var(--h));
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    gap: 0.35rem 0.85rem;
-    align-items: start;
-    padding: 1.1rem 1.15rem 1rem;
-    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.15rem 1.2rem 1.1rem;
+    border-radius: 6px;
     border: 1px solid var(--border);
-    background:
-      radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--tint) 12%, transparent), transparent 55%),
-      var(--card-bg);
+    /* Opaque panel, deliberately: the wallpaper is behind the page, not
+       behind the words. A translucent card here puts a botanical branch
+       through the middle of a sentence. */
+    background: var(--panel);
     color: inherit;
     text-decoration: none;
-    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    position: relative;
+    transition: border-color 0.16s ease, transform 0.16s ease;
   }
-  .proj { position: relative; overflow: hidden; }
-  .proj::after {
-    /* a soft sheen that sweeps on hover */
+  .proj::before {
+    /* one gilt hairline along the top edge -- the card's only ornament */
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(115deg, transparent 30%, color-mix(in srgb, var(--tint) 10%, transparent) 48%, transparent 62%);
-    transform: translateX(-70%);
-    transition: transform 0.5s ease;
-    pointer-events: none;
+    inset: 0 0 auto;
+    height: 2px;
+    border-radius: 6px 6px 0 0;
+    background: linear-gradient(90deg, transparent, var(--gold-deep) 25%, var(--gold) 50%, var(--gold-deep) 75%, transparent);
+    opacity: 0.7;
+    transition: opacity 0.16s ease;
   }
-  .proj:hover::after { transform: translateX(70%); }
-  .proj:hover, .proj:focus-visible {
-    transform: translateY(-3px);
-    border-color: color-mix(in srgb, var(--tint) 55%, var(--border));
-    box-shadow: 0 10px 26px color-mix(in srgb, var(--tint) 18%, transparent);
+  .proj:hover,
+  .proj:focus-visible {
+    border-color: rgba(217, 164, 49, 0.55);
+    transform: translateY(-2px);
   }
-  .mark {
-    grid-row: 1 / 3;
-    width: 48px;
-    height: 48px;
-    border-radius: 13px;
-    display: grid;
-    place-items: center;
-    background: color-mix(in srgb, var(--tint) 16%, transparent);
-    border: 1px solid color-mix(in srgb, var(--tint) 30%, transparent);
-    box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--tint) 18%, transparent);
-    transition: transform 0.18s ease;
-  }
-  .proj:hover .mark { transform: rotate(-6deg) scale(1.07); }
-  .mark svg { width: 27px; height: 27px; }
-  .mark path {
-    fill: none;
-    stroke: var(--tint);
-    stroke-width: 7;
-    stroke-linejoin: round;
-    stroke-linecap: round;
-  }
+  .proj:hover::before { opacity: 1; }
   .name {
-    display: block;
-    font-weight: 750;
-    font-size: 1.02rem;
-    line-height: 1.25;
+    font-family: var(--display);
+    font-size: 1.08rem;
+    line-height: 1.3;
+    color: var(--paper);
   }
   .blurb {
-    display: block;
     font-size: 0.88rem;
     color: var(--muted);
-    line-height: 1.45;
+    line-height: 1.5;
+    flex: 1;
   }
   .go {
-    grid-column: 2;
-    justify-self: start;
     margin-top: 0.35rem;
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    color: var(--tint);
-    transition: letter-spacing 0.16s ease;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
   }
-  .proj:hover .go { letter-spacing: 0.04em; }
+  .proj:hover .go { color: var(--gold-bright); }
 
   /* ---------- workshop row ---------- */
   .workshop { margin-top: 1rem; padding-bottom: 1rem; }
-  .workshop p { margin: 0 0 0.6rem; color: var(--muted); font-size: 0.9rem; }
+  .workshop p { margin: 0 0 0.7rem; color: var(--muted); font-size: 0.9rem; }
   .workshop ul {
     list-style: none;
     margin: 0;
@@ -332,7 +263,7 @@ const workshop = [
   }
   .workshop li a {
     display: inline-block;
-    padding: 0.42rem 0.85rem;
+    padding: 0.42rem 0.9rem;
     border-radius: 999px;
     border: 1px solid var(--border);
     color: var(--muted);
@@ -340,9 +271,10 @@ const workshop = [
     font-size: 0.88rem;
     transition: color 0.14s, border-color 0.14s;
   }
-  .workshop li a:hover { color: var(--fg); border-color: var(--accent); }
+  .workshop li a:hover { color: var(--gold-bright); border-color: var(--gold); }
 
   @media (prefers-reduced-motion: reduce) {
-    .btn, .proj, .proj::after, .mark, .go { transition: none; }
+    .btn, .proj, .proj::before, .go { transition: none; }
+    .proj:hover { transform: none; }
   }
 </style>

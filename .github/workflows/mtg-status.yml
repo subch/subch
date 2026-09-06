@@ -5,10 +5,14 @@ name: Check the Commander table
 # as a small JSON file that /mtg reads.
 #
 # The table is Manabrew on the Forge engine, behind Caddy and a Discord gate.
-# /auth/health is the gate's health endpoint and is deliberately ungated, so it
+# /gate/health is the gate's health endpoint and is deliberately ungated, so it
 # answers 200 whenever Caddy and the gate are alive - which is the front door
 # a player would hit first. A deeper check (relay, engine) needs a login and is
 # not worth the noise here.
+#
+# The gate serves under /gate/* rather than /auth/*: Manabrew's own client owns
+# /auth/callback for hub sign-in, and the two collided while the gate held that
+# prefix.
 
 on:
   schedule:
@@ -29,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HOST: mtg.subch.us
-      URL: https://mtg.subch.us/auth/health
+      URL: https://mtg.subch.us/gate/health
     steps:
       - uses: actions/checkout@v4
 

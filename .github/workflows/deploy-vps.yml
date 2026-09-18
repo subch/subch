@@ -42,7 +42,9 @@ jobs:
         run: |
           set -euo pipefail
           test -f dist/index.html || { echo "dist/index.html missing - refusing to deploy"; exit 1; }
-          test -f dist/mtg/index.html || { echo "dist/mtg/index.html missing - refusing to deploy"; exit 1; }
+          # /mtg was retired 2026-09-17 (the table is its own site at
+          # mtg.subch.us), so the second sentinel is now a page that exists.
+          test -f dist/search/index.html || { echo "dist/search/index.html missing - refusing to deploy"; exit 1; }
           count=$(find dist -type f | wc -l)
           echo "dist contains $count files"
           [ "$count" -ge 100 ] || { echo "only $count files - that is too few, refusing to deploy"; exit 1; }

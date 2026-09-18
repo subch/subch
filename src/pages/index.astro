@@ -24,10 +24,15 @@ const live = [
     blurb: 'The pass-and-play edition: loads once, then works with zero signal. Syncs your stats home when you’re back online.',
   },
   {
+    // Straight to the table. subch.us/mtg was retired 2026-09-17: it was the
+    // XMage-era front page and deck library, and every .dck it exported was
+    // in XMage's format, which the Forge table cannot read. The table is its
+    // own site now, with its own Discord gate on the door.
     name: 'Commander',
-    href: '/mtg/',
-    action: 'Play MTG',
-    blurb: 'Magic: The Gathering Commander on our own server — setup in ten minutes, 174 ready-made decks, and a decklist converter.',
+    href: 'https://mtg.subch.us',
+    action: 'Open the table',
+    external: true,
+    blurb: 'Four-player Commander in the browser, every rule enforced, nothing to install. Members of the Discord only.',
   },
   {
     name: 'No Baloney',

@@ -79,12 +79,12 @@
   }
 
   /* ---------- THEME: T-Bone's Saloon ----------
-     The Golden Fart Saloon, painted. Same palette as the arcade front door
+     The Golden Fart Saloon. Same palette as the arcade front door
      (ground #140D08, gold #D9A431, paper #F7F1E6, oxblood #7A2E22) so a game
-     opened from the saloon feels like the same room. Pieces are beans: seat 0
-     is a kidney bean, seat 1 a cannellini. The backdrop, the bar-top timber,
-     the baize and the card back are the owner-approved paintings in /art/saloon.
-     Home instances only; the public twin hides it (see profile.js + config.js). */
+     opened from the saloon feels like the same room. Colours and type only:
+     the painted assets that used to live in /art/saloon were all generated
+     and were pulled on 2026-09-22 at the owner's request. Do not add images
+     back to this theme. */
   :root[data-theme="saloon"] {
     --font-display: "Rye", "Fraunces", Georgia, serif;
     --bg: #140D08; --bg-2: #2E2118;
@@ -102,20 +102,7 @@
     --glow: none;
     --gloss: .24; --groove: 1; --felt-noise: .08; --grain-alpha: .35;
     --tile-grad: linear-gradient(160deg, rgba(46,33,24,.96), rgba(36,26,20,.96));
-    --scene: url("/art/saloon/coffeehouse.webp");
-    /* light at the top so the room reads, heavier where the tiles and
-       boards sit; those are opaque anyway, so this is only for bare type */
-    --scene-scrim: linear-gradient(180deg, rgba(20,13,8,.34), rgba(20,13,8,.58) 42%, rgba(20,13,8,.80));
-    --wood-img: url("/art/saloon/tex-redgum.webp");
-    --felt-img: url("/art/saloon/tex-baize.webp");
-    --card-back-img: url("/art/saloon/card-back.webp");
-    --mark-img: url("/art/saloon/kookaburra.webp");
-    --sq-light-img: url("/art/saloon/sq-light.webp");
-    --sq-dark-img: url("/art/saloon/sq-dark.webp");
-    --card-stock: url("/art/saloon/tex-cardstock.webp");
-    --token-0-img: url("/art/saloon/token-0.webp");
-    --token-1-img: url("/art/saloon/token-1.webp");
-    --pit-img: url("/art/saloon/mancala-pit.webp");
+    --scene: none; --scene-scrim: none; --wood-img: none; --felt-img: none; --card-back-img: none; --mark-img: none;
   }
   /* ---------- THEME: Candy Shop ---------- */
   :root[data-theme="candy"] {
@@ -223,28 +210,6 @@ h1, h2, h3, .display { font-family: var(--font-display); text-wrap: balance; lin
 :root[data-theme="saloon"] .brand, :root[data-theme="saloon"] .section-title, :root[data-theme="saloon"] .topbar, :root[data-theme="saloon"] .foot, :root[data-theme="saloon"] h1 { text-shadow: 0 1px 2px rgba(0,0,0,.8), 0 2px 14px rgba(0,0,0,.7); }
 :root[data-theme="saloon"] .panel, :root[data-theme="saloon"] .picker, :root[data-theme="saloon"] .confirm { background: rgba(36,26,20,.96); }
 
-/* Painted tile icons. CSS only: the hub already stamps data-game on every
-   tile, so the drawn SVG is simply hidden and a painting takes its place.
-   Nothing outside this theme is touched. */
-:root[data-theme="saloon"] .tile .ico{
-  background-size:cover;background-position:center;
-  border-color:rgba(217,164,49,.28);
-}
-:root[data-theme="saloon"] .tile .ico svg{display:none}
-:root[data-theme="saloon"] .tile[data-game="checkers"] .ico{background-image:url("/art/saloon/icons/checkers.webp")}
-:root[data-theme="saloon"] .tile[data-game="chess"] .ico{background-image:url("/art/saloon/icons/chess.webp")}
-:root[data-theme="saloon"] .tile[data-game="connect-four"] .ico{background-image:url("/art/saloon/icons/connect-four.webp")}
-:root[data-theme="saloon"] .tile[data-game="crazy-8s"] .ico{background-image:url("/art/saloon/icons/crazy-8s.webp")}
-:root[data-theme="saloon"] .tile[data-game="dots-and-boxes"] .ico{background-image:url("/art/saloon/icons/dots-and-boxes.webp")}
-:root[data-theme="saloon"] .tile[data-game="go"] .ico{background-image:url("/art/saloon/icons/go.webp")}
-:root[data-theme="saloon"] .tile[data-game="go-fish"] .ico{background-image:url("/art/saloon/icons/go-fish.webp")}
-:root[data-theme="saloon"] .tile[data-game="mancala"] .ico{background-image:url("/art/saloon/icons/mancala.webp")}
-:root[data-theme="saloon"] .tile[data-game="math-duel"] .ico{background-image:url("/art/saloon/icons/math-duel.webp")}
-:root[data-theme="saloon"] .tile[data-game="memory-match"] .ico{background-image:url("/art/saloon/icons/memory-match.webp")}
-:root[data-theme="saloon"] .tile[data-game="quarto"] .ico{background-image:url("/art/saloon/icons/quarto.webp")}
-:root[data-theme="saloon"] .tile[data-game="tic-tac-toe"] .ico{background-image:url("/art/saloon/icons/tic-tac-toe.webp")}
-:root[data-theme="saloon"] .tile[data-game="war"] .ico{background-image:url("/art/saloon/icons/war.webp")}
-
 /* Theme-specific materials (approved) */
   :root[data-theme="arcade"] .ck .face { fill: color-mix(in srgb, var(--pc) 22%, #0b1128); }
   :root[data-theme="arcade"] .ck .edge { fill: color-mix(in srgb, var(--pc) 35%, #05091a); }
@@ -262,141 +227,12 @@ h1, h2, h3, .display { font-family: var(--font-display); text-wrap: balance; lin
   :root[data-theme="arcade"] .card { box-shadow: 0 0 0 1px var(--accent), 0 0 16px rgba(46,242,197,.3); }
   :root[data-theme="arcade"] .cf .frame { stroke: var(--accent); opacity: .7; }
 
-/* ---------- THEME: T-Bone's Saloon, the painted chess set ----------
-   Chess does NOT go through pieces.js -- it renders the cburnett sprite via
-   <use href="#cb-XY">, untinted, so until now the saloon theme never touched
-   a chess piece at all. These rules swap the whole glyph for painted art.
-
-   Two armies of characters rather than a matched set of turned wood, on the
-   owner's call. Every role is a different species, so the pieces are told
-   apart by WHO they are; the two SIDES are told apart by the base under each
-   figure -- oxblood for T-Bone's mob, pale for the outlaws.
-
-   The art is bottom-aligned on a fixed 240x320 canvas with the figure scaled
-   by its role, so a king really is taller than a pawn without one per-piece
-   size living in this file. `.pc` is stretched ABOVE its square (negative top
-   inset) so a piece stands up out of the square with its base still on it,
-   the way a real one does.
-
-   The background sits on the SVG, not on .pc: --pc-img is set per piece by
-   the selectors below and a custom property cannot travel back up to the
-   parent. The vector is removed with `use { display: none }` rather than
-   hiding the svg -- visibility:hidden would take the background with it. */
-  /* Painted board squares. Scoped to the chess board for now -- checkers is
-     still on the vector discs and gets these when it is repainted.
-
-     Both go in the background SHORTHAND with the colour token as the layer
-     underneath. A separate background-image rule is silently reset by the
-     shorthand that base.css already sets on .sq -- the same trap the saloon
-     body background hit. */
-  :root[data-theme="saloon"] .chessv .sq { background: var(--sq-light-img) center / cover, var(--sq-light); }
-  :root[data-theme="saloon"] .chessv .sq.d { background: var(--sq-dark-img) center / cover, var(--sq-dark); }
-  :root[data-theme="saloon"] .chessv .pc { inset: -28% 4% 4%; }
-  :root[data-theme="saloon"] .chessv .pc svg,
-  :root[data-theme="saloon"] .promo button svg {
-    background: var(--pc-img) center bottom / contain no-repeat;
-  }
-  :root[data-theme="saloon"] .chessv .pc svg use,
-  :root[data-theme="saloon"] .promo button svg use { display: none; }
-  /* The art carries its own pooled shadow; the vector pieces needed a flat
-     drop-shadow and doubling them up muddies the foot of every piece. */
-  :root[data-theme="saloon"] .chessv .pc svg { filter: none; }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="k"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="k"] { --pc-img: url("/art/saloon/pieces/s0-king.webp") }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="q"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="q"] { --pc-img: url("/art/saloon/pieces/s0-queen.webp") }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="b"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="b"] { --pc-img: url("/art/saloon/pieces/s0-bishop.webp") }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="n"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="n"] { --pc-img: url("/art/saloon/pieces/s0-knight.webp") }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="r"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="r"] { --pc-img: url("/art/saloon/pieces/s0-rook.webp") }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="0"][data-p="p"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="0"][data-p="p"] { --pc-img: url("/art/saloon/pieces/s0-pawn.webp") }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="k"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="k"] { --pc-img: url("/art/saloon/pieces/s1-king.webp") }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="q"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="q"] { --pc-img: url("/art/saloon/pieces/s1-queen.webp") }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="b"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="b"] { --pc-img: url("/art/saloon/pieces/s1-bishop.webp") }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="n"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="n"] { --pc-img: url("/art/saloon/pieces/s1-knight.webp") }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="r"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="r"] { --pc-img: url("/art/saloon/pieces/s1-rook.webp") }
-  :root[data-theme="saloon"] .chessv .pc svg[data-seat="1"][data-p="p"],
-  :root[data-theme="saloon"] .promo button svg[data-seat="1"][data-p="p"] { --pc-img: url("/art/saloon/pieces/s1-pawn.webp") }
-
-/* ---------- THEME: T-Bone's Saloon, the deck ----------
-   One deck serves War, Crazy 8s, Go Fish and Memory Match, so this is the
-   widest-reaching set in the theme.
-
-   The rank and suit in the corners stay DRAWN TEXT. The no-words rule is
-   about rooms and signage; a card whose rank you cannot read is a card you
-   cannot play, and the deck already printed them.
-
-   Six court images cover twelve court cards -- T-Bone is King of every suit
-   and the NUMBAT is Jack of every suit, so only the four Queens differ.
-   (It was the bilby until 2026-09-01; the bilby was retired from the whole
-   world and the numbat replaced it. T-Bone is a grey kangaroo as of the same
-   date. See arcade-art/STYLE.md sec 3.) The
-   parchment stock is one shared texture under all fifty-two rather than baked
-   into each court, and it goes on .card (which owns the rounded corners and
-   the overflow clip) with the colour token still underneath as a fallback. */
-  /* :not(:has(> .cb)) matters. This selector outranks the global
-     `.card:has(> .cb) { background-image: var(--card-back-img) }` rule, and a
-     background SHORTHAND resets background-image -- so without the exclusion
-     the kookaburra card back silently became blank stock. Same trap as the
-     saloon body background, running the other way. */
-  :root[data-theme="saloon"] .card:not(:has(> .cb)) { background: var(--card-stock) center / cover, var(--card-face); }
-  /* The stock shows through instead of the flat fill; the drawn grain would
-     double up on a texture that already has its own. */
-  :root[data-theme="saloon"] .cf .paper { fill: transparent; }
-  :root[data-theme="saloon"] .cf .grain { display: none; }
-  /* Courts: painted character in place of the drawn frame and big letter.
-     Corner indices are untouched. */
-  :root[data-theme="saloon"] .cf[data-r="K"],
-  :root[data-theme="saloon"] .cf[data-r="Q"],
-  :root[data-theme="saloon"] .cf[data-r="J"] {
-    background: var(--court-img) center / contain no-repeat;
-  }
-  :root[data-theme="saloon"] .cf .court { display: none; }
-  :root[data-theme="saloon"] .cf[data-r="K"] { --court-img: url("/art/saloon/cards/court-king.webp") }
-  :root[data-theme="saloon"] .cf[data-r="J"] { --court-img: url("/art/saloon/cards/court-jack.webp") }
-  :root[data-theme="saloon"] .cf[data-r="Q"][data-s="s"] { --court-img: url("/art/saloon/cards/court-q-s.webp") }
-  :root[data-theme="saloon"] .cf[data-r="Q"][data-s="h"] { --court-img: url("/art/saloon/cards/court-q-h.webp") }
-  :root[data-theme="saloon"] .cf[data-r="Q"][data-s="d"] { --court-img: url("/art/saloon/cards/court-q-d.webp") }
-  :root[data-theme="saloon"] .cf[data-r="Q"][data-s="c"] { --court-img: url("/art/saloon/cards/court-q-c.webp") }
-  /* The pip cards keep their single big suit glyph, softened so it reads as
-     printing on the stock rather than ink sitting on top of it. */
-  :root[data-theme="saloon"] .cf .pip { opacity: .82; }
+/* ---------- THEME: T-Bone's Saloon, type on the drawn parts ----------
+   The saloon used to carry a painted chess set, court cards, counters and a
+   mancala pit here. All of it was generated and all of it went on
+   2026-09-22. What is left is the display face on the drawn pieces, so the
+   theme still reads as the saloon without a single image. */
   :root[data-theme="saloon"] .cf .idx { font-family: var(--font-display); }
-
-/* ---------- THEME: T-Bone's Saloon, counters and pits ----------
-   ONE pair of counters serves draughts AND connect four -- they are the same
-   object in both games, and two assets doing four assets' work is what keeps
-   the two boards looking like they came from the same cupboard.
-
-   No character painted on them. Six attempts at a bilby face on a counter
-   returned framed portrait medallions and ignored the colour every time; the
-   characters belong on the chess board and the court cards. A crowned draught
-   keeps the DRAWN crown on top of the painted counter, which is the method
-   Travis approved -- generate the part that wants judgment, draw the part
-   that has to be unmistakable at fifty pixels. */
-  :root[data-theme="saloon"] .ck { background: var(--token-img) center / contain no-repeat; }
-  /* Everything except the crown goes: the disc is now paint, the crown is
-     still the drawn one sitting on top of it. */
-  :root[data-theme="saloon"] .ck > *:not(.crown):not(.crown-j) { display: none; }
-  :root[data-theme="saloon"] .ck.s0 { --token-img: var(--token-0-img); }
-  :root[data-theme="saloon"] .ck.s1 { --token-img: var(--token-1-img); }
-
-  /* Mancala: the painted hollow replaces the drawn bowl, the beans stay drawn
-     (a single bean is a shape, not a picture -- three passes at generating one
-     returned a pod, a bowlful and a landscape). The pit art is square and the
-     svg is 160x112, so it is STRETCHED rather than contained: a round hollow
-     squashed to that box is exactly the ellipse the drawn bowl was. */
-  :root[data-theme="saloon"] .pit { background: var(--pit-img) center / 100% 100% no-repeat; }
-  :root[data-theme="saloon"] .pit .bowl, :root[data-theme="saloon"] .pit .rim { display: none; }
-  :root[data-theme="saloon"] .pit .bead { stroke: rgba(40,22,12,.55); stroke-width: 1.2; }
   :root[data-theme="saloon"] .pit .count { font-family: var(--font-display); }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

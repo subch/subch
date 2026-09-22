@@ -1,0 +1,110 @@
+---
+// A lava lamp, drawn. Inline SVG: a brass-dark base and cap, a tapered glass
+// vessel of plum liquid, and five blobs of lava that rise, hang and sink on
+// their own clocks, fused by a goo filter (blur + alpha contrast) so two
+// blobs passing each other stretch and merge the way real wax does. Colours
+// come from the page palette (--a, --b, --c). No raster art anywhere.
+//
+// `id` prefixes every internal id so the lamp can appear twice on a page.
+const { id = 'lamp', class: cls = '' } = Astro.props;
+const p = (s) => `${id}-${s}`;
+---
+<svg class={`lava-lamp ${cls}`} viewBox="0 0 200 520" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id={p('metal')} x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1a0f0c" />
+      <stop offset=".35" stop-color="#5a3a2a" />
+      <stop offset=".5" stop-color="#8a5a3c" />
+      <stop offset=".7" stop-color="#3d2519" />
+      <stop offset="1" stop-color="#120906" />
+    </linearGradient>
+    <linearGradient id={p('liquid')} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a0a30" stop-opacity=".82" />
+      <stop offset=".55" stop-color="#3a0c2a" stop-opacity=".88" />
+      <stop offset="1" stop-color="#5a0f1e" stop-opacity=".95" />
+    </linearGradient>
+    <radialGradient id={p('wax')} cx=".4" cy=".35" r=".7">
+      <stop offset="0" style="stop-color:var(--c)" />
+      <stop offset=".45" style="stop-color:var(--b)" />
+      <stop offset="1" style="stop-color:var(--a)" />
+    </radialGradient>
+    <radialGradient id={p('heat')} cx=".5" cy="1" r=".8">
+      <stop offset="0" style="stop-color:var(--b)" stop-opacity=".75" />
+      <stop offset=".5" style="stop-color:var(--a)" stop-opacity=".25" />
+      <stop offset="1" style="stop-color:var(--a)" stop-opacity="0" />
+    </radialGradient>
+    <clipPath id={p('glass')}>
+      <path d="M78 48 L122 48 C132 130 160 250 160 355 C160 392 40 392 40 355 C40 250 68 130 78 48 Z" />
+    </clipPath>
+    <filter id={p('goo')} x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="goo" />
+      <feBlend in="SourceGraphic" in2="goo" />
+    </filter>
+    <filter id={p('soft')} x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" />
+    </filter>
+  </defs>
+
+  <!-- the glow the lamp throws on whatever is behind it -->
+  <ellipse class="lamp-halo" cx="100" cy="300" rx="120" ry="200" fill={`url(#${p('heat')})`} filter={`url(#${p('soft')})`} />
+
+  <!-- foot and base -->
+  <ellipse cx="100" cy="503" rx="48" ry="10" fill="#0a0504" />
+  <path d="M55 392 C55 392 66 470 60 500 L140 500 C134 470 145 392 145 392 Z" fill={`url(#${p('metal')})`} />
+  <path d="M60 500 L140 500 L140 506 C140 512 60 512 60 506 Z" fill="#241410" />
+
+  <!-- the liquid, clipped to the glass -->
+  <g clip-path={`url(#${p('glass')})`}>
+    <rect x="30" y="40" width="140" height="360" fill={`url(#${p('liquid')})`} />
+    <!-- heat at the bulb -->
+    <ellipse cx="100" cy="392" rx="70" ry="60" fill={`url(#${p('heat')})`} />
+    <!-- the wax: a pool at the bottom and blobs on their own clocks -->
+    <g class="wax" filter={`url(#${p('goo')})`} fill={`url(#${p('wax')})`}>
+      <ellipse class="pool" cx="100" cy="372" rx="58" ry="26" />
+      <circle class="blob b1" cx="82"  cy="340" r="26" />
+      <circle class="blob b2" cx="118" cy="350" r="21" />
+      <circle class="blob b3" cx="100" cy="330" r="30" />
+      <circle class="blob b4" cx="70"  cy="356" r="16" />
+      <circle class="blob b5" cx="126" cy="338" r="13" />
+    </g>
+  </g>
+
+  <!-- the glass: an edge, and a highlight down the left -->
+  <path d="M78 48 L122 48 C132 130 160 250 160 355 C160 392 40 392 40 355 C40 250 68 130 78 48 Z" fill="none" stroke="#ffffff" stroke-opacity=".14" stroke-width="1.5" />
+  <path d="M84 70 C70 160 56 250 55 345" fill="none" stroke="#ffffff" stroke-opacity=".22" stroke-width="3" stroke-linecap="round" />
+
+  <!-- cap -->
+  <path d="M74 50 L126 50 L122 22 C122 14 78 14 78 22 Z" fill={`url(#${p('metal')})`} />
+  <ellipse cx="100" cy="21" rx="22" ry="5" fill="#2a1710" />
+</svg>
+
+<style is:global>
+  /* The blobs. Each rises, hangs near the top, and sinks on a different clock,
+     so the pattern never repeats. transform-box makes the SVG circles animate
+     about their own centres. */
+  .lava-lamp .blob, .lava-lamp .pool { transform-box: fill-box; transform-origin: 50% 50%; }
+  .lava-lamp .pool { animation: lamp-pool 9s ease-in-out infinite alternate; }
+  .lava-lamp .b1 { animation: lamp-rise 17s ease-in-out infinite; }
+  .lava-lamp .b2 { animation: lamp-rise 23s ease-in-out infinite; animation-delay: -8s; }
+  .lava-lamp .b3 { animation: lamp-rise 29s ease-in-out infinite; animation-delay: -15s; }
+  .lava-lamp .b4 { animation: lamp-rise 14s ease-in-out infinite; animation-delay: -4s; }
+  .lava-lamp .b5 { animation: lamp-rise 20s ease-in-out infinite; animation-delay: -11s; }
+  @keyframes lamp-rise {
+    0%   { transform: translateY(0) scale(1, 1); }
+    12%  { transform: translateY(-30px) scale(.9, 1.25); }
+    45%  { transform: translateY(-262px) scale(1.05, .95); }
+    55%  { transform: translateY(-270px) scale(1.12, .9); }
+    88%  { transform: translateY(-24px) scale(.95, 1.15); }
+    100% { transform: translateY(0) scale(1, 1); }
+  }
+  @keyframes lamp-pool {
+    from { transform: scale(1, 1); }
+    to   { transform: scale(1.08, 1.2); }
+  }
+  .lava-lamp .lamp-halo { animation: lamp-breathe 7s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: 50% 60%; }
+  @keyframes lamp-breathe { from { opacity: .7; transform: scale(1); } to { opacity: 1; transform: scale(1.08); } }
+  @media (prefers-reduced-motion: reduce) {
+    .lava-lamp .blob, .lava-lamp .pool, .lava-lamp .lamp-halo { animation: none !important; }
+  }
+</style>

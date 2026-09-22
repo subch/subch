@@ -1,52 +1,51 @@
 ---
 import Base from '../layouts/Base.astro';
+import LavaLamp from '../components/LavaLamp.astro';
 
 // The splash is a launcher: live, fun things only. Workshop/reference pages
-// live in the quiet row at the bottom.
-//
-// ONE REGISTER (STYLE.md sec 10 law 4). These cards are TYPE ONLY -- no
-// glyphs, no per-tile hues. The old inline SVG marks with an HSL `hue` each
-// were nine registers in one row, which is the note this world has spent the
-// most time relearning. The wallpaper is the picture on this page; the cards
-// are a printed bill on a timber panel. Do not add icons back one at a time.
-const live = [
+// live in the quiet row at the bottom. Everything on this page is drawn
+// (CSS and inline SVG); no raster art, by the owner's rule of 2026-09-22.
+
+// The three front doors: the big gradient-framed cards.
+const doors = [
   {
+    kicker: 'Instruments, effects and a sample crate',
+    name: 'music.subch.us',
+    href: 'https://music.subch.us',
+    blurb: 'A Juno-shaped polysynth, an 808-shaped drum machine, a modular rack, a pedal-circuit simulator and a sample jam, all running in the browser on Rust compiled to WebAssembly. Plus what I am listening to right now.',
+    foot: 'Six tools · no install · works on a phone',
+  },
+  {
+    kicker: 'Board and card games',
     name: 'The Game Room',
     href: 'https://play.subch.us',
-    action: 'Play live',
-    external: true,
-    blurb: 'Board & card games with real online tables — join by name, play friends on their own phones, stats that follow you.',
+    blurb: 'Chess, checkers, Connect Four, Mancala, Crazy Eights and seven more, with real online tables: join by name, play friends on their own phones, stats that follow you. Plus two arcade cabinets out the back.',
+    foot: 'Free play · no sign-ups · works on a TV remote',
   },
   {
-    name: 'Game Room · Road Trip',
-    href: '/gameroom/',
-    action: 'Play offline',
-    blurb: 'The pass-and-play edition: loads once, then works with zero signal. Syncs your stats home when you’re back online.',
-  },
-  {
-    // Straight to the table. subch.us/mtg was retired 2026-09-17: it was the
-    // XMage-era front page and deck library, and every .dck it exported was
-    // in XMage's format, which the Forge table cannot read. The table is its
-    // own site now, with its own Discord gate on the door.
+    kicker: 'Magic: The Gathering',
     name: 'Commander',
     href: 'https://mtg.subch.us',
-    action: 'Open the table',
-    external: true,
-    blurb: 'Four-player Commander in the browser, every rule enforced, nothing to install. Members of the Discord only.',
+    blurb: 'Four-player Commander in the browser with every rule enforced and nothing to install. The Forge engine does the judging; you bring the deck.',
+    foot: 'Members of the Discord only',
   },
-  {
-    name: 'No Baloney',
-    href: '/search/',
-    action: 'Search',
-    blurb: 'A search engine tuned to skip the junk and find real answers.',
-  },
-  {
-    name: 'Goon Turismo',
-    href: 'https://goon-turismo.com',
-    action: 'Visit',
-    external: true,
-    blurb: 'Our crew’s Gran Turismo 7 time-trial results and season standings.',
-  },
+];
+
+// The music tools, one card each, all under music.subch.us.
+const music = [
+  { kicker: 'Polyphonic synthesizer', name: 'SUBCH-60', href: 'https://music.subch.us/subch60/', blurb: 'Six voices in the shape of the Juno-60: one oscillator a voice, a four-pole filter, the arpeggiator and the chorus that made it famous. Every slider explains itself.' },
+  { kicker: 'Drum machine', name: 'SUBCH-808', href: 'https://music.subch.us/subch808/', blurb: 'Eleven voices built the way the TR-808 built them, a sixteen-step sequencer with accent and shuffle, and a knob explainer on every control. Bounce a beat to WAV.' },
+  { kicker: 'Modular synthesizer', name: 'SUBCHange', href: 'https://music.subch.us/subchange/', blurb: 'Sixteen modules on a rack, patched with cables: oscillators, filters, envelopes, a step sequencer, delay and reverb. Share a patch as a link.' },
+  { kicker: 'Guitar pedal circuits', name: 'Pedal Lab', href: 'https://music.subch.us/pedal/', blurb: 'Ten classic pedal circuits simulated part by part. Turn a knob, swap a diode, change a cap, and hear it; the scope and the frequency response show why.' },
+  { kicker: 'Sample crate and jam', name: 'SUBCHannels', href: 'https://music.subch.us/subchannels/', blurb: 'An 8×8 pad grid of loops and one-shots locked to one clock, with a step sequencer and punch-in effects. Build your own grid from the crate.' },
+  { kicker: 'Guitar', name: 'Capo Finder', href: 'https://music.subch.us/capo/', blurb: 'Open chord voicings, the shapes that sit next to them, and a capo finder: pick the key and the shapes you would rather play. Design and idea by Bryan Albee.' },
+];
+
+// Also live, smaller.
+const more = [
+  { kicker: 'Search', name: 'No Baloney', href: '/search/', blurb: 'A search engine tuned to skip the junk and find real answers.' },
+  { kicker: 'Offline edition', name: 'Game Room · Road Trip', href: '/gameroom/', blurb: 'The pass-and-play Game Room: loads once, then works with zero signal, and syncs your stats home later.' },
+  { kicker: 'Gran Turismo 7', name: 'Goon Turismo', href: 'https://goon-turismo.com', blurb: 'Our crew’s time-trial results and season standings.', external: true },
 ];
 
 const workshop = [
@@ -56,41 +55,74 @@ const workshop = [
   { name: 'GitHub', href: 'https://github.com/subch' },
 ];
 ---
-<Base title="Home" description="Games, a search engine that skips the junk, and the other things Travis Schaefer builds for fun. Pick one and go.">
-  <section class="hero">
-    <p class="kicker">subch.us · the Schaefer build shelf</p>
-    <h1>Things I built<br />for the fun of it.</h1>
-    <p class="lede">
-      Games for the family, a search engine that skips the junk, and a few
-      other live projects. Everything below works right now — pick one.
-    </p>
-    <div class="hero-cta">
-      <a class="btn primary" href="https://play.subch.us">Play The Game Room</a>
-      <a class="btn" href="/search/">Search with No Baloney</a>
+<Base title="Home" description="Synths, drum machines and pedal circuits in the browser, games for the family, a search engine that skips the junk, and the other things Travis Schaefer builds for fun.">
+  <!-- ------------------------------------------------ hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="scene" aria-hidden="true"></div>
+    <LavaLamp id="hero-lamp" class="scene-lamp" />
+    <div class="hero-body">
+      <p class="kicker">The Schaefer build shelf</p>
+      <h1 id="hero-title">Things I built<br />for the fun of it.</h1>
+      <p class="lede">
+        Synths and drum machines that run in a browser tab, games for the family,
+        a search engine that skips the junk. Everything here works right now. Pick one.
+      </p>
+      <div class="cta">
+        <a class="btn" href="https://music.subch.us">Make some noise</a>
+        <a class="btn ghost" href="https://play.subch.us">Play a game</a>
+      </div>
     </div>
+    <div class="grid-floor" aria-hidden="true"></div>
   </section>
 
-  <section class="live">
-    <h2 class="rail">Live projects</h2>
-    <div class="grid">
-      {live.map((p) => (
-        <a
-          class="proj"
-          href={p.href}
-          target={p.external ? '_blank' : undefined}
-          rel={p.external ? 'noopener' : undefined}
-        >
-          <span class="name">{p.name}</span>
-          <span class="blurb">{p.blurb}</span>
-          <span class="go">{p.action} {p.external ? '↗' : '→'}</span>
+  <!-- ------------------------------------------------ front doors -->
+  <section class="block" id="doors">
+    <h2>Front doors <span class="sub">the big three</span></h2>
+    <div class="doors">
+      {doors.map((d) => (
+        <a class="door" href={d.href}>
+          <span class="d-body">
+            <span class="d-kicker">{d.kicker}</span>
+            <span class="d-name">{d.name}</span>
+            <span class="d-desc">{d.blurb}</span>
+            <span class="d-foot">{d.foot}</span>
+          </span>
         </a>
       ))}
     </div>
   </section>
 
-  <section class="workshop">
-    <h2 class="rail">From the workshop</h2>
-    <p>Notes, parts lists, and works-in-progress — less polished, still public.</p>
+  <!-- ------------------------------------------------ music -->
+  <section class="block" id="music">
+    <h2>Music <span class="sub">instruments and effects, drawn and simulated, nothing installed</span></h2>
+    <div class="cards">
+      {music.map((m) => (
+        <a class="tile" href={m.href}>
+          <span class="t-kicker">{m.kicker}</span>
+          <span class="t-name">{m.name}</span>
+          <span class="t-desc">{m.blurb}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------ also live -->
+  <section class="block" id="more">
+    <h2>Also live <span class="sub">smaller things that work</span></h2>
+    <div class="cards three">
+      {more.map((m) => (
+        <a class="tile" href={m.href} target={m.external ? '_blank' : undefined} rel={m.external ? 'noopener' : undefined}>
+          <span class="t-kicker">{m.kicker}</span>
+          <span class="t-name">{m.name}</span>
+          <span class="t-desc">{m.blurb}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------ workshop -->
+  <section class="block workshop" id="workshop">
+    <h2>From the workshop <span class="sub">notes, parts lists, works in progress</span></h2>
     <ul>
       {workshop.map((w) => (
         <li><a href={w.href}>{w.name}</a></li>
@@ -100,186 +132,80 @@ const workshop = [
 </Base>
 
 <style>
-  /* ---------- hero ---------- */
+  /* ---------- hero: the drawn sunset panel, like the music hub's now-playing box ---------- */
   .hero {
-    position: relative;
-    isolation: isolate;
-    padding: 3.2rem 0 2.4rem;
+    position: relative; overflow: hidden; isolation: isolate;
+    margin-top: 12px; padding: 56px 40px 96px;
+    border: 1px solid var(--line); border-radius: 18px;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--a) 14%, transparent), 0 30px 80px #00000088;
   }
-  .hero::before {
-    /* The hero is the one block of running text that sits straight on the
-       wallpaper -- the cards below are opaque panels. A soft pool of dark
-       behind it does what a lamp does in a papered room, and it works at
-       every width, which a wider page-level scrim would not on a phone. */
-    content: '';
-    position: absolute;
-    inset: -2rem -3rem;
-    z-index: -1;
-    background: radial-gradient(78% 72% at 32% 45%, rgba(16, 6, 4, 0.86), rgba(16, 6, 4, 0) 72%);
-    pointer-events: none;
+  .scene {
+    position: absolute; inset: 0; z-index: 0; opacity: .55;
+    background: var(--scene);
+    animation: push 22s ease-in-out infinite alternate; transform-origin: 70% 80%; will-change: transform;
   }
-  .kicker {
-    margin: 0 0 1rem;
-    font-size: 0.74rem;
-    font-weight: 600;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    /* gold, not gold-deep: shadowed gilt disappears against the pattern */
-    color: var(--gold);
+  @keyframes push { from { transform: scale(1); } to { transform: scale(1.06); } }
+  .hero :global(.scene-lamp) {
+    position: absolute; right: 9%; bottom: 8%; height: 92%; width: auto; z-index: 0;
+    filter: drop-shadow(0 0 30px color-mix(in srgb, var(--a) 35%, transparent));
   }
+  .hero-body { position: relative; z-index: 1; max-width: 560px; }
+  .kicker { margin: 0 0 12px; font: 400 11px var(--f-display); letter-spacing: .24em; text-transform: uppercase; color: var(--b); text-shadow: 0 0 10px color-mix(in srgb, var(--b) 40%, transparent); }
   .hero h1 {
-    margin: 0 0 1.1rem;
-    font-size: clamp(2rem, 5.6vw, 3.1rem);
-    line-height: 1.16;
-    color: var(--paper);
-    /* Lamplight: the display face reads as gilt signwriting, not flat text. */
-    text-shadow: 0 1px 0 rgba(20, 13, 8, 0.9);
+    margin: 0 0 14px; font: 400 clamp(30px, 5.4vw, 52px)/1.05 var(--f-display);
+    text-shadow: 0 0 18px color-mix(in srgb, var(--a) 30%, transparent);
   }
   .hero h1 :global(br) { display: block; }
-  .lede {
-    margin: 0;
-    max-width: 46ch;
-    font-size: 1.06rem;
-    color: var(--muted);
-  }
-  .hero-cta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.7rem;
-    margin-top: 1.7rem;
-  }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.72rem 1.2rem;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    background: var(--panel);
-    color: var(--paper);
-    font-weight: 600;
-    font-size: 0.95rem;
-    text-decoration: none;
-    transition: border-color 0.14s ease, color 0.14s ease, background-color 0.14s ease;
-  }
-  .btn:hover { border-color: var(--gold); color: var(--gold-bright); }
-  .btn.primary {
-    background: var(--gold);
-    border-color: var(--gold-bright);
-    color: #140d08;
-  }
-  .btn.primary:hover {
-    background: var(--gold-bright);
-    color: #140d08;
-  }
+  .lede { margin: 0; max-width: 46ch; font-size: 16px; color: var(--text); text-shadow: 0 1px 8px #000c; }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 
-  /* ---------- section rails ---------- */
-  .rail {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    font-size: 0.76rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    /* gold, not gold-deep. Shadowed gilt is a colour for sitting ON a panel;
-       over the wallpaper it is the same value as the pattern and vanishes. */
-    color: var(--gold);
-    margin: 2.4rem 0 1rem;
+  /* ---------- front doors: gradient frame with a glow, the name big ---------- */
+  .doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .door {
+    display: flex; flex-direction: column; text-decoration: none; color: var(--text); border-radius: 18px; overflow: hidden; position: relative;
+    background: linear-gradient(var(--panel), var(--panel)) padding-box, linear-gradient(135deg, var(--a), var(--b) 55%, var(--c)) border-box;
+    border: 2px solid transparent;
+    box-shadow: 0 0 30px color-mix(in srgb, var(--a) 14%, transparent), 0 20px 50px #00000066;
+    transition: transform .15s, box-shadow .15s;
   }
-  .rail::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--gold-deep), transparent);
-  }
+  .door:hover { transform: translateY(-3px); box-shadow: 0 0 40px color-mix(in srgb, var(--a) 28%, transparent), 0 24px 60px #00000080; color: var(--text); }
+  .door::after { content: "\2192"; position: absolute; right: 18px; top: 16px; font: 400 22px var(--f-display); color: var(--b); text-shadow: 0 0 10px color-mix(in srgb, var(--b) 55%, transparent); }
+  .d-body { display: flex; flex-direction: column; gap: 6px; padding: 20px 22px; flex: 1; }
+  .d-kicker { font: 400 10px var(--f-display); letter-spacing: .22em; text-transform: uppercase; color: var(--b); }
+  .d-name { font: 400 30px/1.1 var(--f-display); text-shadow: 0 0 14px color-mix(in srgb, var(--a) 30%, transparent); margin: 2px 0 4px; overflow-wrap: anywhere; }
+  .d-desc { color: var(--muted); font-size: 14px; }
+  .d-foot { color: var(--faint); font-size: 12px; margin-top: auto; padding-top: 8px; }
 
-  /* ---------- live project cards ---------- */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 0.9rem;
+  /* ---------- tiles: the compact cards ---------- */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .cards.three { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .tile {
+    display: flex; flex-direction: column; gap: 4px; padding: 14px 16px 16px;
+    text-decoration: none; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    transition: transform .15s, border-color .15s, box-shadow .15s;
   }
-  .proj {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    padding: 1.15rem 1.2rem 1.1rem;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    /* Opaque panel, deliberately: the wallpaper is behind the page, not
-       behind the words. A translucent card here puts a botanical branch
-       through the middle of a sentence. */
-    background: var(--panel);
-    color: inherit;
-    text-decoration: none;
-    position: relative;
-    transition: border-color 0.16s ease, transform 0.16s ease;
-  }
-  .proj::before {
-    /* one gilt hairline along the top edge -- the card's only ornament */
-    content: '';
-    position: absolute;
-    inset: 0 0 auto;
-    height: 2px;
-    border-radius: 6px 6px 0 0;
-    background: linear-gradient(90deg, transparent, var(--gold-deep) 25%, var(--gold) 50%, var(--gold-deep) 75%, transparent);
-    opacity: 0.7;
-    transition: opacity 0.16s ease;
-  }
-  .proj:hover,
-  .proj:focus-visible {
-    border-color: rgba(217, 164, 49, 0.55);
-    transform: translateY(-2px);
-  }
-  .proj:hover::before { opacity: 1; }
-  .name {
-    font-family: var(--display);
-    font-size: 1.08rem;
-    line-height: 1.3;
-    color: var(--paper);
-  }
-  .blurb {
-    font-size: 0.88rem;
-    color: var(--muted);
-    line-height: 1.5;
-    flex: 1;
-  }
-  .go {
-    margin-top: 0.35rem;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gold);
-  }
-  .proj:hover .go { color: var(--gold-bright); }
+  .tile:hover { transform: translateY(-2px); border-color: var(--a); box-shadow: 0 0 20px color-mix(in srgb, var(--a) 22%, transparent); color: var(--text); }
+  .t-kicker { font: 400 10px var(--f-display); letter-spacing: .18em; text-transform: uppercase; color: var(--b); }
+  .t-name { font: 400 17px/1.25 var(--f-display); margin: 2px 0 4px; }
+  .t-desc { color: var(--muted); font-size: 13px; line-height: 1.45; }
 
   /* ---------- workshop row ---------- */
-  .workshop { margin-top: 1rem; padding-bottom: 1rem; }
-  .workshop p { margin: 0 0 0.7rem; color: var(--muted); font-size: 0.9rem; }
-  .workshop ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
+  .workshop ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
   .workshop li a {
-    display: inline-block;
-    padding: 0.42rem 0.9rem;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.88rem;
-    transition: color 0.14s, border-color 0.14s;
+    display: inline-block; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line);
+    color: var(--muted); text-decoration: none; font: 400 11px var(--f-display); letter-spacing: .14em; text-transform: uppercase;
+    transition: color .14s, border-color .14s;
   }
-  .workshop li a:hover { color: var(--gold-bright); border-color: var(--gold); }
+  .workshop li a:hover { color: var(--b); border-color: var(--b); }
 
+  @media (max-width: 760px) {
+    .hero { padding: 36px 20px 84px; }
+    .hero { padding-bottom: 150px; }
+    .hero-body { max-width: 100%; }
+    .hero :global(.scene-lamp) { height: 44%; bottom: 10%; right: 4%; opacity: .75; }
+  }
   @media (prefers-reduced-motion: reduce) {
-    .btn, .proj, .proj::before, .go { transition: none; }
-    .proj:hover { transform: none; }
+    .door, .tile { transition: none; }
+    .door:hover, .tile:hover { transform: none; }
   }
 </style>

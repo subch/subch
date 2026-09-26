@@ -11,7 +11,6 @@ const nav = [
   { href: '/search/', label: 'No Baloney' },
 ];
 const currentPath = Astro.url.pathname;
-import LavaLamp from '../components/LavaLamp.astro';
 // Colourway: LAVA, picked by the owner 2026-09-22 out of four candidates
 // (glacier, acid and brass are in git history if ever wanted back).
 ---
@@ -31,7 +30,6 @@ import LavaLamp from '../components/LavaLamp.astro';
     <!-- the sky: three slow glows behind everything, drawn, no artwork -->
     <div class="sky" aria-hidden="true">
       <i class="glow g1"></i><i class="glow g2"></i><i class="glow g3"></i>
-      <LavaLamp id="sky-lamp" class="sky-lamp" />
     </div>
 
     <header class="bar">
@@ -125,7 +123,7 @@ import LavaLamp from '../components/LavaLamp.astro';
   html { background: var(--ground); }
   body {
     /* transparent, not --ground: body is not a stacking context, so its own
-       background would paint OVER the z-index:-1 sky (glows and lamp). The
+       background would paint OVER the z-index:-1 sky (the glows). The
        html element carries the ground colour instead. */
     background: transparent; color: var(--text);
     font: 15px/1.5 var(--f-body);
@@ -142,9 +140,6 @@ import LavaLamp from '../components/LavaLamp.astro';
   .sky .g2 { width: 40vw; height: 40vw; right: -12vw; top: 20vh; background: var(--g2); animation-delay: -9s; animation-duration: 33s; }
   .sky .g3 { width: 44vw; height: 44vw; left: 28vw; bottom: -20vw; background: var(--g3); opacity: .08; animation-delay: -17s; animation-duration: 39s; }
   @keyframes drift { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(6vw, 5vh, 0) scale(1.12); } }
-  /* a faint lamp in the right margin, only where there is a margin to stand in */
-  .sky-lamp { display: none; position: absolute; right: 2vw; bottom: -4vh; height: min(78vh, 640px); width: auto; opacity: .42; }
-  @media (min-width: 1400px) { .sky-lamp { display: block; } }
   @media (prefers-reduced-motion: reduce) { .sky .glow, .scene { animation: none !important; } }
 
   /* header */

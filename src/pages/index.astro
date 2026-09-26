@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import LavaLamp from '../components/LavaLamp.astro';
 
 // The splash is a launcher: live, fun things only. Workshop/reference pages
 // live in the quiet row at the bottom. Everything on this page is drawn
@@ -59,7 +58,6 @@ const workshop = [
   <!-- ------------------------------------------------ hero -->
   <section class="hero" aria-labelledby="hero-title">
     <div class="scene" aria-hidden="true"></div>
-    <LavaLamp id="hero-lamp" class="scene-lamp" />
     <div class="hero-body">
       <p class="kicker">The Schaefer build shelf</p>
       <h1 id="hero-title">Things I built<br />for the fun of it.</h1>
@@ -145,10 +143,6 @@ const workshop = [
     animation: push 22s ease-in-out infinite alternate; transform-origin: 70% 80%; will-change: transform;
   }
   @keyframes push { from { transform: scale(1); } to { transform: scale(1.06); } }
-  .hero :global(.scene-lamp) {
-    position: absolute; right: 9%; bottom: 8%; height: 92%; width: auto; z-index: 0;
-    filter: drop-shadow(0 0 30px color-mix(in srgb, var(--a) 35%, transparent));
-  }
   .hero-body { position: relative; z-index: 1; max-width: 560px; }
   .kicker { margin: 0 0 12px; font: 400 11px var(--f-display); letter-spacing: .24em; text-transform: uppercase; color: var(--b); text-shadow: 0 0 10px color-mix(in srgb, var(--b) 40%, transparent); }
   .hero h1 {
@@ -200,9 +194,7 @@ const workshop = [
 
   @media (max-width: 760px) {
     .hero { padding: 36px 20px 84px; }
-    .hero { padding-bottom: 150px; }
     .hero-body { max-width: 100%; }
-    .hero :global(.scene-lamp) { height: 44%; bottom: 10%; right: 4%; opacity: .75; }
   }
   @media (prefers-reduced-motion: reduce) {
     .door, .tile { transition: none; }
